@@ -1,0 +1,41 @@
+customer_id,customer_name,channel,region
+1,"Le, Maldonado and Herrera",Foodservice,Quebec
+2,Mack-Peterson,Wholesale,BC Interior
+3,Graham-Chavez,Retail,Ontario
+4,"Liu, Baker and Mason",Retail,Alberta
+5,Romero Inc,Retail,BC Lower Mainland
+6,"Evans, Fowler and Lynch",Wholesale,Ontario
+7,Brooks and Sons,Retail,Quebec
+8,"Ashley, Nielsen and Sellers",Retail,Quebec
+9,"Nguyen, Smith and Hickman",Retail,Alberta
+10,Allen-Allen,Foodservice,Ontario
+11,"Arroyo, Miller and Tucker",Retail,BC Interior
+12,Spence PLC,Foodservice,Alberta
+13,Anderson Group,Foodservice,Alberta
+14,"Martin, Rose and Obrien",Retail,BC Interior
+15,Hickman Ltd,Retail,Quebec
+16,"Harris, Collins and Carney",Retail,BC Lower Mainland
+17,"Brooks, Lam and Hayes",Foodservice,BC Lower Mainland
+18,Walker LLC,Retail,BC Lower Mainland
+19,Chapman and Sons,Retail,BC Lower Mainland
+20,"Robinson, Jones and Welch",Foodservice,Quebec
+21,Jones Inc,Foodservice,Quebec
+22,Jones-Young,Foodservice,Quebec
+23,"Washington, Ryan and Cummings",Foodservice,Alberta
+24,"Johnston, Sanchez and Kennedy",Retail,Alberta
+25,Lee-Davis,Foodservice,BC Lower Mainland
+26,Gomez-Jenkins,Retail,Ontario
+27,"Brown, Valdez and Lucas",Retail,BC Lower Mainland
+28,Powell LLC,Retail,Ontario
+29,Wright and Sons,Retail,BC Interior
+30,"West, Henderson and Ramirez",Foodservice,Quebec
+31,Baxter Inc,Retail,BC Lower Mainland
+32,Morton-Chase,Retail,Quebec
+33,Williams PLC,Retail,BC Interior
+34,Novak and Sons,Wholesale,Ontario
+35,Russell Group,Retail,BC Interior
+36,Hancock Inc,Foodservice,BC Interior
+37,Gray Group,Foodservice,Quebec
+38,House-Glover,Foodservice,BC Interior
+39,Henderson-Bernard,Retail,Alberta
+40,"Stanley, Tucker and Lee",Wholesale,Ontario

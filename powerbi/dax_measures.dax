@@ -1,0 +1,75 @@
+// =====================================================================
+// DAX measure library — Supply Chain Control Tower
+// Organized as a "measure table" (create a blank table named _Measures
+// in Power BI, hide it, and put all of these there — standard governed
+// semantic-model practice instead of scattering measures across fact tables).
+// =====================================================================
+
+// ---------- Revenue / Margin ----------
+
+Total Revenue = SUM(fact_orders[revenue])
+
+Total COGS = SUM(fact_orders[cogs])
+
+Gross Margin $ = [Total Revenue] - [Total COGS]
+
+Gross Margin % =
+DIVIDE([Gross Margin $], [Total Revenue])
+
+// ---------- Fulfillment (OTIF) ----------
+
+Total Orders = DISTINCTCOUNT(fact_orders[order_id])
+
+OTIF Orders =
+CALCULATE([Total Orders], fact_orders[otif_flag] = 1)
+
+OTIF % =
+DIVIDE([OTIF Orders], [Total Orders])
+
+Avg Fill Rate =
+AVERAGE(fact_orders[fill_rate])
+
+Qty Ordered = SUM(fact_orders[qty_ordered])
+Qty Shipped = SUM(fact_orders[qty_shipped])
+
+// ---------- Inventory & Expiry Risk ----------
+
+Total Inventory Value = SUM(fact_inventory[inventory_value])
+
+Qty On Hand = SUM(fact_inventory[qty_on_hand])
+
+Critical Expiry Value =
+CALCULATE([Total Inventory Value], fact_inventory[expiry_risk_flag] = "Critical")
+
+Warning Expiry Value =
+CALCULATE([Total Inventory Value], fact_inventory[expiry_risk_flag] = "Warning")
+
+% Inventory at Risk =
+// "At risk" = anything flagged Critical or Warning by the FEFO calc in 02_silver_transform.py
+DIVIDE([Critical Expiry Value] + [Warning Expiry Value], [Total Inventory Value])
+
+// Average inventory value across the snapshot dates in the current filter context.
+// Needed as the denominator for turns/days-on-hand — using a plain SUM would double-count
+// across multiple weekly snapshots instead of averaging them.
+Avg Inventory Value =
+AVERAGEX(VALUES(dim_date[full_date]), [Total Inventory Value])
+
+// Annualized inventory turns: how many times inventory is sold through per year.
+// Standard formula = COGS / Average Inventory Value, scaled to the period in filter context.
+Inventory Turns =
+VAR DaysInPeriod = DATEDIFF(MIN(dim_date[full_date]), MAX(dim_date[full_date]), DAY) + 1
+VAR AnnualizationFactor = DIVIDE(365, DaysInPeriod)
+RETURN
+    DIVIDE([Total COGS], [Avg Inventory Value]) * AnnualizationFactor
+
+Days On Hand =
+DIVIDE(365, [Inventory Turns])
+
+// ---------- Row counts for QA / DQ dashboard tie-in ----------
+
+DQ Checks Passed =
+CALCULATE(COUNTROWS(dq_log), dq_log[passed] = TRUE)
+
+DQ Checks Total = COUNTROWS(dq_log)
+
+DQ Pass Rate = DIVIDE([DQ Checks Passed], [DQ Checks Total])
