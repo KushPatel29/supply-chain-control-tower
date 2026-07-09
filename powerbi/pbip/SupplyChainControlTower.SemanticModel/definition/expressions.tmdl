@@ -1,0 +1,2 @@
+expression DataPath = "C:\Users\kush2\Claude\portfolio-projects\supply-chain-control-tower\data\bronze" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	annotation PBI_ResultType = Text

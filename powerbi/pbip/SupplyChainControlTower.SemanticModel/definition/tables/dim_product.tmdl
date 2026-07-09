@@ -1,0 +1,58 @@
+table dim_product
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column sku
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sku
+
+	column product_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: product_name
+
+	column category
+		dataType: string
+		summarizeBy: none
+		sourceColumn: category
+
+	column subcategory
+		dataType: string
+		summarizeBy: none
+		sourceColumn: subcategory
+
+	column shelf_life_days
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: shelf_life_days
+
+	column unit_of_measure
+		dataType: string
+		summarizeBy: none
+		sourceColumn: unit_of_measure
+
+	column unit_cost
+		dataType: double
+		summarizeBy: none
+		sourceColumn: unit_cost
+
+	column unit_price
+		dataType: double
+		summarizeBy: none
+		sourceColumn: unit_price
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\dim_product.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"product_id", Int64.Type}, {"sku", type text}, {"product_name", type text}, {"category", type text}, {"subcategory", type text}, {"shelf_life_days", Int64.Type}, {"unit_of_measure", type text}, {"unit_cost", type number}, {"unit_price", type number}})
+				in
+				    Typed

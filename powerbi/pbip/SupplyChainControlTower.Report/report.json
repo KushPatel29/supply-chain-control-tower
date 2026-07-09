@@ -1,0 +1,37 @@
+{
+  "config": "{\"version\":\"5.43\",\"activeSectionIndex\":0}",
+  "layoutOptimization": 0,
+  "resourcePackages": [],
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "Executive Overview",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720,
+      "name": "section_exec_overview",
+      "visualContainers": [],
+      "width": 1280
+    },
+    {
+      "config": "{}",
+      "displayName": "Inventory & Expiry Risk",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720,
+      "name": "section_inventory_risk",
+      "visualContainers": [],
+      "width": 1280
+    },
+    {
+      "config": "{}",
+      "displayName": "Fulfillment (OTIF)",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720,
+      "name": "section_otif",
+      "visualContainers": [],
+      "width": 1280
+    }
+  ]
+}

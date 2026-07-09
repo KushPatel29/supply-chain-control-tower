@@ -1,0 +1,14 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/artifacts/pbipProperties/1.0.0/schema.json",
+  "version": "1.0",
+  "artifacts": [
+    {
+      "report": {
+        "path": "SupplyChainControlTower.Report"
+      }
+    }
+  ],
+  "settings": {
+    "enableAutoRecovery": true
+  }
+}

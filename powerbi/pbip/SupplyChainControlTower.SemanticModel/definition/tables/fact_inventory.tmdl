@@ -1,0 +1,65 @@
+table fact_inventory
+
+	column snapshot_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: snapshot_date
+
+	column lot_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: lot_id
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column warehouse_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: warehouse_id
+
+	column qty_on_hand
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: qty_on_hand
+
+	column days_until_expiry
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: days_until_expiry
+
+	column expiry_risk_flag
+		dataType: string
+		summarizeBy: none
+		sourceColumn: expiry_risk_flag
+
+	column inventory_value
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: inventory_value
+
+	partition fact_inventory = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\fact_inventory_snapshot.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"snapshot_date", type date}, {"lot_id", Int64.Type}, {"product_id", Int64.Type}, {"warehouse_id", Int64.Type}, {"qty_on_hand", type number}}),
+				    // Silver rule: FEFO expiry risk banding from the lot's expiry date
+				    MergedLot = Table.NestedJoin(Typed, {"lot_id"}, dim_lot, {"lot_id"}, "lot", JoinKind.Inner),
+				    ExpandedLot = Table.ExpandTableColumn(MergedLot, "lot", {"expiry_date"}, {"expiry_date"}),
+				    AddedDays = Table.AddColumn(ExpandedLot, "days_until_expiry", each Duration.Days([expiry_date] - [snapshot_date]), Int64.Type),
+				    AddedRisk = Table.AddColumn(AddedDays, "expiry_risk_flag", each if [days_until_expiry] <= 2 then "Critical" else if [days_until_expiry] <= 5 then "Warning" else "OK", type text),
+				    MergedProduct = Table.NestedJoin(AddedRisk, {"product_id"}, dim_product, {"product_id"}, "product", JoinKind.Inner),
+				    ExpandedProduct = Table.ExpandTableColumn(MergedProduct, "product", {"unit_cost"}, {"unit_cost"}),
+				    AddedValue = Table.AddColumn(ExpandedProduct, "inventory_value", each Number.Round([qty_on_hand] * [unit_cost], 2), type number),
+				    Cleaned = Table.RemoveColumns(AddedValue, {"expiry_date", "unit_cost"})
+				in
+				    Cleaned

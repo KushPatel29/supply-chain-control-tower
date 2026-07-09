@@ -1,0 +1,106 @@
+table fact_orders
+
+	column order_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column order_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: order_date
+
+	column customer_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column lot_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: lot_id
+
+	column warehouse_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: warehouse_id
+
+	column qty_ordered
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: qty_ordered
+
+	column qty_shipped
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: qty_shipped
+
+	column promised_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: promised_date
+
+	column shipped_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: shipped_date
+
+	column fill_rate
+		dataType: double
+		summarizeBy: none
+		sourceColumn: fill_rate
+
+	column otif_flag
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: otif_flag
+
+	column revenue
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: revenue
+
+	column cogs
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: cogs
+
+	column gross_margin
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: gross_margin
+
+	partition fact_orders = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\fact_orders.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    // Silver rule: drop the source's price copies and re-resolve from governed dim_product
+				    RemovedSourcePrices = Table.RemoveColumns(Promoted, {"unit_price", "unit_cost"}),
+				    Typed = Table.TransformColumnTypes(RemovedSourcePrices, {{"order_id", Int64.Type}, {"order_date", type date}, {"customer_id", Int64.Type}, {"product_id", Int64.Type}, {"lot_id", Int64.Type}, {"warehouse_id", Int64.Type}, {"qty_ordered", type number}, {"qty_shipped", type number}, {"promised_date", type date}, {"shipped_date", type date}}),
+				    MergedProduct = Table.NestedJoin(Typed, {"product_id"}, dim_product, {"product_id"}, "product", JoinKind.Inner),
+				    ExpandedProduct = Table.ExpandTableColumn(MergedProduct, "product", {"unit_cost", "unit_price"}, {"unit_cost", "unit_price"}),
+				    AddedFillRate = Table.AddColumn(ExpandedProduct, "fill_rate", each Number.Round([qty_shipped] / [qty_ordered], 4), type number),
+				    // Silver rule: OTIF = shipped on/before promised date AND fill rate >= 95%
+				    AddedOtif = Table.AddColumn(AddedFillRate, "otif_flag", each if [shipped_date] <= [promised_date] and [fill_rate] >= 0.95 then 1 else 0, Int64.Type),
+				    AddedRevenue = Table.AddColumn(AddedOtif, "revenue", each Number.Round([qty_shipped] * [unit_price], 2), type number),
+				    AddedCogs = Table.AddColumn(AddedRevenue, "cogs", each Number.Round([qty_shipped] * [unit_cost], 2), type number),
+				    AddedMargin = Table.AddColumn(AddedCogs, "gross_margin", each Number.Round([revenue] - [cogs], 2), type number),
+				    RemovedPriceCols = Table.RemoveColumns(AddedMargin, {"unit_cost", "unit_price"})
+				in
+				    RemovedPriceCols

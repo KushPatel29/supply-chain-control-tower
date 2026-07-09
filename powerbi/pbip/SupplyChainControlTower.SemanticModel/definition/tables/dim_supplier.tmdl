@@ -1,0 +1,27 @@
+table dim_supplier
+
+	column supplier_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: supplier_id
+
+	column supplier_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: supplier_name
+
+	column region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: region
+
+	partition dim_supplier = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\dim_supplier.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"supplier_id", Int64.Type}, {"supplier_name", type text}, {"region", type text}})
+				in
+				    Typed

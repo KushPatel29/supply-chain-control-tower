@@ -1,0 +1,6 @@
+role 'Sales - BC Lower Mainland'
+	modelPermission: read
+
+	tablePermission dim_customer = dim_customer[region] = "BC Lower Mainland"
+
+	tablePermission dim_warehouse = dim_warehouse[region] = "BC Lower Mainland"

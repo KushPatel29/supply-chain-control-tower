@@ -1,0 +1,21 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+ref table dim_product
+ref table dim_supplier
+ref table dim_warehouse
+ref table dim_customer
+ref table dim_lot
+ref table dim_date
+ref table fact_orders
+ref table fact_inventory
+ref table _Measures
+
+ref role 'Sales - BC Lower Mainland'
+
+ref expression DataPath

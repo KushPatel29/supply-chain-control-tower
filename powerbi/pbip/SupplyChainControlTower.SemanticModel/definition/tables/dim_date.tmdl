@@ -1,0 +1,60 @@
+table dim_date
+
+	column full_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: full_date
+
+	column year
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: year
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: quarter
+
+	column month
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: month
+
+	column month_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month
+
+	column week_of_year
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: week_of_year
+
+	column day_of_week_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: day_of_week_name
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    StartDate = #date(2025, 1, 1),
+				    EndDate = #date(2025, 6, 30),
+				    Dates = List.Dates(StartDate, Duration.Days(EndDate - StartDate) + 1, #duration(1, 0, 0, 0)),
+				    AsTable = Table.FromList(Dates, Splitter.SplitByNothing(), {"full_date"}),
+				    Typed = Table.TransformColumnTypes(AsTable, {{"full_date", type date}}),
+				    AddYear = Table.AddColumn(Typed, "year", each Date.Year([full_date]), Int64.Type),
+				    AddQuarter = Table.AddColumn(AddYear, "quarter", each Date.QuarterOfYear([full_date]), Int64.Type),
+				    AddMonth = Table.AddColumn(AddQuarter, "month", each Date.Month([full_date]), Int64.Type),
+				    AddMonthName = Table.AddColumn(AddMonth, "month_name", each Date.MonthName([full_date]), type text),
+				    AddWeek = Table.AddColumn(AddMonthName, "week_of_year", each Date.WeekOfYear([full_date]), Int64.Type),
+				    AddDayName = Table.AddColumn(AddWeek, "day_of_week_name", each Date.DayOfWeekName([full_date]), type text)
+				in
+				    AddDayName

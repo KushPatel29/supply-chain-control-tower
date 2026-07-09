@@ -1,0 +1,32 @@
+table dim_warehouse
+
+	column warehouse_id
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: warehouse_id
+
+	column warehouse_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: warehouse_name
+
+	column region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: region
+
+	column city
+		dataType: string
+		summarizeBy: none
+		sourceColumn: city
+
+	partition dim_warehouse = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\dim_warehouse.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"warehouse_id", Int64.Type}, {"warehouse_name", type text}, {"region", type text}, {"city", type text}})
+				in
+				    Typed

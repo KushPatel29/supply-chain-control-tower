@@ -1,0 +1,74 @@
+table _Measures
+
+	measure 'Total Revenue' = SUM(fact_orders[revenue])
+		formatString: #,0.00
+
+	measure 'Total COGS' = SUM(fact_orders[cogs])
+		formatString: #,0.00
+
+	measure 'Gross Margin $' = [Total Revenue] - [Total COGS]
+		formatString: #,0.00
+
+	measure 'Gross Margin %' = DIVIDE([Gross Margin $], [Total Revenue])
+		formatString: 0.0%
+
+	measure 'Total Orders' = DISTINCTCOUNT(fact_orders[order_id])
+		formatString: #,0
+
+	measure 'OTIF Orders' = CALCULATE([Total Orders], fact_orders[otif_flag] = 1)
+		formatString: #,0
+
+	measure 'OTIF %' = DIVIDE([OTIF Orders], [Total Orders])
+		formatString: 0.0%
+
+	measure 'Avg Fill Rate' = AVERAGE(fact_orders[fill_rate])
+		formatString: 0.0%
+
+	measure 'Qty Ordered' = SUM(fact_orders[qty_ordered])
+		formatString: #,0
+
+	measure 'Qty Shipped' = SUM(fact_orders[qty_shipped])
+		formatString: #,0
+
+	measure 'Total Inventory Value' = SUM(fact_inventory[inventory_value])
+		formatString: #,0.00
+
+	measure 'Qty On Hand' = SUM(fact_inventory[qty_on_hand])
+		formatString: #,0
+
+	measure 'Critical Expiry Value' = CALCULATE([Total Inventory Value], fact_inventory[expiry_risk_flag] = "Critical")
+		formatString: #,0.00
+
+	measure 'Warning Expiry Value' = CALCULATE([Total Inventory Value], fact_inventory[expiry_risk_flag] = "Warning")
+		formatString: #,0.00
+
+	measure '% Inventory at Risk' = DIVIDE([Critical Expiry Value] + [Warning Expiry Value], [Total Inventory Value])
+		formatString: 0.0%
+
+	measure 'Avg Inventory Value' = AVERAGEX(VALUES(dim_date[full_date]), [Total Inventory Value])
+		formatString: #,0.00
+
+	measure 'Inventory Turns' =
+			VAR DaysInPeriod = DATEDIFF(MIN(dim_date[full_date]), MAX(dim_date[full_date]), DAY) + 1
+			VAR AnnualizationFactor = DIVIDE(365, DaysInPeriod)
+			RETURN
+			    DIVIDE([Total COGS], [Avg Inventory Value]) * AnnualizationFactor
+		formatString: #,0.0
+
+	measure 'Days On Hand' = DIVIDE(365, [Inventory Turns])
+		formatString: #,0.0
+
+	column Value
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Value
+		isHidden
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Value = Int64.Type], {})
+				in
+				    Source

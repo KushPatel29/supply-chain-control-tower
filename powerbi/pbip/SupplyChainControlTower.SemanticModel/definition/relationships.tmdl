@@ -1,0 +1,39 @@
+relationship a1000001-0000-4000-8000-000000000001
+	fromColumn: fact_orders.product_id
+	toColumn: dim_product.product_id
+
+relationship a1000001-0000-4000-8000-000000000002
+	fromColumn: fact_orders.customer_id
+	toColumn: dim_customer.customer_id
+
+relationship a1000001-0000-4000-8000-000000000003
+	fromColumn: fact_orders.lot_id
+	toColumn: dim_lot.lot_id
+
+relationship a1000001-0000-4000-8000-000000000004
+	fromColumn: fact_orders.warehouse_id
+	toColumn: dim_warehouse.warehouse_id
+
+relationship a1000001-0000-4000-8000-000000000005
+	fromColumn: fact_orders.order_date
+	toColumn: dim_date.full_date
+
+relationship a1000001-0000-4000-8000-000000000006
+	fromColumn: fact_inventory.product_id
+	toColumn: dim_product.product_id
+
+relationship a1000001-0000-4000-8000-000000000007
+	fromColumn: fact_inventory.lot_id
+	toColumn: dim_lot.lot_id
+
+relationship a1000001-0000-4000-8000-000000000008
+	fromColumn: fact_inventory.warehouse_id
+	toColumn: dim_warehouse.warehouse_id
+
+relationship a1000001-0000-4000-8000-000000000009
+	fromColumn: fact_inventory.snapshot_date
+	toColumn: dim_date.full_date
+
+relationship a1000001-0000-4000-8000-000000000010
+	fromColumn: dim_lot.supplier_id
+	toColumn: dim_supplier.supplier_id
