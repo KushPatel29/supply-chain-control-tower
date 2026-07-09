@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  pipeline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r data_generator/requirements.txt
+          pip install pytest
+
+      - name: Generate fresh synthetic data
+        run: python data_generator/generate_data.py
+
+      - name: Run pipeline logic & data-invariant tests
+        run: pytest tests/ -v

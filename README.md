@@ -1,8 +1,12 @@
 # Supply Chain Control Tower
 
+[![CI](https://github.com/KushPatel29/supply-chain-control-tower-/actions/workflows/ci.yml/badge.svg)](https://github.com/KushPatel29/supply-chain-control-tower-/actions/workflows/ci.yml)
+
 A Microsoft Fabric + Power BI analytics platform for a synthetic perishable-goods
 distributor — inventory turns, days-on-hand, OTIF/fill rate, and FEFO/expiry risk,
 built on a governed Lakehouse medallion architecture with row-level security.
+Every push regenerates the data and runs a 13-test suite over the pipeline's
+business logic, so the badge above means the whole thing actually works.
 
 This project reproduces (with synthetic data, since the original is confidential
 employer data) the same architecture and KPI suite I built in production for a
@@ -61,6 +65,9 @@ notebooks/          PySpark notebooks: 01 bronze ingest -> 02 silver transform
                      -> 03 gold curate -> 04 data quality checks
 sql/                T-SQL DDL for the Gold star schema
 powerbi/            DAX measure library + Power BI build guide (incl. RLS/OLS)
+docs/               metric dictionary (governed KPI definitions + change control)
+tests/              pytest suite: referential integrity, FEFO/OTIF/margin rules
+.github/workflows/  CI — regenerates data and runs the test suite on every push
 ```
 
 ## How to reproduce
@@ -93,6 +100,42 @@ powerbi/            DAX measure library + Power BI build guide (incl. RLS/OLS)
 integrity, and control-total reconciliation checks after every Gold build and
 logs results to `gold.dq_log` — the same automated reconciliation pattern used
 in production to catch discrepancies before they reach an executive dashboard.
+
+Every metric exposed to report consumers is defined in
+[`docs/metric_dictionary.md`](docs/metric_dictionary.md) with formula, grain,
+owner, and refresh SLA — definitions change only via PR, in the same commit
+as the implementation change, so the dictionary and the DAX never drift apart.
+
+## Testing & CI
+
+`tests/test_pipeline_logic.py` independently re-implements the Silver-layer
+business rules (FEFO risk banding, OTIF, margin) in pandas and asserts they
+hold for every generated row, alongside referential-integrity and uniqueness
+invariants. GitHub Actions regenerates the dataset from scratch and runs the
+suite on every push:
+
+```bash
+pip install pytest
+pytest tests/ -v    # 13 tests
+```
+
+## Not just food: adapting this to other industries
+
+FEFO/expiry logic is just "time-bounded inventory urgency" — the same
+architecture drops into any industry where stock has a clock or a trace
+requirement:
+
+| Industry | What "lot + expiry" becomes | What OTIF becomes |
+|---|---|---|
+| Pharma / medical devices | Batch + expiration, FDA lot traceability | Order fill compliance |
+| Retail / e-commerce | Seasonal SKU + markdown date | Promised-delivery-date hit rate |
+| Manufacturing | Production batch + warranty window | On-time production order completion |
+| Chemicals | Batch + stability/retest date | Delivery reliability |
+| Logistics / 3PL | Shipment + SLA deadline | SLA attainment |
+
+Concretely: rename `dim_lot`, repoint the expiry thresholds in
+`02_silver_transform.py`, and the rest of the pipeline — medallion layers,
+star schema, DQ checks, RLS — carries over unchanged.
 
 ## Notes on the synthetic data
 
