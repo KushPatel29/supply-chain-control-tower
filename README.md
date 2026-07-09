@@ -1,6 +1,11 @@
 # Supply Chain Control Tower
 
 [![CI](https://github.com/KushPatel29/supply-chain-control-tower-/actions/workflows/ci.yml/badge.svg)](https://github.com/KushPatel29/supply-chain-control-tower-/actions/workflows/ci.yml)
+![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-Lakehouse-0078D4)
+![PySpark](https://img.shields.io/badge/PySpark-Delta%20MERGE-E25A1C?logo=apachespark&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power%20BI-DAX%20%2B%20RLS-F2C811?logo=powerbi&logoColor=black)
+![T-SQL](https://img.shields.io/badge/T--SQL-Star%20Schema-CC2927)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 A Microsoft Fabric + Power BI analytics platform for a synthetic perishable-goods
 distributor — inventory turns, days-on-hand, OTIF/fill rate, and FEFO/expiry risk,
@@ -65,7 +70,7 @@ notebooks/          PySpark notebooks: 01 bronze ingest -> 02 silver transform
                      -> 03 gold curate -> 04 data quality checks
 sql/                T-SQL DDL for the Gold star schema
 powerbi/            DAX measure library + Power BI build guide (incl. RLS/OLS)
-docs/               metric dictionary (governed KPI definitions + change control)
+docs/               metric dictionary (governed KPIs) + pipeline orchestration spec
 tests/              pytest suite: referential integrity, FEFO/OTIF/margin rules
 .github/workflows/  CI — regenerates data and runs the test suite on every push
 ```
@@ -80,7 +85,7 @@ tests/              pytest suite: referential integrity, FEFO/OTIF/margin rules
    ```
    Writes ~30k rows across 7 CSVs to `data/bronze/`.
 
-2. **Stand up Fabric** (free 60-day trial at [app.fabric.microsoft.com](https://app.fabric.microsoft.com)) — create a workspace, a Lakehouse, upload the CSVs from `data/bronze/` to `Files/bronze/`, then attach a notebook and run `notebooks/01_bronze_ingest.py` through `04_data_quality_checks.py` in order (copy each `# %%` cell into a Fabric notebook cell).
+2. **Stand up Fabric** (free 60-day trial at [app.fabric.microsoft.com](https://app.fabric.microsoft.com)) — create a workspace, a Lakehouse, upload the CSVs from `data/bronze/` to `Files/bronze/`, then attach a notebook and run `notebooks/01_bronze_ingest.py` through `04_data_quality_checks.py` in order (copy each `# %%` cell into a Fabric notebook cell). To productionize the schedule, build the Data Pipeline described in [`docs/fabric_pipeline_spec.md`](docs/fabric_pipeline_spec.md) — DQ failures gate the semantic-model refresh and alert on the failure edge.
 
 3. **Build the Power BI report** — follow [`powerbi/BUILD_GUIDE.md`](powerbi/BUILD_GUIDE.md) for the semantic model, DAX measures, RLS, and object-level security setup.
 

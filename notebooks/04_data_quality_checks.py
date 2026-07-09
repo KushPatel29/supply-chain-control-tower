@@ -9,11 +9,11 @@
 
 # %%
 from pyspark.sql import functions as F
-from datetime import datetime
+from datetime import datetime, timezone
 
 GOLD = "gold"
 SILVER = "silver"
-run_ts = datetime.utcnow()
+run_ts = datetime.now(timezone.utc)
 results = []
 
 
