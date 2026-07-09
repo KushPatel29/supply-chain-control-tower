@@ -88,12 +88,18 @@ table fact_orders
 		mode: import
 		source =
 				let
+				    // Product economics loaded inline (not by referencing the dim_product query)
+				    // so this query never mixes a direct data-source access with a query
+				    // reference — that combination trips Power Query's privacy firewall.
+				    ProductRaw = Csv.Document(File.Contents(DataPath & "\dim_product.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    ProductPromoted = Table.PromoteHeaders(ProductRaw, [PromoteAllScalars = true]),
+				    ProductEcon = Table.TransformColumnTypes(Table.SelectColumns(ProductPromoted, {"product_id", "unit_cost", "unit_price"}), {{"product_id", Int64.Type}, {"unit_cost", type number}, {"unit_price", type number}}),
 				    Source = Csv.Document(File.Contents(DataPath & "\fact_orders.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    // Silver rule: drop the source's price copies and re-resolve from governed dim_product
 				    RemovedSourcePrices = Table.RemoveColumns(Promoted, {"unit_price", "unit_cost"}),
 				    Typed = Table.TransformColumnTypes(RemovedSourcePrices, {{"order_id", Int64.Type}, {"order_date", type date}, {"customer_id", Int64.Type}, {"product_id", Int64.Type}, {"lot_id", Int64.Type}, {"warehouse_id", Int64.Type}, {"qty_ordered", type number}, {"qty_shipped", type number}, {"promised_date", type date}, {"shipped_date", type date}}),
-				    MergedProduct = Table.NestedJoin(Typed, {"product_id"}, dim_product, {"product_id"}, "product", JoinKind.Inner),
+				    MergedProduct = Table.NestedJoin(Typed, {"product_id"}, ProductEcon, {"product_id"}, "product", JoinKind.Inner),
 				    ExpandedProduct = Table.ExpandTableColumn(MergedProduct, "product", {"unit_cost", "unit_price"}, {"unit_cost", "unit_price"}),
 				    AddedFillRate = Table.AddColumn(ExpandedProduct, "fill_rate", each Number.Round([qty_shipped] / [qty_ordered], 4), type number),
 				    // Silver rule: OTIF = shipped on/before promised date AND fill rate >= 95%

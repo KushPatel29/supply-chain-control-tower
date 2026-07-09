@@ -49,15 +49,24 @@ table fact_inventory
 		mode: import
 		source =
 				let
+				    // Lot expiry and product cost loaded inline (not by referencing sibling
+				    // queries) so this query never mixes a direct data-source access with a
+				    // query reference — that combination trips Power Query's privacy firewall.
+				    LotRaw = Csv.Document(File.Contents(DataPath & "\dim_lot.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    LotPromoted = Table.PromoteHeaders(LotRaw, [PromoteAllScalars = true]),
+				    LotExpiry = Table.TransformColumnTypes(Table.SelectColumns(LotPromoted, {"lot_id", "expiry_date"}), {{"lot_id", Int64.Type}, {"expiry_date", type date}}),
+				    ProductRaw = Csv.Document(File.Contents(DataPath & "\dim_product.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    ProductPromoted = Table.PromoteHeaders(ProductRaw, [PromoteAllScalars = true]),
+				    ProductCost = Table.TransformColumnTypes(Table.SelectColumns(ProductPromoted, {"product_id", "unit_cost"}), {{"product_id", Int64.Type}, {"unit_cost", type number}}),
 				    Source = Csv.Document(File.Contents(DataPath & "\fact_inventory_snapshot.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"snapshot_date", type date}, {"lot_id", Int64.Type}, {"product_id", Int64.Type}, {"warehouse_id", Int64.Type}, {"qty_on_hand", type number}}),
 				    // Silver rule: FEFO expiry risk banding from the lot's expiry date
-				    MergedLot = Table.NestedJoin(Typed, {"lot_id"}, dim_lot, {"lot_id"}, "lot", JoinKind.Inner),
+				    MergedLot = Table.NestedJoin(Typed, {"lot_id"}, LotExpiry, {"lot_id"}, "lot", JoinKind.Inner),
 				    ExpandedLot = Table.ExpandTableColumn(MergedLot, "lot", {"expiry_date"}, {"expiry_date"}),
 				    AddedDays = Table.AddColumn(ExpandedLot, "days_until_expiry", each Duration.Days([expiry_date] - [snapshot_date]), Int64.Type),
 				    AddedRisk = Table.AddColumn(AddedDays, "expiry_risk_flag", each if [days_until_expiry] <= 2 then "Critical" else if [days_until_expiry] <= 5 then "Warning" else "OK", type text),
-				    MergedProduct = Table.NestedJoin(AddedRisk, {"product_id"}, dim_product, {"product_id"}, "product", JoinKind.Inner),
+				    MergedProduct = Table.NestedJoin(AddedRisk, {"product_id"}, ProductCost, {"product_id"}, "product", JoinKind.Inner),
 				    ExpandedProduct = Table.ExpandTableColumn(MergedProduct, "product", {"unit_cost"}, {"unit_cost"}),
 				    AddedValue = Table.AddColumn(ExpandedProduct, "inventory_value", each Number.Round([qty_on_hand] * [unit_cost], 2), type number),
 				    Cleaned = Table.RemoveColumns(AddedValue, {"expiry_date", "unit_cost"})
