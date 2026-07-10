@@ -1,18 +1,22 @@
 table dim_supplier
+	lineageTag: 3819e2d1-55b2-4f60-b2b0-dd639ddb8977
 
 	column supplier_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 8dd66b3b-13fb-4250-b55c-8be81b7b969f
 		summarizeBy: none
 		sourceColumn: supplier_id
 
 	column supplier_name
 		dataType: string
+		lineageTag: d68a032f-94b6-4b37-917b-beb7c0f9a22c
 		summarizeBy: none
 		sourceColumn: supplier_name
 
 	column region
 		dataType: string
+		lineageTag: ee464268-9def-47cb-9dd8-1e264d7cd9fd
 		summarizeBy: none
 		sourceColumn: region
 
@@ -25,3 +29,4 @@ table dim_supplier
 				    Typed = Table.TransformColumnTypes(Promoted, {{"supplier_id", Int64.Type}, {"supplier_name", type text}, {"region", type text}})
 				in
 				    Typed
+

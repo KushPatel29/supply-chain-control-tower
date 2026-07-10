@@ -1,52 +1,69 @@
 table _Measures
+	lineageTag: db375e73-e25e-406f-8216-fd51d6e5b14c
 
 	measure 'Total Revenue' = SUM(fact_orders[revenue])
 		formatString: #,0.00
+		lineageTag: cdc7dc36-f84b-43e1-bf50-c2fd5ed62e7e
 
 	measure 'Total COGS' = SUM(fact_orders[cogs])
 		formatString: #,0.00
+		lineageTag: 95414b3e-150f-4f30-89f2-37dca3a6e7eb
 
 	measure 'Gross Margin $' = [Total Revenue] - [Total COGS]
 		formatString: #,0.00
+		lineageTag: 0617cc8b-ce78-457b-b223-e49e93dc135a
 
 	measure 'Gross Margin %' = DIVIDE([Gross Margin $], [Total Revenue])
 		formatString: 0.0%
+		lineageTag: 2db9c8ef-9fc9-47f1-b7d2-61fbaa08549c
 
 	measure 'Total Orders' = DISTINCTCOUNT(fact_orders[order_id])
 		formatString: #,0
+		lineageTag: 8ced94ac-212e-44f8-b0a7-8cbb7ecb07c8
 
 	measure 'OTIF Orders' = CALCULATE([Total Orders], fact_orders[otif_flag] = 1)
 		formatString: #,0
+		lineageTag: c5b37c1a-dd44-436e-9b1b-d6c8f4cd8b2a
 
 	measure 'OTIF %' = DIVIDE([OTIF Orders], [Total Orders])
 		formatString: 0.0%
+		lineageTag: a53b68bf-f36b-499b-8644-96f011af4956
 
 	measure 'Avg Fill Rate' = AVERAGE(fact_orders[fill_rate])
 		formatString: 0.0%
+		lineageTag: 346db450-a6ff-4b05-880b-4cffc0b682fb
 
 	measure 'Qty Ordered' = SUM(fact_orders[qty_ordered])
 		formatString: #,0
+		lineageTag: 20b82a58-3852-46ed-878a-1b4358dbe0bf
 
 	measure 'Qty Shipped' = SUM(fact_orders[qty_shipped])
 		formatString: #,0
+		lineageTag: 3d8abc15-4365-4127-a1b8-38193f406fe3
 
 	measure 'Total Inventory Value' = SUM(fact_inventory[inventory_value])
 		formatString: #,0.00
+		lineageTag: e58b47c8-f8db-4119-9136-fb635aa4e524
 
 	measure 'Qty On Hand' = SUM(fact_inventory[qty_on_hand])
 		formatString: #,0
+		lineageTag: 810a246f-c76e-4836-9e00-19bb188aa3ef
 
 	measure 'Critical Expiry Value' = CALCULATE([Total Inventory Value], fact_inventory[expiry_risk_flag] = "Critical")
 		formatString: #,0.00
+		lineageTag: e1d87e95-555b-4e81-bdf9-5a790a6180d5
 
 	measure 'Warning Expiry Value' = CALCULATE([Total Inventory Value], fact_inventory[expiry_risk_flag] = "Warning")
 		formatString: #,0.00
+		lineageTag: 4a3c2171-f9e7-4ae0-b517-e83ff6980c25
 
 	measure '% Inventory at Risk' = DIVIDE([Critical Expiry Value] + [Warning Expiry Value], [Total Inventory Value])
 		formatString: 0.0%
+		lineageTag: 6e0e49e2-e94e-4fb2-a21e-56849a3c7ef0
 
 	measure 'Avg Inventory Value' = AVERAGEX(VALUES(dim_date[full_date]), [Total Inventory Value])
 		formatString: #,0.00
+		lineageTag: e310e1a1-ff53-43ca-89be-1d92a96f8d41
 
 	measure 'Inventory Turns' =
 			VAR DaysInPeriod = DATEDIFF(MIN(dim_date[full_date]), MAX(dim_date[full_date]), DAY) + 1
@@ -54,16 +71,19 @@ table _Measures
 			RETURN
 			    DIVIDE([Total COGS], [Avg Inventory Value]) * AnnualizationFactor
 		formatString: #,0.0
+		lineageTag: d7cf622b-34f2-4f65-b6ba-cf208ed34814
 
 	measure 'Days On Hand' = DIVIDE(365, [Inventory Turns])
 		formatString: #,0.0
+		lineageTag: e199e7e7-a415-4a89-b22c-0a34a0d799db
 
 	column Value
 		dataType: int64
+		isHidden
 		formatString: 0
+		lineageTag: 5608e50b-58b0-4c92-b17b-c7eb8f62f3b6
 		summarizeBy: none
 		sourceColumn: Value
-		isHidden
 
 	partition _Measures = m
 		mode: import
@@ -72,3 +92,4 @@ table _Measures
 				    Source = #table(type table [Value = Int64.Type], {})
 				in
 				    Source
+

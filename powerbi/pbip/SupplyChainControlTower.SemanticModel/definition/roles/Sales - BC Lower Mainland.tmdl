@@ -4,3 +4,6 @@ role 'Sales - BC Lower Mainland'
 	tablePermission dim_customer = dim_customer[region] = "BC Lower Mainland"
 
 	tablePermission dim_warehouse = dim_warehouse[region] = "BC Lower Mainland"
+
+	annotation PBI_Id = 04e1c3fb44794a90b6a322e6710d347b
+

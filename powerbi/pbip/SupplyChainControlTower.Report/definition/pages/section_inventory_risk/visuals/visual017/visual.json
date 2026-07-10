@@ -1,0 +1,102 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visual017",
+  "position": {
+    "x": 660,
+    "y": 410,
+    "z": 8000,
+    "height": 290,
+    "width": 600,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lot"
+                    }
+                  },
+                  "Property": "lot_id"
+                }
+              },
+              "queryRef": "dim_lot.lot_id",
+              "nativeQueryRef": "lot_id"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lot"
+                    }
+                  },
+                  "Property": "expiry_date"
+                }
+              },
+              "queryRef": "dim_lot.expiry_date",
+              "nativeQueryRef": "expiry_date"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Qty On Hand"
+                }
+              },
+              "queryRef": "_Measures.Qty On Hand",
+              "nativeQueryRef": "Qty On Hand"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Inventory Value"
+                }
+              },
+              "queryRef": "_Measures.Total Inventory Value",
+              "nativeQueryRef": "Total Inventory Value"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Lot-Level Traceability'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,47 +1,58 @@
 table fact_inventory
+	lineageTag: b065bdae-9990-4e00-8831-3d5afbd854fa
 
 	column snapshot_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: e71c0f23-1502-44c9-aad6-88ec2e24525e
 		summarizeBy: none
 		sourceColumn: snapshot_date
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column lot_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 03b517fe-82dd-466f-b23a-eb350b635774
 		summarizeBy: none
 		sourceColumn: lot_id
 
 	column product_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 300ddd49-a310-47b5-861d-be71158e0dc0
 		summarizeBy: none
 		sourceColumn: product_id
 
 	column warehouse_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 59060e27-4fff-4cc6-8579-973b258bf38c
 		summarizeBy: none
 		sourceColumn: warehouse_id
 
 	column qty_on_hand
 		dataType: double
+		lineageTag: 5d54a6c9-6d83-48e7-96c5-6c1208b3d7e6
 		summarizeBy: sum
 		sourceColumn: qty_on_hand
 
 	column days_until_expiry
 		dataType: int64
 		formatString: 0
+		lineageTag: 4e0bb4e6-12b8-447c-8949-ac234b50a0f6
 		summarizeBy: none
 		sourceColumn: days_until_expiry
 
 	column expiry_risk_flag
 		dataType: string
+		lineageTag: 80541712-1622-4ad4-960a-a06f8459f8b9
 		summarizeBy: none
 		sourceColumn: expiry_risk_flag
 
 	column inventory_value
 		dataType: double
+		lineageTag: 1d25548f-ea3b-469d-86fc-e29095c67adf
 		summarizeBy: sum
 		sourceColumn: inventory_value
 
@@ -72,3 +83,4 @@ table fact_inventory
 				    Cleaned = Table.RemoveColumns(AddedValue, {"expiry_date", "unit_cost"})
 				in
 				    Cleaned
+

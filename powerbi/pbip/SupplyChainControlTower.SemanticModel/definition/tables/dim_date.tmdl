@@ -1,31 +1,50 @@
 table dim_date
+	lineageTag: b1e198d8-4f8c-484f-842a-bcaf0b8a014e
 
 	column full_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: 4f1403cc-49fc-43fb-944a-612f27933f3f
 		summarizeBy: none
 		sourceColumn: full_date
+
+		variation Variation
+			isDefault
+			relationship: 77d80999-af4a-4040-83a3-591a610dc1c1
+			defaultHierarchy: LocalDateTable_92fd8655-6ed0-4a1c-ad4f-1662347657a6.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column year
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: 6f81a049-664d-4dc3-960a-1c3d898d6071
+		summarizeBy: sum
 		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
 
 	column quarter
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: 60efb534-1acc-462b-8f3e-1f413b081ed7
+		summarizeBy: sum
 		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
 
 	column month
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: 342ece03-cb5d-4656-9cf5-812a972fe073
+		summarizeBy: sum
 		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
 
 	column month_name
 		dataType: string
+		lineageTag: 09a01bf4-2535-48ca-a456-7ab87c3a491e
 		summarizeBy: none
 		sourceColumn: month_name
 		sortByColumn: month
@@ -33,11 +52,15 @@ table dim_date
 	column week_of_year
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: d99d19f7-c822-472c-8814-33b1956d5e9c
+		summarizeBy: sum
 		sourceColumn: week_of_year
+
+		annotation SummarizationSetBy = Automatic
 
 	column day_of_week_name
 		dataType: string
+		lineageTag: 781d19b1-f1fc-43ef-8754-0ee781529dda
 		summarizeBy: none
 		sourceColumn: day_of_week_name
 
@@ -58,3 +81,4 @@ table dim_date
 				    AddDayName = Table.AddColumn(AddWeek, "day_of_week_name", each Date.DayOfWeekName([full_date]), type text)
 				in
 				    AddDayName
+

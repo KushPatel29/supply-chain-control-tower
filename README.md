@@ -19,6 +19,24 @@ specialty foods distributor: Bronze → Silver → Gold Lakehouse layers, PySpar
 transformations, a star-schema semantic model, automated data quality checks,
 and a Power BI report with RLS.
 
+## Dashboard
+
+Three-page Power BI report, hand-authored as a Power BI Project (TMDL semantic
+model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/) — open
+`SupplyChainControlTower.pbip` in Power BI Desktop and hit Refresh.
+
+**Executive Overview** — revenue, margin, OTIF and expiry risk at a glance:
+
+![Executive Overview](powerbi/screenshots/01-executive-overview.png)
+
+**Inventory & Expiry Risk** — FEFO risk banding, value by warehouse, lot-level traceability:
+
+![Inventory & Expiry Risk](powerbi/screenshots/02-inventory-expiry-risk.png)
+
+**Fulfillment (OTIF)** — OTIF/fill-rate trend, by channel and region, customer scorecard:
+
+![Fulfillment OTIF](powerbi/screenshots/03-fulfillment-otif.png)
+
 ## Why this project
 
 Food/perishable supply chains need inventory visibility that goes beyond "units
@@ -69,7 +87,8 @@ data/bronze/        generated raw CSVs (sample output, ~30k rows total)
 notebooks/          PySpark notebooks: 01 bronze ingest -> 02 silver transform
                      -> 03 gold curate -> 04 data quality checks
 sql/                T-SQL DDL for the Gold star schema
-powerbi/            DAX measure library + Power BI build guide (incl. RLS/OLS)
+powerbi/            DAX measure library, build guide (incl. RLS/OLS), and the
+                     ready-to-open PBIP project (TMDL model + PBIR report)
 docs/               metric dictionary (governed KPIs) + pipeline orchestration spec
 tests/              pytest suite: referential integrity, FEFO/OTIF/margin rules
 .github/workflows/  CI — regenerates data and runs the test suite on every push

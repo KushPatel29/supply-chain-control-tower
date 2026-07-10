@@ -1,23 +1,28 @@
 table dim_customer
+	lineageTag: 217d3b57-8c74-42be-88c4-7e4778965e2b
 
 	column customer_id
 		dataType: int64
 		formatString: 0
+		lineageTag: caaffed4-ec54-4cb8-b0ee-9820b15150c2
 		summarizeBy: none
 		sourceColumn: customer_id
 
 	column customer_name
 		dataType: string
+		lineageTag: 9f1aad01-b4b9-48b6-9123-4485be68a6b2
 		summarizeBy: none
 		sourceColumn: customer_name
 
 	column channel
 		dataType: string
+		lineageTag: 99037a10-7ae0-4c29-9165-da746da03af7
 		summarizeBy: none
 		sourceColumn: channel
 
 	column region
 		dataType: string
+		lineageTag: fce9c189-ad75-4298-ad05-1b05be4c751e
 		summarizeBy: none
 		sourceColumn: region
 
@@ -30,3 +35,4 @@ table dim_customer
 				    Typed = Table.TransformColumnTypes(Promoted, {{"customer_id", Int64.Type}, {"customer_name", type text}, {"channel", type text}, {"region", type text}})
 				in
 				    Typed
+

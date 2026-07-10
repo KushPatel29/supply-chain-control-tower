@@ -1,49 +1,59 @@
 table dim_product
+	lineageTag: c0b4d065-86c4-4471-9436-85303a704070
 
 	column product_id
 		dataType: int64
 		formatString: 0
+		lineageTag: b189b9ce-67c2-4930-a83f-9efbf787379e
 		summarizeBy: none
 		sourceColumn: product_id
 
 	column sku
 		dataType: string
+		lineageTag: d249e38d-ea37-4bb8-a8d0-98bd5e431f7c
 		summarizeBy: none
 		sourceColumn: sku
 
 	column product_name
 		dataType: string
+		lineageTag: 904e4525-be5e-4e1d-8702-00cf074a0e0e
 		summarizeBy: none
 		sourceColumn: product_name
 
 	column category
 		dataType: string
+		lineageTag: 266ec608-6aab-4ebe-abe7-fdc2a3385414
 		summarizeBy: none
 		sourceColumn: category
 
 	column subcategory
 		dataType: string
+		lineageTag: 55cbe9d6-e092-4bad-b0d9-afad9bfd9360
 		summarizeBy: none
 		sourceColumn: subcategory
 
 	column shelf_life_days
 		dataType: int64
 		formatString: 0
+		lineageTag: 3c80cf98-730f-45c7-abed-e46303cf688f
 		summarizeBy: none
 		sourceColumn: shelf_life_days
 
 	column unit_of_measure
 		dataType: string
+		lineageTag: 10dec597-b352-4065-a2b5-020f6cfcd7bd
 		summarizeBy: none
 		sourceColumn: unit_of_measure
 
 	column unit_cost
 		dataType: double
+		lineageTag: 37f46d27-4ece-4c95-b504-d469c306b31f
 		summarizeBy: none
 		sourceColumn: unit_cost
 
 	column unit_price
 		dataType: double
+		lineageTag: 19f94926-ba7f-4e3e-97f1-7b7a197e5cc9
 		summarizeBy: none
 		sourceColumn: unit_price
 
@@ -56,3 +66,4 @@ table dim_product
 				    Typed = Table.TransformColumnTypes(Promoted, {{"product_id", Int64.Type}, {"sku", type text}, {"product_name", type text}, {"category", type text}, {"subcategory", type text}, {"shelf_life_days", Int64.Type}, {"unit_of_measure", type text}, {"unit_cost", type number}, {"unit_price", type number}})
 				in
 				    Typed
+

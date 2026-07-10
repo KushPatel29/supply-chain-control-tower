@@ -1,46 +1,79 @@
 table dim_lot
+	lineageTag: 4018b9d0-e432-47d1-94d6-93f1c6a7a320
 
 	column lot_id
 		dataType: int64
 		formatString: 0
+		lineageTag: d1e5dac1-25ff-4182-8c58-7b43382d2135
 		summarizeBy: none
 		sourceColumn: lot_id
 
 	column product_id
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: d2a50ab4-9a2d-4698-8333-0466c02135cd
+		summarizeBy: sum
 		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
 
 	column supplier_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 27827f1e-7e7e-4409-867f-974da7227e03
 		summarizeBy: none
 		sourceColumn: supplier_id
 
 	column warehouse_id
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: 72713c76-87df-4909-bbd8-4bc41fd9fcd3
+		summarizeBy: sum
 		sourceColumn: warehouse_id
+
+		annotation SummarizationSetBy = Automatic
 
 	column production_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: 3de533c4-3d49-4ec7-9c13-a39375229dbc
 		summarizeBy: none
 		sourceColumn: production_date
+
+		variation Variation
+			isDefault
+			relationship: 453aa562-26d8-4e89-b150-54984edcc813
+			defaultHierarchy: LocalDateTable_ae9b6d83-6e4d-43a3-8c0e-63e7cbb1746a.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column received_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: da1404c1-e78a-41ed-b9c7-ce86860e12ae
 		summarizeBy: none
 		sourceColumn: received_date
+
+		variation Variation
+			isDefault
+			relationship: 707337dd-6698-43a6-841c-7da8fd842707
+			defaultHierarchy: LocalDateTable_2be00c03-6fbb-4389-b551-1745a8715ec9.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column expiry_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: f33e6044-edcf-49a9-904c-7b2fb43d36b1
 		summarizeBy: none
 		sourceColumn: expiry_date
+
+		variation Variation
+			isDefault
+			relationship: 579b3df7-514a-4758-aa74-ed0c2500dbc3
+			defaultHierarchy: LocalDateTable_ba672105-eff9-46d2-8088-735eeb28a31e.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	partition dim_lot = m
 		mode: import
@@ -51,3 +84,4 @@ table dim_lot
 				    Typed = Table.TransformColumnTypes(Promoted, {{"lot_id", Int64.Type}, {"product_id", Int64.Type}, {"supplier_id", Int64.Type}, {"warehouse_id", Int64.Type}, {"production_date", type date}, {"received_date", type date}, {"expiry_date", type date}})
 				in
 				    Typed
+

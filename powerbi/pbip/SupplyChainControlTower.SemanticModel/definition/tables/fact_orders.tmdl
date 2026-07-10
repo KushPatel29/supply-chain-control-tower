@@ -1,86 +1,124 @@
 table fact_orders
+	lineageTag: 6392f32a-e644-403d-98a7-c4f6fe095e40
 
 	column order_id
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: a14309d8-8bb4-4c3a-9677-a8b2b22e2b01
+		summarizeBy: sum
 		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
 
 	column order_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: 7296587a-45be-42ae-94a3-bd8fe55456db
 		summarizeBy: none
 		sourceColumn: order_date
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column customer_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 61ea01cc-fd7b-487a-bcf7-f9793ae82c10
 		summarizeBy: none
 		sourceColumn: customer_id
 
 	column product_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 7db3dc35-f60d-4850-9b6b-ea6aaa63b363
 		summarizeBy: none
 		sourceColumn: product_id
 
 	column lot_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 6ccb2e16-c4ea-4629-bf19-74dc4508ba65
 		summarizeBy: none
 		sourceColumn: lot_id
 
 	column warehouse_id
 		dataType: int64
 		formatString: 0
+		lineageTag: 63d36a9b-a6a0-4208-afce-f12db1b1bedc
 		summarizeBy: none
 		sourceColumn: warehouse_id
 
 	column qty_ordered
 		dataType: double
+		lineageTag: 79bd5338-f011-4468-9094-62cb2b5fa168
 		summarizeBy: sum
 		sourceColumn: qty_ordered
 
 	column qty_shipped
 		dataType: double
+		lineageTag: 91de1a3a-7d95-4763-922b-bea2e2f7e86c
 		summarizeBy: sum
 		sourceColumn: qty_shipped
 
 	column promised_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: 2a7268a7-8c2e-4b14-afc3-04c0f820d2f3
 		summarizeBy: none
 		sourceColumn: promised_date
+
+		variation Variation
+			isDefault
+			relationship: 5cc119df-8ff1-4489-b8d2-2fb5711cf6fb
+			defaultHierarchy: LocalDateTable_4483e73c-6c41-4a90-b1f7-2867135c61a7.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column shipped_date
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: df54479d-63dd-49bf-8a23-4cf197fa98f6
 		summarizeBy: none
 		sourceColumn: shipped_date
 
+		variation Variation
+			isDefault
+			relationship: cc786d01-b3c4-4096-94b8-2753c98bd021
+			defaultHierarchy: LocalDateTable_d2cde9bd-fd99-4ff9-87d0-d1aed8779807.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
 	column fill_rate
 		dataType: double
-		summarizeBy: none
+		lineageTag: 1f023975-06cb-4e90-a6bf-b7df1618033c
+		summarizeBy: sum
 		sourceColumn: fill_rate
+
+		annotation SummarizationSetBy = Automatic
 
 	column otif_flag
 		dataType: int64
 		formatString: 0
-		summarizeBy: none
+		lineageTag: df88c785-ddc2-49ae-be33-e16812c5c087
+		summarizeBy: sum
 		sourceColumn: otif_flag
+
+		annotation SummarizationSetBy = Automatic
 
 	column revenue
 		dataType: double
+		lineageTag: 97cb1e35-427e-4357-8328-673464ac61c1
 		summarizeBy: sum
 		sourceColumn: revenue
 
 	column cogs
 		dataType: double
+		lineageTag: 5cec83b8-1a14-412d-a941-d774a1e42927
 		summarizeBy: sum
 		sourceColumn: cogs
 
 	column gross_margin
 		dataType: double
+		lineageTag: ea747297-8e49-420a-be7e-3a74477d3375
 		summarizeBy: sum
 		sourceColumn: gross_margin
 
@@ -110,3 +148,4 @@ table fact_orders
 				    RemovedPriceCols = Table.RemoveColumns(AddedMargin, {"unit_cost", "unit_price"})
 				in
 				    RemovedPriceCols
+

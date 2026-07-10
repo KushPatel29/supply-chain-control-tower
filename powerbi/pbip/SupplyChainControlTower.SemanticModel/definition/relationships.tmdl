@@ -37,3 +37,34 @@ relationship a1000001-0000-4000-8000-000000000009
 relationship a1000001-0000-4000-8000-000000000010
 	fromColumn: dim_lot.supplier_id
 	toColumn: dim_supplier.supplier_id
+
+relationship 453aa562-26d8-4e89-b150-54984edcc813
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_lot.production_date
+	toColumn: LocalDateTable_ae9b6d83-6e4d-43a3-8c0e-63e7cbb1746a.Date
+
+relationship 707337dd-6698-43a6-841c-7da8fd842707
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_lot.received_date
+	toColumn: LocalDateTable_2be00c03-6fbb-4389-b551-1745a8715ec9.Date
+
+relationship 579b3df7-514a-4758-aa74-ed0c2500dbc3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_lot.expiry_date
+	toColumn: LocalDateTable_ba672105-eff9-46d2-8088-735eeb28a31e.Date
+
+relationship 77d80999-af4a-4040-83a3-591a610dc1c1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_date.full_date
+	toColumn: LocalDateTable_92fd8655-6ed0-4a1c-ad4f-1662347657a6.Date
+
+relationship 5cc119df-8ff1-4489-b8d2-2fb5711cf6fb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.promised_date
+	toColumn: LocalDateTable_4483e73c-6c41-4a90-b1f7-2867135c61a7.Date
+
+relationship cc786d01-b3c4-4096-94b8-2753c98bd021
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.shipped_date
+	toColumn: LocalDateTable_d2cde9bd-fd99-4ff9-87d0-d1aed8779807.Date
+

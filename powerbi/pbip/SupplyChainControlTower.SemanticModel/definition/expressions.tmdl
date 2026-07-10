@@ -1,2 +1,5 @@
 expression DataPath = "C:\Users\kush2\Claude\portfolio-projects\supply-chain-control-tower\data\bronze" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: dd127cc1-8f4f-4ca1-a373-8bae7f9ae6f6
+
 	annotation PBI_ResultType = Text
+
