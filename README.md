@@ -43,6 +43,11 @@ treemap:
 
 ![Executive Insights](powerbi/screenshots/04-executive-insights.png)
 
+**Live interaction** — slicers cross-filter every visual (RLS-ready model
+underneath):
+
+![Slicer interaction demo](powerbi/screenshots/demo-interaction.gif)
+
 ## Why this project
 
 Food/perishable supply chains need inventory visibility that goes beyond "units
@@ -123,6 +128,26 @@ tests/              pytest suite: referential integrity, FEFO/OTIF/margin rules
 | Days on Hand | 365 / Inventory Turns | `fact_inventory` |
 | Expiry Risk | Critical (≤2 days), Warning (≤5 days), OK — computed in Silver from lot expiry dates | `fact_inventory` |
 | Gross Margin % | (Revenue − COGS) / Revenue | `fact_orders` |
+
+## Performance & scale: the 100M-row version
+
+The synthetic dataset is ~30k rows so the repo runs anywhere in seconds, but
+the design decisions are the large-scale ones, and here is exactly what
+changes at 100M+ order lines:
+
+1. **Incremental loads already exist** — the Silver/Gold notebooks use Delta
+   `MERGE` keyed on natural keys, so daily volume, not history, drives
+   compute. (The dbt twin of this repo implements the same pattern as an
+   incremental model with a late-arrival window.)
+2. **Incremental refresh** on `fact_orders`/`fact_inventory` in the semantic
+   model: partition by month, refresh the trailing 2 partitions, archive the
+   rest — Desktop-defined policy, Service-executed.
+3. **Aggregation table**: `kpi_daily` (already in the dbt project) becomes an
+   in-model aggregation that answers trend visuals without touching the
+   detail grain; detail queries drill through to DirectLake/DirectQuery.
+4. **What stays the same**: the star schema, the measure definitions, RLS
+   design, and every test — which is the point of building it governed from
+   the start.
 
 ## Data quality & governance
 
