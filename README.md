@@ -149,6 +149,27 @@ pip install pytest
 pytest tests/ -v    # 13 tests
 ```
 
+## Demand forecasting with honest backtesting
+
+`analytics/demand_forecast.py` forecasts daily shipped units per category and
+— more importantly — proves which model deserves production, using
+rolling-origin backtesting (4 folds x 28-day horizon) instead of a single
+lucky train/test split:
+
+| Model | Avg WAPE (lower is better) |
+|---|---|
+| **Moving average (28d)** | **18.5%** ← shipped |
+| Holt-Winters (weekly seasonality) | 19.7% |
+| Seasonal naive (baseline to beat) | 24.3% |
+
+![Forecast vs actual](analytics/output/forecast_vs_actual.png)
+
+The punchline is deliberate: on this demand pattern the simple model beats
+the fancier one, and the backtest is what earns the right to say so. The
+test suite pins the evaluation design itself — no training leakage, full
+horizon coverage, and "a candidate must beat the naive baseline or you ship
+the baseline."
+
 ## Not just food: adapting this to other industries
 
 FEFO/expiry logic is just "time-bounded inventory urgency" — the same
