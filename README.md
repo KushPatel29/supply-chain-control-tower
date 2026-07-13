@@ -37,6 +37,12 @@ model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/) — open
 
 ![Fulfillment OTIF](powerbi/screenshots/03-fulfillment-otif.png)
 
+**Executive Insights** — advanced analytics: OTIF gauge vs target, margin
+waterfall, customer value map (fill rate x margin x revenue), inventory
+treemap:
+
+![Executive Insights](powerbi/screenshots/04-executive-insights.png)
+
 ## Why this project
 
 Food/perishable supply chains need inventory visibility that goes beyond "units
@@ -160,6 +166,15 @@ requirement:
 Concretely: rename `dim_lot`, repoint the expiry thresholds in
 `02_silver_transform.py`, and the rest of the pipeline — medallion layers,
 star schema, DQ checks, RLS — carries over unchanged.
+
+**Worked example — pharma/med-device distribution:** this model is already
+90% of a DSCSA-style serialization dashboard. `dim_lot` becomes the batch
+record (lot number, NDC, expiration), the FEFO risk bands become
+expiry-pull windows per regulatory class, lot-level drillthrough becomes
+the recall-response query ("every customer who received batch X in 30
+seconds"), and the cold-chain variant just adds a temperature-excursion
+flag to `fact_inventory` with the same DQ-check pattern. The RLS design
+(region/channel) maps directly to territory-based sales compliance.
 
 ## Notes on the synthetic data
 

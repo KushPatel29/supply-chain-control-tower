@@ -77,6 +77,10 @@ table _Measures
 		formatString: #,0.0
 		lineageTag: e199e7e7-a415-4a89-b22c-0a34a0d799db
 
+	measure 'OTIF Target' = 0.95
+		formatString: 0.0%
+		lineageTag: c3f85290-b443-4fad-9364-caf0ca46ce88
+
 	column Value
 		dataType: int64
 		isHidden

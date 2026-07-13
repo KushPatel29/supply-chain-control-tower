@@ -3,7 +3,8 @@
   "pageOrder": [
     "section_exec_overview",
     "section_inventory_risk",
-    "section_otif"
+    "section_otif",
+    "section_exec_insights"
   ],
   "activePageName": "section_otif"
 }
