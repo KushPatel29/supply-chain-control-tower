@@ -18,10 +18,11 @@ a Power BI control tower with row-level security — on synthetic data,
 because the original belongs to a former employer.
 
 One rule governs everything here: **nothing is claimed that isn't run,
-tested, or measured.** Every push regenerates the data from scratch,
-executes the whole pipeline through a data-quality gate that provably blocks
-bad builds, and runs a 22-test suite. The green badge above covers the
-failure paths too.
+tested, or measured.** Every push regenerates the data from scratch, streams
+a file drop through the exactly-once ingest, executes the whole pipeline
+through a quarantine split and a data-quality gate that provably blocks bad
+builds, exercises the model-promotion policy, and runs a 33-test suite. The
+green badge above covers the failure paths too.
 
 ## The problem, in one walk through the warehouse
 
@@ -126,6 +127,25 @@ Stack: Microsoft Fabric (Lakehouse, PySpark), Power BI (DAX, TMDL, RLS/OLS,
 calculation groups), T-SQL for the Gold DDL, Python for everything that
 proves the rest works.
 
+## Orders don't wait for the nightly batch
+
+A control tower that updates once a day is a rear-view mirror. So the
+Bronze layer has a streaming front door:
+[`pipeline/stream_ingest.py`](pipeline/stream_ingest.py) watches a landing
+zone the way Spark's file source does — **incremental discovery** (only
+files the checkpoint ledger has never seen) with **exactly-once** ingestion
+that survives restarts. Drop a file, drain the stream, drain it again:
+the second drain ingests nothing, and CI proves that on every push.
+Malformed drops get ledgered as rejected with a reason and never block the
+healthy ones.
+
+The real-cluster version is
+[`notebooks/05_stream_ingest.py`](notebooks/05_stream_ingest.py) — Spark
+Structured Streaming with an explicit schema and `trigger(availableNow=True)`,
+which runs on Fabric as-is (on Databricks the same pattern is
+`cloudFiles`/Autoloader). Batch and stream converge on the same Silver
+tables through the same idempotent `MERGE`.
+
 ## The pipeline that refuses to publish
 
 Here's the incident this design exists to prevent: a source system hiccups,
@@ -143,6 +163,19 @@ publish marker so downstream never reads the bad build, and exits non-zero
 — the exit code a Fabric If-Condition (or any scheduler) turns into a
 blocked refresh and an alert.
 
+Halting is the right answer for structural corruption — but halting the
+whole pipeline because one source row has a negative quantity would trade a
+data problem for an SLA problem. So the Silver layer runs a **quarantine
+split** first: every order row is validated against the business ruleset
+(null keys, non-positive quantities, shipped-before-ordered, orphan foreign
+keys), and toxic rows are routed to a quarantine table with
+machine-readable `error_metadata` — `[{"field": "product_id", "issue":
+"orphan_foreign_key"}]` — while the healthy 99.5% flows on and publishes.
+A `--replay-quarantine` pass re-validates the parked rows once the source
+fix lands and releases only the ones that now pass. And if toxins ever
+exceed 2% of the stream, that's not a bad row, that's a broken source
+system — the flood check escalates to critical and the gate takes over.
+
 And because a gate you've never seen close is just decoration, CI sabotages
 the build on every push — injects a duplicate key, and fails the workflow
 unless the gate trips:
@@ -150,7 +183,9 @@ unless the gate trips:
 ```bash
 python pipeline/run_pipeline.py                     # bronze -> silver -> gold -> DQ -> publish
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
-pytest tests/ -v                                    # 22 tests, incl. 4 on the gate itself
+python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
+python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
+pytest tests/ -v                                     # 33 tests, incl. gate + quarantine + stream
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -179,6 +214,16 @@ house rule: *beat the naive baseline or we ship the baseline.*
 Every run logs params and metrics per model to **MLflow**
 (`mlflow ui --backend-store-uri sqlite:///mlflow.db`), so the bake-off has
 an auditable history instead of a folklore of "we tried that once."
+
+And the decision doesn't stop at ship-day.
+[`analytics/model_lifecycle.py`](analytics/model_lifecycle.py) watches the
+champion's **operational WAPE** on the newest fold — the proxy for "last
+cycle's forecast vs the actuals that just landed in Gold." Past 20% drift it
+triggers a fresh bake-off, and a challenger takes the **`@champion` alias in
+the MLflow Model Registry** only if it strictly beats the incumbent — ties
+and losses change nothing, because a promotion policy with novelty bias is
+just churn. The policy is a pure function with its own tests: hold, retrain-
+and-hold, promote.
 
 ## Security that lives in a table, not in code
 
@@ -255,11 +300,16 @@ schedule per [`docs/fabric_pipeline_spec.md`](docs/fabric_pipeline_spec.md)
 runner does. The Power BI build steps are in
 [`powerbi/BUILD_GUIDE.md`](powerbi/BUILD_GUIDE.md).
 
-> **What I didn't fake:** Fabric deployment pipelines (Dev→Test→Prod) and
-> Fabric Git integration need a working service login, which this machine
-> doesn't currently have. Rather than paste unverifiable screenshots, this
-> repo ships the runnable local equivalent (the gated orchestrator above)
-> and the pipeline-as-spec. Everything you *can* see here, you can run.
+> **What I didn't fake:** running the Fabric deployment needs a tenant
+> login this machine doesn't currently have. So instead of screenshots, the
+> repo ships a **complete, armed CI/CD pipeline** —
+> [`deploy_fabric.yml`](.github/workflows/deploy_fabric.yml) promotes the
+> PBIP through Dev → QA → Prod GitHub Environments with approval gates,
+> service-principal auth, and per-environment parameterization
+> ([`deploy/parameter.yml`](deploy/parameter.yml)) via Microsoft's
+> `fabric-cicd`. It triggers only on manual dispatch and is one tenant +
+> six secrets away from firing; [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
+> is the arming guide. Everything else in this repo, you can run today.
 
 ## It's not really about food
 
@@ -284,16 +334,19 @@ the medallion, star schema, DQ gate, and security all carry over unchanged.
 ```
 data_generator/     synthetic data generator (Faker + numpy, fixed seed)
 data/bronze/        generated raw CSVs (~30k rows)
-pipeline/           run_pipeline.py — local medallion orchestrator + DQ gate
-notebooks/          PySpark notebooks: 01 bronze -> 02 silver -> 03 gold -> 04 DQ
+pipeline/           run_pipeline.py — orchestrator: quarantine split + DQ gate
+                     stream_ingest.py — exactly-once streaming ingest (Autoloader semantics)
+notebooks/          PySpark: 01 bronze -> 02 silver -> 03 gold -> 04 DQ -> 05 streaming
 analytics/          demand_forecast.py — 4-model rolling-origin backtest + MLflow
+                     model_lifecycle.py — drift watch + registry champion promotion
 benchmarks/         10M-row Delta Lake benchmarks (MERGE, Z-order file skipping)
 sql/                T-SQL DDL for the Gold star schema
 powerbi/            PBIP project (TMDL + PBIR): dynamic RLS + OLS roles,
                      Time Intelligence calculation group, DAX library, build guide
-docs/               metric dictionary, pipeline spec, MODEL_OPTIMIZATION.md
-tests/              22 tests: pipeline gate, FEFO/OTIF/margin rules, forecast design
-.github/workflows/  CI — full pipeline + DQ-gate sabotage proof + test suite
+deploy/             fabric-cicd deployment script + per-environment parameter.yml
+docs/               metric dictionary, pipeline spec, MODEL_OPTIMIZATION.md, DEPLOYMENT.md
+tests/              33 tests: gate, quarantine, streaming, promotion policy, KPI rules
+.github/workflows/  ci.yml (pipeline + sabotage proofs) + deploy_fabric.yml (armed CI/CD)
 ```
 
 One last thing, since it matters: every number, customer, and product in

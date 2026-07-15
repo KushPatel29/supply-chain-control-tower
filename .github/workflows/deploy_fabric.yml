@@ -1,0 +1,97 @@
+# Fabric CI/CD — Dev -> QA -> Prod workspace promotion via fabric-cicd.
+#
+# ARMED, NOT FIRED: this workflow is complete and dispatch-ready, but it needs
+# a Fabric tenant + service principal secrets (see docs/DEPLOYMENT.md) that
+# this portfolio repo intentionally does not carry. It triggers only on
+# workflow_dispatch, so the CI badge reflects the test pipeline, never a
+# missing-credential failure. Arm it by creating the three GitHub
+# Environments and six secrets, then Run workflow.
+name: Deploy to Fabric
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_qa:
+        description: "Hotfix path: skip QA and require prod approval only"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Validate PBIP artifacts before any deployment
+        run: |
+          pip install -r data_generator/requirements.txt pytest
+          python data_generator/generate_data.py
+          python pipeline/run_pipeline.py
+          pytest tests/ -q
+
+  deploy-dev:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: dev        # auto-deploy target, no approval gate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Publish semantic model + report to the Dev workspace
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          FABRIC_WORKSPACE_ID: ${{ secrets.FABRIC_WORKSPACE_ID_DEV }}
+        run: |
+          pip install fabric-cicd azure-identity
+          python deploy/fabric_deploy.py --environment DEV
+
+  deploy-qa:
+    needs: deploy-dev
+    if: ${{ !inputs.skip_qa }}
+    runs-on: ubuntu-latest
+    environment: qa         # configure a required reviewer on this environment
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Promote to the QA workspace
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          FABRIC_WORKSPACE_ID: ${{ secrets.FABRIC_WORKSPACE_ID_QA }}
+        run: |
+          pip install fabric-cicd azure-identity
+          python deploy/fabric_deploy.py --environment QA
+
+  deploy-prod:
+    needs: [deploy-dev, deploy-qa]
+    if: ${{ always() && needs.deploy-dev.result == 'success' && (needs.deploy-qa.result == 'success' || inputs.skip_qa) }}
+    runs-on: ubuntu-latest
+    environment: prod       # required reviewer + wait timer belong here
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Promote to the Prod workspace
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          FABRIC_WORKSPACE_ID: ${{ secrets.FABRIC_WORKSPACE_ID_PROD }}
+        run: |
+          pip install fabric-cicd azure-identity
+          python deploy/fabric_deploy.py --environment PROD

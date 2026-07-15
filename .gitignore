@@ -13,3 +13,4 @@ data/lake/
 # MLflow local tracking store
 mlflow.db
 mlruns/
+data/stream_landing/

@@ -35,5 +35,17 @@ jobs:
             echo "DQ gate correctly halted the publish (exit code 2)"
           fi
 
+      - name: Quarantine demo (toxic rows isolated, pipeline still publishes)
+        run: python pipeline/run_pipeline.py --inject-bad-rows 40
+
+      - name: Streaming ingest demo (exactly-once drain)
+        run: |
+          python pipeline/stream_ingest.py --make-demo-file 500
+          python pipeline/stream_ingest.py --drain
+          python pipeline/stream_ingest.py --drain   # second drain must ingest nothing
+
+      - name: Model lifecycle (drift watch -> registry promotion policy)
+        run: python analytics/model_lifecycle.py
+
       - name: Run pipeline logic & data-invariant tests
         run: pytest tests/ -v

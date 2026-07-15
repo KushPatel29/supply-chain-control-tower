@@ -1,0 +1,19 @@
+# fabric-cicd parameterization — what changes between environments.
+# find_value strings are matched inside the repo's item definitions and
+# replaced per target environment at publish time, so one git branch deploys
+# to three workspaces with the right wiring in each.
+find_replace:
+  # semantic model data source: local path in the repo, lakehouse per env
+  - find_value: 'C:\Users\kush2\Claude\portfolio-projects\supply-chain-control-tower'
+    replace_value:
+      DEV: "abfss://dev-lakehouse@onelake.dfs.fabric.microsoft.com/supply_chain.Lakehouse/Files"
+      QA: "abfss://qa-lakehouse@onelake.dfs.fabric.microsoft.com/supply_chain.Lakehouse/Files"
+      PROD: "abfss://prod-lakehouse@onelake.dfs.fabric.microsoft.com/supply_chain.Lakehouse/Files"
+
+  # dynamic RLS entitlements: the security_mapping M source swaps from the
+  # in-repo demo rows to the governed entitlement file per environment
+  - find_value: "BEAST\\kush2"
+    replace_value:
+      DEV: "dev-analyst@meridian-foods.example"
+      QA: "qa-reviewer@meridian-foods.example"
+      PROD: "ops-manager-west@meridian-foods.example"

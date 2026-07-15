@@ -61,9 +61,77 @@ def bronze_ingest(lake: Path) -> dict:
     return counts
 
 
-def silver_transform(lake: Path) -> dict:
+def validate_orders(orders: pd.DataFrame, dims: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Row-level quarantine split. Healthy rows continue into Silver; toxic
+    rows are routed to the quarantine table with machine-readable
+    error_metadata — the pipeline keeps running for the 99.9% while the
+    poison is isolated for replay once the source system is fixed."""
+    issues = pd.Series([[] for _ in range(len(orders))], index=orders.index)
+
+    def flag(mask: pd.Series, field: str, issue: str) -> None:
+        for i in orders.index[mask.fillna(True)]:
+            issues.at[i] = issues.at[i] + [{"field": field, "issue": issue}]
+
+    flag(orders["order_id"].isna(), "order_id", "null_key")
+    flag(orders["qty_ordered"] <= 0, "qty_ordered", "non_positive")
+    flag(orders["qty_shipped"] < 0, "qty_shipped", "negative_value")
+    flag(pd.to_datetime(orders["shipped_date"], errors="coerce")
+         < pd.to_datetime(orders["order_date"], errors="coerce"),
+         "shipped_date", "shipped_before_ordered")
+    flag(~orders["product_id"].isin(dims["dim_product"]["product_id"]),
+         "product_id", "orphan_foreign_key")
+    flag(~orders["customer_id"].isin(dims["dim_customer"]["customer_id"]),
+         "customer_id", "orphan_foreign_key")
+
+    bad = issues.str.len() > 0
+    quarantined = orders[bad].copy()
+    quarantined["error_metadata"] = issues[bad].map(json.dumps)
+    quarantined["quarantined_at"] = datetime.now(timezone.utc).isoformat()
+    return orders[~bad], quarantined
+
+
+def replay_quarantine(lake: Path) -> int:
+    """Re-validate quarantined rows against the CURRENT silver dimensions and
+    promote the ones that now pass (the source fix arrived). Returns the
+    number of rows released back into Silver."""
+    qfile = lake / "quarantine" / "fact_orders_quarantine.parquet"
+    if not qfile.exists():
+        return 0
+    quarantined = pd.read_parquet(qfile).drop(
+        columns=["error_metadata", "quarantined_at"])
+    dims = {name: pd.read_parquet(lake / "silver" / f"{name}.parquet")
+            for name in ("dim_product", "dim_customer")}
+    healthy, still_bad = validate_orders(quarantined, dims)
+    if not healthy.empty:
+        silver_file = lake / "silver" / "fact_orders.parquet"
+        silver = pd.read_parquet(silver_file)
+        enriched = _enrich_orders(healthy, pd.read_parquet(
+            lake / "silver" / "dim_product.parquet"))
+        merged = pd.concat([silver, enriched], ignore_index=True)
+        merged.to_parquet(silver_file, index=False)
+    still_bad.to_parquet(qfile, index=False)
+    return len(healthy)
+
+
+def _enrich_orders(orders: pd.DataFrame, dim_product: pd.DataFrame) -> pd.DataFrame:
+    """The Silver business rules (OTIF, fill rate, economics) for order rows."""
+    orders = orders.drop(columns=["unit_price", "unit_cost"], errors="ignore")
+    orders = orders.merge(
+        dim_product[["product_id", "unit_cost", "unit_price"]],
+        on="product_id", how="inner")
+    orders["fill_rate"] = (orders["qty_shipped"] / orders["qty_ordered"]).round(4)
+    on_time = pd.to_datetime(orders["shipped_date"]) <= pd.to_datetime(orders["promised_date"])
+    orders["otif_flag"] = ((on_time) & (orders["fill_rate"] >= 0.95)).astype(int)
+    orders["revenue"] = (orders["qty_shipped"] * orders["unit_price"]).round(2)
+    orders["cogs"] = (orders["qty_shipped"] * orders["unit_cost"]).round(2)
+    orders["gross_margin"] = (orders["revenue"] - orders["cogs"]).round(2)
+    return orders
+
+
+def silver_transform(lake: Path, inject_bad_rows: int = 0) -> dict:
     src, out = lake / "bronze", lake / "silver"
     out.mkdir(exist_ok=True)
+    (lake / "quarantine").mkdir(exist_ok=True)
     t = {p.stem: pd.read_parquet(p) for p in src.glob("*.parquet")}
 
     # dimensions: dedup on natural key
@@ -76,6 +144,22 @@ def silver_transform(lake: Path) -> dict:
     lots = t["dim_lot"].drop_duplicates("lot_id")
     t["dim_lot"] = lots[lots["product_id"].isin(t["dim_product"]["product_id"])]
 
+    # --- quarantine split on the order stream --------------------------
+    if inject_bad_rows:
+        # simulate a source-system hiccup: orphan FKs and negative quantities
+        bad = t["fact_orders"].head(inject_bad_rows).copy()
+        bad["order_id"] = bad["order_id"] + 10_000_000   # unique synthetic ids
+        bad.loc[bad.index[: inject_bad_rows // 2], "product_id"] = -999_999
+        bad.loc[bad.index[inject_bad_rows // 2:], "qty_shipped"] = -5.0
+        t["fact_orders"] = pd.concat([t["fact_orders"], bad], ignore_index=True)
+
+    healthy, quarantined = validate_orders(
+        t["fact_orders"], {"dim_product": t["dim_product"],
+                           "dim_customer": t["dim_customer"]})
+    quarantined.to_parquet(lake / "quarantine" / "fact_orders_quarantine.parquet",
+                           index=False)
+    t["fact_orders"] = healthy
+
     # fact_inventory_snapshot: FEFO / shelf-life risk
     inv = t["fact_inventory_snapshot"].merge(
         t["dim_lot"][["lot_id", "expiry_date"]], on="lot_id", how="inner")
@@ -87,17 +171,7 @@ def silver_transform(lake: Path) -> dict:
     t["fact_inventory_snapshot"] = inv.drop(columns=["expiry_date"])
 
     # fact_orders: OTIF, fill rate, economics from governed dim_product
-    orders = t["fact_orders"].drop(columns=["unit_price", "unit_cost"], errors="ignore")
-    orders = orders.merge(
-        t["dim_product"][["product_id", "unit_cost", "unit_price"]],
-        on="product_id", how="inner")
-    orders["fill_rate"] = (orders["qty_shipped"] / orders["qty_ordered"]).round(4)
-    on_time = pd.to_datetime(orders["shipped_date"]) <= pd.to_datetime(orders["promised_date"])
-    orders["otif_flag"] = ((on_time) & (orders["fill_rate"] >= 0.95)).astype(int)
-    orders["revenue"] = (orders["qty_shipped"] * orders["unit_price"]).round(2)
-    orders["cogs"] = (orders["qty_shipped"] * orders["unit_cost"]).round(2)
-    orders["gross_margin"] = (orders["revenue"] - orders["cogs"]).round(2)
-    t["fact_orders"] = orders
+    t["fact_orders"] = _enrich_orders(t["fact_orders"], t["dim_product"])
 
     for name, df in t.items():
         df.to_parquet(out / f"{name}.parquet", index=False)
@@ -218,6 +292,16 @@ def data_quality_checks(lake: Path) -> list[dict]:
     check("freshness", "fact_orders", age_days <= 45, WARNING,
           f"newest order {newest.date()} ({age_days}d old)")
 
+    # quarantine rate: some toxic rows are expected (warning); a flood means
+    # the source system is broken and the build should not publish (critical)
+    qfile = lake / "quarantine" / "fact_orders_quarantine.parquet"
+    n_quarantined = len(pd.read_parquet(qfile)) if qfile.exists() else 0
+    rate = n_quarantined / max(len(silver_orders) + n_quarantined, 1)
+    check("quarantine_rate_flood", "fact_orders", rate <= 0.02, CRITICAL,
+          f"{n_quarantined} rows quarantined ({rate:.2%})")
+    check("quarantine_backlog", "fact_orders", n_quarantined == 0, WARNING,
+          f"{n_quarantined} rows awaiting replay")
+
     pd.DataFrame(log).to_csv(lake / "gold" / "dq_log.csv", index=False)
     return log
 
@@ -239,12 +323,22 @@ def main(argv: list[str] | None = None) -> int:
                     help="where the medallion layers are materialized")
     ap.add_argument("--inject-dq-failure", action="store_true",
                     help="deliberately break gold to prove the DQ gate halts the publish")
+    ap.add_argument("--inject-bad-rows", type=int, default=0, metavar="N",
+                    help="simulate N toxic source rows to demo the quarantine pattern")
+    ap.add_argument("--replay-quarantine", action="store_true",
+                    help="re-validate quarantined rows and release the now-clean ones")
     args = ap.parse_args(argv)
     lake = Path(args.lake_dir)
 
+    if args.replay_quarantine:
+        released = replay_quarantine(lake)
+        print(f"[RPLY] quarantine replay: {released} rows re-validated clean and "
+              "released into silver")
+        return 0
+
     stages = [
         ("bronze_ingest", lambda: bronze_ingest(lake)),
-        ("silver_transform", lambda: silver_transform(lake)),
+        ("silver_transform", lambda: silver_transform(lake, args.inject_bad_rows)),
         ("gold_curate", lambda: gold_curate(lake, args.inject_dq_failure)),
     ]
     run_log = []
