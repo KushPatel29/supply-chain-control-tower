@@ -1,0 +1,9 @@
+/// Object-level security example: operations staff see logistics but the supplier dimension (commercial/contract data) is hidden entirely - it does not exist for this role.
+role 'Field Ops'
+	modelPermission: read
+
+	tablePermission dim_supplier
+		metadataPermission: none
+
+	annotation PBI_Id = 257c9bbb9b3a4bc2a33ac16dd65a4e2a
+

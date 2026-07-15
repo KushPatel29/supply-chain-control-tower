@@ -1,0 +1,13 @@
+table,bytes,is_auto_datetime
+LocalDateTable_ba672105-eff9-46d2-8088-735eeb28a31e,27392,True
+LocalDateTable_ae9b6d83-6e4d-43a3-8c0e-63e7cbb1746a,6560,True
+dim_lot,3384,False
+LocalDateTable_d2cde9bd-fd99-4ff9-87d0-d1aed8779807,3264,True
+LocalDateTable_4483e73c-6c41-4a90-b1f7-2867135c61a7,3184,True
+dim_customer,368,False
+dim_date,320,False
+dim_supplier,160,False
+LocalDateTable_92fd8655-6ed0-4a1c-ad4f-1662347657a6,16,True
+dim_product,0,False
+dim_warehouse,0,False
+fact_inventory,0,False

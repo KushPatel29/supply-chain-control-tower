@@ -18,10 +18,22 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r data_generator/requirements.txt
-          pip install pytest statsmodels matplotlib
+          pip install pytest statsmodels matplotlib pyarrow mlflow scikit-learn
 
       - name: Generate fresh synthetic data
         run: python data_generator/generate_data.py
+
+      - name: Run the medallion pipeline end-to-end (bronze -> silver -> gold -> DQ -> publish)
+        run: python pipeline/run_pipeline.py
+
+      - name: Prove the DQ gate halts the publish on a critical failure
+        run: |
+          if python pipeline/run_pipeline.py --inject-dq-failure; then
+            echo "::error::DQ gate FAILED to trip on an injected critical failure"
+            exit 1
+          else
+            echo "DQ gate correctly halted the publish (exit code 2)"
+          fi
 
       - name: Run pipeline logic & data-invariant tests
         run: pytest tests/ -v

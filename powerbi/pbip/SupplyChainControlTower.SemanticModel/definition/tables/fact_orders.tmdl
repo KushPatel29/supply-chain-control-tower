@@ -66,11 +66,6 @@ table fact_orders
 		summarizeBy: none
 		sourceColumn: promised_date
 
-		variation Variation
-			isDefault
-			relationship: 5cc119df-8ff1-4489-b8d2-2fb5711cf6fb
-			defaultHierarchy: LocalDateTable_4483e73c-6c41-4a90-b1f7-2867135c61a7.'Date Hierarchy'
-
 		annotation UnderlyingDateTimeDataType = Date
 
 	column shipped_date
@@ -79,11 +74,6 @@ table fact_orders
 		lineageTag: df54479d-63dd-49bf-8a23-4cf197fa98f6
 		summarizeBy: none
 		sourceColumn: shipped_date
-
-		variation Variation
-			isDefault
-			relationship: cc786d01-b3c4-4096-94b8-2753c98bd021
-			defaultHierarchy: LocalDateTable_d2cde9bd-fd99-4ff9-87d0-d1aed8779807.'Date Hierarchy'
 
 		annotation UnderlyingDateTimeDataType = Date
 

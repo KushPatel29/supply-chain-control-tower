@@ -11,6 +11,13 @@ Models compared:
   - Moving average (28-day).
   - Holt-Winters triple exponential smoothing (weekly seasonality,
     statsmodels ExponentialSmoothing).
+  - Gradient-boosted trees (sklearn HistGradientBoostingRegressor — the
+    LightGBM-style challenger) on calendar + lag/rolling features. Direct
+    (non-recursive) forecasting: every lag is >= the 28-day horizon, so all
+    features for future dates resolve inside the training window.
+
+Every backtest run is logged to MLflow (local SQLite store):
+    mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 Outputs (to analytics/output/):
   - backtest_results.csv    per-model, per-fold WAPE/MAPE
@@ -77,10 +84,36 @@ def holt_winters(train: pd.Series, horizon: int) -> np.ndarray:
     return np.clip(fitted.forecast(horizon), 0, None)
 
 
+def _gb_features(dates: pd.DatetimeIndex, history: pd.Series) -> pd.DataFrame:
+    """Calendar + lag features. All lags are >= HORIZON days so a 28-day-ahead
+    forecast never needs its own predictions (direct, not recursive)."""
+    feats = pd.DataFrame(index=dates)
+    feats["dayofweek"] = dates.dayofweek
+    feats["day"] = dates.day
+    feats["month"] = dates.month
+    for lag in (28, 35, 42):
+        feats[f"lag_{lag}"] = history.reindex(dates - pd.Timedelta(days=lag)).values
+    roll28 = history.rolling(28).mean()
+    feats["rollmean_28_lag28"] = roll28.reindex(dates - pd.Timedelta(days=28)).values
+    return feats
+
+
+def gradient_boosted(train: pd.Series, horizon: int) -> np.ndarray:
+    from sklearn.ensemble import HistGradientBoostingRegressor
+    X = _gb_features(train.index, train)
+    mask = X.notna().all(axis=1)
+    model = HistGradientBoostingRegressor(random_state=42, max_depth=4)
+    model.fit(X[mask], train[mask])
+    future = pd.date_range(train.index[-1] + pd.Timedelta(days=1), periods=horizon)
+    Xf = _gb_features(future, train)
+    return np.clip(model.predict(Xf), 0, None)
+
+
 MODELS = {
     "seasonal_naive": seasonal_naive,
     "moving_avg_28d": moving_average,
     "holt_winters": holt_winters,
+    "gradient_boosted": gradient_boosted,
 }
 
 
@@ -115,6 +148,26 @@ def rolling_backtest(demand: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def log_to_mlflow(results: pd.DataFrame, best_model: str) -> None:
+    """One MLflow run per model per backtest execution (import-optional)."""
+    try:
+        import mlflow
+    except ImportError:
+        print("mlflow not installed - skipping experiment tracking")
+        return
+    mlflow.set_tracking_uri(f"sqlite:///{(ROOT / 'mlflow.db').as_posix()}")
+    mlflow.set_experiment("demand-forecast-backtest")
+    agg = results.groupby("model").agg(avg_wape=("wape", "mean"),
+                                       avg_mape=("mape", "mean")).reset_index()
+    for _, r in agg.iterrows():
+        with mlflow.start_run(run_name=r["model"]):
+            mlflow.log_params({"horizon_days": HORIZON, "n_folds": N_FOLDS,
+                               "seasonality": SEASON})
+            mlflow.log_metrics({"avg_wape": r["avg_wape"], "avg_mape": r["avg_mape"],
+                                "is_champion": float(r["model"] == best_model)})
+    print(f"mlflow: logged {len(agg)} runs -> {ROOT / 'mlflow.db'}")
+
+
 def main():
     demand = load_daily_demand()
     results = rolling_backtest(demand)
@@ -123,6 +176,7 @@ def main():
     summary = (results.groupby("model")["wape"].mean().sort_values()
                .rename("avg_wape").reset_index())
     best_model = summary.iloc[0]["model"]
+    log_to_mlflow(results, best_model)
     print("Rolling-origin backtest (avg WAPE across categories x folds):")
     for _, r in summary.iterrows():
         marker = "  <-- winner" if r["model"] == best_model else ""
@@ -150,7 +204,7 @@ def main():
             lw=1.2, label="history")
     ax.plot(actual.index, actual.values, color="#12436D", lw=2, label="actual")
     palette = {"seasonal_naive": "#A285D1", "moving_avg_28d": "#F46A25",
-               "holt_winters": "#28A197"}
+               "holt_winters": "#28A197", "gradient_boosted": "#801650"}
     for name, fn in MODELS.items():
         fc = fn(train, HORIZON)
         w = wape(actual.values, fc)

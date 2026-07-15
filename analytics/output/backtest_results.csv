@@ -2,48 +2,64 @@ category,fold,model,train_days,wape,mape
 Deli,1,seasonal_naive,69,0.2196,0.2681
 Deli,1,moving_avg_28d,69,0.1764,0.2191
 Deli,1,holt_winters,69,0.1993,0.2466
+Deli,1,gradient_boosted,69,0.1802,0.2253
 Deli,2,seasonal_naive,97,0.2627,0.2968
 Deli,2,moving_avg_28d,97,0.1609,0.1934
 Deli,2,holt_winters,97,0.1984,0.2367
+Deli,2,gradient_boosted,97,0.1633,0.1981
 Deli,3,seasonal_naive,125,0.2867,0.281
 Deli,3,moving_avg_28d,125,0.1804,0.179
 Deli,3,holt_winters,125,0.1957,0.1958
+Deli,3,gradient_boosted,125,0.1866,0.1839
 Deli,4,seasonal_naive,153,0.2353,0.2518
 Deli,4,moving_avg_28d,153,0.2161,0.2471
 Deli,4,holt_winters,153,0.2192,0.2517
+Deli,4,gradient_boosted,153,0.2405,0.2693
 Fresh Meat,1,seasonal_naive,69,0.2389,0.2518
 Fresh Meat,1,moving_avg_28d,69,0.1473,0.1515
 Fresh Meat,1,holt_winters,69,0.1635,0.1731
+Fresh Meat,1,gradient_boosted,69,0.1503,0.1494
 Fresh Meat,2,seasonal_naive,97,0.2616,0.2817
 Fresh Meat,2,moving_avg_28d,97,0.1977,0.2151
 Fresh Meat,2,holt_winters,97,0.1963,0.2136
+Fresh Meat,2,gradient_boosted,97,0.2037,0.2241
 Fresh Meat,3,seasonal_naive,125,0.2252,0.2381
 Fresh Meat,3,moving_avg_28d,125,0.1668,0.1812
 Fresh Meat,3,holt_winters,125,0.1664,0.1818
+Fresh Meat,3,gradient_boosted,125,0.1565,0.1709
 Fresh Meat,4,seasonal_naive,153,0.2544,0.2649
 Fresh Meat,4,moving_avg_28d,153,0.1784,0.1955
 Fresh Meat,4,holt_winters,153,0.1918,0.2095
+Fresh Meat,4,gradient_boosted,153,0.2186,0.2428
 Frozen,1,seasonal_naive,69,0.1965,0.1754
 Frozen,1,moving_avg_28d,69,0.1792,0.1604
 Frozen,1,holt_winters,69,0.196,0.1707
+Frozen,1,gradient_boosted,69,0.18,0.1603
 Frozen,2,seasonal_naive,97,0.2565,0.2811
 Frozen,2,moving_avg_28d,97,0.2236,0.261
 Frozen,2,holt_winters,97,0.2273,0.2554
+Frozen,2,gradient_boosted,97,0.2221,0.254
 Frozen,3,seasonal_naive,125,0.1955,0.216
 Frozen,3,moving_avg_28d,125,0.1491,0.1704
 Frozen,3,holt_winters,125,0.1845,0.217
+Frozen,3,gradient_boosted,125,0.1819,0.1978
 Frozen,4,seasonal_naive,153,0.2017,0.2239
 Frozen,4,moving_avg_28d,153,0.1955,0.2266
 Frozen,4,holt_winters,153,0.1945,0.2292
+Frozen,4,gradient_boosted,153,0.1981,0.2257
 Seafood,1,seasonal_naive,69,0.2616,0.2973
 Seafood,1,moving_avg_28d,69,0.2185,0.2631
 Seafood,1,holt_winters,69,0.2245,0.278
+Seafood,1,gradient_boosted,69,0.2239,0.247
 Seafood,2,seasonal_naive,97,0.2559,0.2867
 Seafood,2,moving_avg_28d,97,0.195,0.204
 Seafood,2,holt_winters,97,0.1988,0.2181
+Seafood,2,gradient_boosted,97,0.2237,0.2393
 Seafood,3,seasonal_naive,125,0.2495,0.2665
 Seafood,3,moving_avg_28d,125,0.1851,0.1994
 Seafood,3,holt_winters,125,0.2295,0.2522
+Seafood,3,gradient_boosted,125,0.1822,0.1907
 Seafood,4,seasonal_naive,153,0.2925,0.2732
 Seafood,4,moving_avg_28d,153,0.1938,0.1846
 Seafood,4,holt_winters,153,0.1693,0.1673
+Seafood,4,gradient_boosted,153,0.2186,0.2112

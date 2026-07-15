@@ -1,0 +1,15 @@
+{
+  "rows": 10000000,
+  "build_seconds": 0.9,
+  "full_load_seconds": 1.9,
+  "load_batches": 20,
+  "merge_batch_rows": 50000,
+  "incremental_merge_seconds": 0.5,
+  "query_before_zorder_seconds": 0.16,
+  "candidate_files_before": 20,
+  "total_files_before": 20,
+  "zorder_seconds": 5.4,
+  "query_after_zorder_seconds": 0.05,
+  "candidate_files_after": 1,
+  "total_files_after": 1
+}

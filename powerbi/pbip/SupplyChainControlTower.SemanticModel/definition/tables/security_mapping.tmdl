@@ -1,0 +1,32 @@
+/// UPN-to-region entitlements driving the dynamic 'Regional Manager' RLS role. In the Service this holds Entra ID UPNs; locally it maps the Desktop principal so View-As / impersonation is verifiable.
+table security_mapping
+	isHidden
+	lineageTag: 23a29fe6-e4de-445c-ae64-268af2182152
+
+	column upn
+		dataType: string
+		lineageTag: 396608da-08d1-4024-ba68-5342d182a1e9
+		summarizeBy: none
+		sourceColumn: upn
+
+	column region
+		dataType: string
+		lineageTag: 152fdb30-85b6-4e7f-95fb-9f7ae580ecc9
+		summarizeBy: none
+		sourceColumn: region
+
+	partition security_mapping = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [upn = text, region = text],
+				        {
+				            {"BEAST\kush2", "BC Interior"},
+				            {"BEAST\kush2", "BC Lower Mainland"},
+				            {"vp.prairies@meridian-foods.example", "Alberta"},
+				            {"vp.east@meridian-foods.example", "Ontario"}
+				        })
+				in
+				    Source
+

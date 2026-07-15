@@ -1,0 +1,8 @@
+/// Dynamic table-driven RLS: entitlements live in security_mapping (UPN -> region). A manager mapped to two regions sees both; the filter propagates from dim_warehouse through dim_lot/fact tables.
+role 'Regional Manager'
+	modelPermission: read
+
+	tablePermission dim_warehouse = dim_warehouse[region] IN CALCULATETABLE(VALUES(security_mapping[region]), security_mapping[upn] = USERPRINCIPALNAME())
+
+	annotation PBI_Id = f38c797273d24468904b0cdfc596cf4a
+

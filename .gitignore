@@ -8,3 +8,8 @@ data/gold/
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
 **/.pbi/unappliedChanges.json
+# local medallion lake materialized by pipeline/run_pipeline.py
+data/lake/
+# MLflow local tracking store
+mlflow.db
+mlruns/

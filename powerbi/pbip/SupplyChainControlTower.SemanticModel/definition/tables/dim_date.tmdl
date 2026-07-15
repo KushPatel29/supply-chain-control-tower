@@ -1,17 +1,14 @@
 table dim_date
 	lineageTag: b1e198d8-4f8c-484f-842a-bcaf0b8a014e
+	dataCategory: Time
 
 	column full_date
 		dataType: dateTime
+		isUnique
 		formatString: yyyy-mm-dd
 		lineageTag: 4f1403cc-49fc-43fb-944a-612f27933f3f
 		summarizeBy: none
 		sourceColumn: full_date
-
-		variation Variation
-			isDefault
-			relationship: 77d80999-af4a-4040-83a3-591a610dc1c1
-			defaultHierarchy: LocalDateTable_92fd8655-6ed0-4a1c-ad4f-1662347657a6.'Date Hierarchy'
 
 		annotation UnderlyingDateTimeDataType = Date
 

@@ -1,6 +1,7 @@
 model Model
 	culture: en-US
 	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
 	sourceQueryCulture: en-US
 	dataAccessOptions
 		legacyRedirects
@@ -8,9 +9,9 @@ model Model
 
 annotation PBI_QueryOrder = ["dim_product","dim_supplier","dim_warehouse","dim_customer","dim_lot","dim_date","fact_orders","fact_inventory","_Measures","DataPath"]
 
-annotation __PBI_TimeIntelligenceEnabled = 1
+annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 
 ref table dim_product
 ref table dim_supplier
@@ -21,13 +22,9 @@ ref table dim_date
 ref table fact_orders
 ref table fact_inventory
 ref table _Measures
-ref table DateTableTemplate_3a5b1c0e-0e10-404d-bcb7-93465a17848a
-ref table LocalDateTable_ae9b6d83-6e4d-43a3-8c0e-63e7cbb1746a
-ref table LocalDateTable_2be00c03-6fbb-4389-b551-1745a8715ec9
-ref table LocalDateTable_ba672105-eff9-46d2-8088-735eeb28a31e
-ref table LocalDateTable_92fd8655-6ed0-4a1c-ad4f-1662347657a6
-ref table LocalDateTable_4483e73c-6c41-4a90-b1f7-2867135c61a7
-ref table LocalDateTable_d2cde9bd-fd99-4ff9-87d0-d1aed8779807
+ref table security_mapping
+ref table 'Time Intelligence'
 
 ref role 'Sales - BC Lower Mainland'
-
+ref role 'Regional Manager'
+ref role 'Field Ops'

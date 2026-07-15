@@ -1,0 +1,27 @@
+table 'Time Intelligence'
+
+	/// One slicer switches every measure between period views - the calculation-group pattern that replaces N x 6 duplicated time-intelligence measures.
+	calculationGroup
+		precedence: 10
+
+		calculationItem Current = SELECTEDMEASURE()
+
+		calculationItem MTD = CALCULATE(SELECTEDMEASURE(), DATESMTD(dim_date[full_date]))
+
+		calculationItem QTD = CALCULATE(SELECTEDMEASURE(), DATESQTD(dim_date[full_date]))
+
+		calculationItem YTD = CALCULATE(SELECTEDMEASURE(), DATESYTD(dim_date[full_date]))
+
+		calculationItem 'Previous Month' = CALCULATE(SELECTEDMEASURE(), DATEADD(dim_date[full_date], -1, MONTH))
+
+		calculationItem 'MoM %' = VAR Prev = CALCULATE(SELECTEDMEASURE(), DATEADD(dim_date[full_date], -1, MONTH)) RETURN DIVIDE(SELECTEDMEASURE() - Prev, Prev)
+
+			formatStringDefinition = "0.0%"
+
+		calculationItem 'Rolling 28D' = CALCULATE(SELECTEDMEASURE(), DATESINPERIOD(dim_date[full_date], MAX(dim_date[full_date]), -28, DAY))
+
+	column 'Time Intelligence'
+		dataType: string
+
+	partition 'Partition_Time Intelligence' = calculationGroup
+

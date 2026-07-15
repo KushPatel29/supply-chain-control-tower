@@ -40,11 +40,6 @@ table dim_lot
 		summarizeBy: none
 		sourceColumn: production_date
 
-		variation Variation
-			isDefault
-			relationship: 453aa562-26d8-4e89-b150-54984edcc813
-			defaultHierarchy: LocalDateTable_ae9b6d83-6e4d-43a3-8c0e-63e7cbb1746a.'Date Hierarchy'
-
 		annotation UnderlyingDateTimeDataType = Date
 
 	column received_date
@@ -54,11 +49,6 @@ table dim_lot
 		summarizeBy: none
 		sourceColumn: received_date
 
-		variation Variation
-			isDefault
-			relationship: 707337dd-6698-43a6-841c-7da8fd842707
-			defaultHierarchy: LocalDateTable_2be00c03-6fbb-4389-b551-1745a8715ec9.'Date Hierarchy'
-
 		annotation UnderlyingDateTimeDataType = Date
 
 	column expiry_date
@@ -67,11 +57,6 @@ table dim_lot
 		lineageTag: f33e6044-edcf-49a9-904c-7b2fb43d36b1
 		summarizeBy: none
 		sourceColumn: expiry_date
-
-		variation Variation
-			isDefault
-			relationship: 579b3df7-514a-4758-aa74-ed0c2500dbc3
-			defaultHierarchy: LocalDateTable_ba672105-eff9-46d2-8088-735eeb28a31e.'Date Hierarchy'
 
 		annotation UnderlyingDateTimeDataType = Date
 
