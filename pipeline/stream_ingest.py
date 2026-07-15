@@ -31,6 +31,7 @@ Demo:
 
 import argparse
 import json
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -38,12 +39,9 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 LANDING = ROOT / "data" / "stream_landing"
 DEFAULT_LAKE = ROOT / "data" / "lake"
-
-EXPECTED_COLUMNS = ["order_id", "order_date", "customer_id", "product_id",
-                    "lot_id", "warehouse_id", "qty_ordered", "qty_shipped",
-                    "promised_date", "shipped_date", "unit_price", "unit_cost"]
 
 
 def _checkpoint_path(lake: Path) -> Path:
@@ -72,13 +70,16 @@ def discover_new_files(landing: Path, ledger: dict) -> list[Path]:
 
 
 def ingest_file(path: Path, lake: Path, ledger: dict) -> int:
-    """Validate schema, append to the bronze stream table, ledger the file.
-    Returns rows ingested (0 if the file was rejected)."""
+    """Validate against the bronze data contract, append to the stream table,
+    ledger the file. Returns rows ingested (0 if the file was rejected)."""
+    from pipeline.data_contract import check_table, load_contract
+
     df = pd.read_csv(path)
-    missing = [c for c in EXPECTED_COLUMNS if c not in df.columns]
-    if missing:
+    result = check_table(df, "fact_orders", load_contract())
+    if result["breaking"]:
+        # one bad drop rejects one file — the stream itself keeps flowing
         ledger["rejected"][path.name] = {
-            "reason": f"schema mismatch: missing {missing}",
+            "reason": f"contract violation: {result['breaking']}",
             "at": datetime.now(timezone.utc).isoformat(),
         }
         return 0

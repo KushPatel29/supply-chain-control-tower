@@ -30,13 +30,21 @@ import hashlib
 import json
 import sys
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 BRONZE_SRC = ROOT / "data" / "bronze"
+PIPELINE_METADATA = ROOT / "config" / "pipeline_metadata.json"
+
+
+def load_metadata() -> dict:
+    """Table-level behavior (keys, partitioning, z-order) as data, not code."""
+    return json.loads(PIPELINE_METADATA.read_text(encoding="utf-8"))["tables"]
 
 CRITICAL = "critical"
 WARNING = "warning"
@@ -50,14 +58,68 @@ def _surrogate(series: pd.Series) -> pd.Series:
 
 # --------------------------------------------------------------- stages
 
-def bronze_ingest(lake: Path) -> dict:
+class ContractViolation(RuntimeError):
+    """Breaking schema drift detected before Bronze — the run must not land."""
+
+
+class EventLog:
+    """Structured observability: one JSON object per pipeline event, keyed by
+    run_id so a single grep (or a Datadog/Azure Monitor ingest of the JSONL)
+    reconstructs any run at 3 a.m. In Fabric the same records land in a
+    Lakehouse ops table; locally they land in <lake>/ops/pipeline_events.jsonl."""
+
+    def __init__(self, lake: Path, pipeline: str = "medallion_batch"):
+        self.lake = lake
+        self.pipeline = pipeline
+        self.run_id = uuid.uuid4().hex[:12]
+        self.events: list[dict] = []
+
+    def emit(self, component: str, status: str, **fields) -> None:
+        self.events.append({
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "run_id": self.run_id,
+            "pipeline": self.pipeline,
+            "component": component,
+            "status": status,
+            **fields,
+        })
+
+    def flush(self) -> None:
+        ops = self.lake / "ops"
+        ops.mkdir(parents=True, exist_ok=True)
+        with open(ops / "pipeline_events.jsonl", "a", encoding="utf-8") as fh:
+            for event in self.events:
+                fh.write(json.dumps(event) + "\n")
+
+
+def bronze_ingest(lake: Path, simulate_schema_drift: bool = False) -> dict:
+    from pipeline.data_contract import enforce
+
+    tables = {csv.stem: pd.read_csv(csv) for csv in sorted(BRONZE_SRC.glob("*.csv"))}
+
+    if simulate_schema_drift:
+        # the classic silent upstream change: a column renamed in the source ERP
+        tables["fact_orders"] = tables["fact_orders"].rename(
+            columns={"qty_shipped": "shipped_quantity_uom"})
+
+    # contract check happens BEFORE anything is written — breaking drift
+    # never reaches the lake
+    report = enforce(tables)
+    for note in report["additive"]:
+        print(f"[CNTR] additive: {note}")
+    if report["breaking"]:
+        for violation in report["breaking"]:
+            print(f"[CNTR] BREAKING: {violation}")
+        raise ContractViolation(
+            f"{len(report['breaking'])} breaking contract violation(s) "
+            f"against bronze_v{report['version']}")
+
     out = lake / "bronze"
     out.mkdir(parents=True, exist_ok=True)
     counts = {}
-    for csv in sorted(BRONZE_SRC.glob("*.csv")):
-        df = pd.read_csv(csv)
-        df.to_parquet(out / f"{csv.stem}.parquet", index=False)
-        counts[csv.stem] = len(df)
+    for name, df in tables.items():
+        df.to_parquet(out / f"{name}.parquet", index=False)
+        counts[name] = len(df)
     return counts
 
 
@@ -134,15 +196,18 @@ def silver_transform(lake: Path, inject_bad_rows: int = 0) -> dict:
     (lake / "quarantine").mkdir(exist_ok=True)
     t = {p.stem: pd.read_parquet(p) for p in src.glob("*.parquet")}
 
-    # dimensions: dedup on natural key
-    dims = {"dim_product": "product_id", "dim_supplier": "supplier_id",
-            "dim_warehouse": "warehouse_id", "dim_customer": "customer_id"}
-    for name, key in dims.items():
-        t[name] = t[name].drop_duplicates(key)
+    # dimensions: dedup on natural key — driven by config/pipeline_metadata.json,
+    # so onboarding a new dimension is a config entry, not new code
+    meta = load_metadata()
+    for name, spec in meta.items():
+        if "natural_key" in spec and name != "dim_lot":
+            t[name] = t[name].drop_duplicates(spec["natural_key"])
 
-    # dim_lot: referential check against dim_product before load
-    lots = t["dim_lot"].drop_duplicates("lot_id")
-    t["dim_lot"] = lots[lots["product_id"].isin(t["dim_product"]["product_id"])]
+    # dim_lot: referential check against its configured parent before load
+    lots = t["dim_lot"].drop_duplicates(meta["dim_lot"]["natural_key"])
+    parent = meta["dim_lot"]["referential_parent"]
+    parent_key = meta[parent]["natural_key"][0]
+    t["dim_lot"] = lots[lots[parent_key].isin(t[parent][parent_key])]
 
     # --- quarantine split on the order stream --------------------------
     if inject_bad_rows:
@@ -183,13 +248,10 @@ def gold_curate(lake: Path, inject_dq_failure: bool = False) -> dict:
     out.mkdir(exist_ok=True)
     t = {p.stem: pd.read_parquet(p) for p in src.glob("*.parquet")}
 
-    sk = {"dim_product": ("product_id", "product_key"),
-          "dim_supplier": ("supplier_id", "supplier_key"),
-          "dim_warehouse": ("warehouse_id", "warehouse_key"),
-          "dim_customer": ("customer_id", "customer_key"),
-          "dim_lot": ("lot_id", "lot_key")}
-    for name, (nk, key) in sk.items():
-        t[name][key] = _surrogate(t[name][nk])
+    # surrogate keys from the same metadata the Fabric MERGE engine reads
+    for name, spec in load_metadata().items():
+        if "surrogate_key" in spec:
+            t[name][spec["surrogate_key"]] = _surrogate(t[name][spec["natural_key"][0]])
 
     # dim_lot carries product/supplier/warehouse surrogate keys
     t["dim_lot"] = (t["dim_lot"]
@@ -327,6 +389,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="simulate N toxic source rows to demo the quarantine pattern")
     ap.add_argument("--replay-quarantine", action="store_true",
                     help="re-validate quarantined rows and release the now-clean ones")
+    ap.add_argument("--simulate-schema-drift", action="store_true",
+                    help="rename a source column to prove contract enforcement fails pre-Bronze")
     args = ap.parse_args(argv)
     lake = Path(args.lake_dir)
 
@@ -336,22 +400,33 @@ def main(argv: list[str] | None = None) -> int:
               "released into silver")
         return 0
 
+    log = EventLog(lake)
     stages = [
-        ("bronze_ingest", lambda: bronze_ingest(lake)),
+        ("bronze_ingest", lambda: bronze_ingest(lake, args.simulate_schema_drift)),
         ("silver_transform", lambda: silver_transform(lake, args.inject_bad_rows)),
         ("gold_curate", lambda: gold_curate(lake, args.inject_dq_failure)),
     ]
     run_log = []
     for name, fn in stages:
         t0 = time.perf_counter()
-        result = fn()
+        try:
+            result = fn()
+        except ContractViolation as err:
+            log.emit(name, "failed", error_class="contract_violation", detail=str(err))
+            log.flush()
+            print(f"[HALT] {name}: {err} -> nothing written, exit 3")
+            return 3
         secs = time.perf_counter() - t0
         run_log.append({"stage": name, "seconds": round(secs, 2), "tables": result})
+        log.emit(name, "completed", duration_ms=int(secs * 1000),
+                 rows=int(sum(result.values())))
         print(f"[OK]   {name:<18} {secs:5.2f}s  {sum(result.values()):,} rows")
 
     dq = data_quality_checks(lake)
     criticals = [c for c in dq if not c["passed"] and c["severity"] == CRITICAL]
     warnings = [c for c in dq if not c["passed"] and c["severity"] == WARNING]
+    log.emit("data_quality_checks", "completed", checks=len(dq),
+             warnings=len(warnings), criticals=len(criticals))
     print(f"[DQ]   {len(dq)} checks: {len(dq) - len(criticals) - len(warnings)} pass, "
           f"{len(warnings)} warning, {len(criticals)} CRITICAL")
 
@@ -365,9 +440,14 @@ def main(argv: list[str] | None = None) -> int:
         marker = lake / "gold" / "_PUBLISHED"
         if marker.exists():
             marker.unlink()
+        log.emit("publish_gate", "blocked",
+                 criticals=[c["check_name"] for c in criticals])
+        log.flush()
         return 2
 
     marker = publish_semantic_model(lake)
+    log.emit("publish_gate", "published", marker=str(marker))
+    log.flush()
     print(f"[PUB]  gate passed -> semantic model publish marker written: {marker}")
     return 0
 

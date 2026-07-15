@@ -56,6 +56,6 @@ def test_malformed_file_rejected_without_blocking(landing, lake):
     result = drain(lake, landing)
     assert result == {"ingested": 1, "rejected": 1}
     ledger = load_ledger(lake)
-    assert "schema mismatch" in ledger["rejected"]["garbage.csv"]["reason"]
+    assert "contract violation" in ledger["rejected"]["garbage.csv"]["reason"]
     # the rejected file is remembered — never retried, never fatal
     assert drain(lake, landing) == {"ingested": 0, "rejected": 0}

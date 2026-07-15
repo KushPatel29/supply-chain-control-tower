@@ -35,6 +35,15 @@ jobs:
             echo "DQ gate correctly halted the publish (exit code 2)"
           fi
 
+      - name: Prove the data contract kills schema drift before Bronze
+        run: |
+          if python pipeline/run_pipeline.py --simulate-schema-drift; then
+            echo "::error::contract enforcement FAILED to stop schema drift"
+            exit 1
+          else
+            echo "contract correctly killed the run pre-Bronze (exit code 3)"
+          fi
+
       - name: Quarantine demo (toxic rows isolated, pipeline still publishes)
         run: python pipeline/run_pipeline.py --inject-bad-rows 40
 

@@ -41,3 +41,37 @@ python benchmarks/scale_benchmark.py --rows 10000000
   object storage and at 100M+ rows. The pattern is what scales, and the
   file-skipping ratio (95% here) is the number that grows more valuable
   with size.
+
+## What the 95% is worth in dollars (FinOps)
+
+Consumption-priced engines — Fabric capacity units, Databricks DBUs,
+BigQuery on-demand — all bill scan-bound workloads roughly linearly with
+bytes scanned. That makes the measured file-skipping ratio translatable
+into money, with assumptions stated instead of hidden:
+
+| Assumption | Value (edit for your environment) |
+|---|---|
+| Fact table at production scale | 100M rows ≈ 5 GB compressed parquet |
+| Scan-bound point/filter queries per day | 500 (reports, APIs, alert checks) |
+| Effective scan price | $6.25/TB (BigQuery-style on-demand, *illustrative — check current rates*) |
+
+| | Bytes scanned/day | Cost/day | Cost/year |
+|---|---:|---:|---:|
+| Arrival-ordered layout (every file a candidate) | 2.44 TB | $15.26 | ~$5,570 |
+| Z-ordered layout (95% skipped, as measured) | 0.12 TB | $0.76 | ~$278 |
+
+**~$5,300/year saved on one workload against one table** — from a 5.4-second
+`OPTIMIZE` that runs in the maintenance window. On capacity-based pricing
+(Fabric F-SKUs) the same effect shows up as headroom instead of a line item:
+scan-bound consumption dropping ~95% is frequently the difference between
+capacity throttling at peak and not needing the next SKU tier up.
+
+Two smaller FinOps notes from this repo, same logic:
+
+- **Incremental MERGE vs daily reload** (0.5s vs 1.9s at 10M rows): compute
+  scales with the *delta*, not the table. At 100M+ rows the reload path is
+  the one that quietly forces the bigger cluster.
+- **Semantic model memory** ([MODEL_OPTIMIZATION.md](../docs/MODEL_OPTIMIZATION.md)):
+  removing auto date/time cut column storage ~90%. Capacity memory is what
+  Fabric SKUs actually gate — model bloat is a procurement problem wearing
+  a technical costume.

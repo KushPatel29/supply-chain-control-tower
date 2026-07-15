@@ -21,7 +21,7 @@ One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs a 33-test suite. The
+builds, exercises the model-promotion policy, and runs a 49-test suite. The
 green badge above covers the failure paths too.
 
 ## The problem, in one walk through the warehouse
@@ -123,6 +123,18 @@ The Silver loads use Delta `MERGE` keyed on natural keys, so re-running a
 notebook never duplicates a row — boring by design, which is the highest
 compliment you can pay a pipeline.
 
+And table behavior is **data, not code**: merge keys, natural/surrogate
+keys, partitioning, and Z-order columns live in
+[`config/pipeline_metadata.json`](config/pipeline_metadata.json), read by
+both the local orchestrator and the generic Fabric MERGE engine
+([`notebooks/06_metadata_merge.py`](notebooks/06_metadata_merge.py)) that
+loops the config and builds each `MERGE` dynamically. Seven tables makes
+this tidy; five hundred makes it the difference between a platform and a
+pile of notebooks. Onboarding a source table is a JSON entry plus a
+contract — a test even verifies the configured merge keys are genuinely
+unique in the data, because a MERGE on a non-unique key multiplies rows
+silently.
+
 Stack: Microsoft Fabric (Lakehouse, PySpark), Power BI (DAX, TMDL, RLS/OLS,
 calculation groups), T-SQL for the Gold DDL, Python for everything that
 proves the rest works.
@@ -163,9 +175,19 @@ publish marker so downstream never reads the bad build, and exits non-zero
 — the exit code a Fabric If-Condition (or any scheduler) turns into a
 blocked refresh and an alert.
 
-Halting is the right answer for structural corruption — but halting the
-whole pipeline because one source row has a negative quantity would trade a
-data problem for an SLA problem. So the Silver layer runs a **quarantine
+The defense actually has three tiers, cheapest first. Tier one is the
+**data contract** ([`contracts/bronze_v1.json`](contracts/bronze_v1.json)):
+the version-controlled agreement about what source systems deliver, checked
+**before a single row lands in Bronze**. New columns are additive and flow
+through; a missing contracted column or a type drift (`integer` quietly
+becoming `string` after an ERP upgrade) kills the run with exit code 3 and
+a named violation — CI proves it by renaming a column and asserting the
+lake stays untouched. The streaming front door enforces the same contract
+per file.
+
+Tier two is row-level. Halting is the right answer for structural corruption
+— but halting the whole pipeline because one source row has a negative
+quantity would trade a data problem for an SLA problem. So the Silver layer runs a **quarantine
 split** first: every order row is validated against the business ruleset
 (null keys, non-positive quantities, shipped-before-ordered, orphan foreign
 keys), and toxic rows are routed to a quarantine table with
@@ -176,16 +198,24 @@ fix lands and releases only the ones that now pass. And if toxins ever
 exceed 2% of the stream, that's not a bad row, that's a broken source
 system — the flood check escalates to critical and the gate takes over.
 
+Every run also narrates itself for the 3 a.m. responder: structured JSONL
+events — `run_id`, component, status, `duration_ms`, row counts — land in
+an ops log (`<lake>/ops/pipeline_events.jsonl`; a Lakehouse table in
+Fabric) that Datadog or Azure Monitor can tail as-is. Success, gate-block,
+and contract-kill paths all leave the trail, and one `run_id` reconstructs
+any run end-to-end. Tested, including the failure paths.
+
 And because a gate you've never seen close is just decoration, CI sabotages
 the build on every push — injects a duplicate key, and fails the workflow
 unless the gate trips:
 
 ```bash
 python pipeline/run_pipeline.py                     # bronze -> silver -> gold -> DQ -> publish
+python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3, lake untouched
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 33 tests, incl. gate + quarantine + stream
+pytest tests/ -v                                     # 49 tests: contracts, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -274,6 +304,12 @@ through Delta Lake, on a laptop:
   a full rewrite is cheap. The *pattern* is what scales; the file-skipping
   ratio is the number that gets more valuable with size.
 
+The write-up also does the FinOps math — with assumptions on the table
+instead of hidden: at a plausible production scale (100M rows, 500
+scan-bound queries/day), the measured 95% file-skip is roughly **$5,300/year
+on a single workload** at BigQuery-style on-demand rates, or the equivalent
+capacity headroom on a Fabric SKU.
+
 At 100M+ rows the playbook is: monthly partitions with incremental refresh
 on the two trailing partitions, an in-model aggregation table for trend
 visuals with drillthrough to detail, and — the actual point of building it
@@ -334,9 +370,12 @@ the medallion, star schema, DQ gate, and security all carry over unchanged.
 ```
 data_generator/     synthetic data generator (Faker + numpy, fixed seed)
 data/bronze/        generated raw CSVs (~30k rows)
-pipeline/           run_pipeline.py — orchestrator: quarantine split + DQ gate
+contracts/          bronze_v1.json — versioned data contract (enforced pre-Bronze)
+config/             pipeline_metadata.json — table behavior as data (keys, Z-order)
+pipeline/           run_pipeline.py — orchestrator: contracts + quarantine + DQ gate
                      stream_ingest.py — exactly-once streaming ingest (Autoloader semantics)
-notebooks/          PySpark: 01 bronze -> 02 silver -> 03 gold -> 04 DQ -> 05 streaming
+                     data_contract.py — additive-vs-breaking schema semantics
+notebooks/          PySpark: 01-04 medallion -> 05 streaming -> 06 metadata MERGE engine
 analytics/          demand_forecast.py — 4-model rolling-origin backtest + MLflow
                      model_lifecycle.py — drift watch + registry champion promotion
 benchmarks/         10M-row Delta Lake benchmarks (MERGE, Z-order file skipping)
@@ -345,7 +384,8 @@ powerbi/            PBIP project (TMDL + PBIR): dynamic RLS + OLS roles,
                      Time Intelligence calculation group, DAX library, build guide
 deploy/             fabric-cicd deployment script + per-environment parameter.yml
 docs/               metric dictionary, pipeline spec, MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              33 tests: gate, quarantine, streaming, promotion policy, KPI rules
+tests/              49 tests: contracts, gate, quarantine, streaming, observability,
+                     promotion policy, KPI rules
 .github/workflows/  ci.yml (pipeline + sabotage proofs) + deploy_fabric.yml (armed CI/CD)
 ```
 
