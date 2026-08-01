@@ -1,6 +1,6 @@
 # Supply Chain Control Tower
 
-[![CI](https://github.com/KushPatel29/supply-chain-control-tower-/actions/workflows/ci.yml/badge.svg)](https://github.com/KushPatel29/supply-chain-control-tower-/actions/workflows/ci.yml)
+[![CI](https://github.com/KushPatel29/supply-chain-control-tower/actions/workflows/ci.yml/badge.svg)](https://github.com/KushPatel29/supply-chain-control-tower/actions/workflows/ci.yml)
 ![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-Lakehouse-0078D4)
 ![PySpark](https://img.shields.io/badge/PySpark-Delta%20MERGE-E25A1C?logo=apachespark&logoColor=white)
 ![Power BI](https://img.shields.io/badge/Power%20BI-DAX%20%2B%20RLS-F2C811?logo=powerbi&logoColor=black)
