@@ -7,7 +7,7 @@
 ![T-SQL](https://img.shields.io/badge/T--SQL-Star%20Schema-CC2927)
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
-![Tests](https://img.shields.io/badge/tests-665%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-666%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 In specialty food distribution, every pallet is a countdown timer. A case of
@@ -22,7 +22,7 @@ One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs a 665-test suite. The
+builds, exercises the model-promotion policy, and runs a 666-test suite. The
 green badge above covers the failure paths too.
 
 ## Business process improvement case
@@ -42,6 +42,15 @@ QGIS/ArcGIS-ready GeoJSON, nearest-node screening, a Power BI join surface,
 and automated controls that stop key, coordinate or route-selection drift.
 Locations are synthetic and straight-line distance is labelled as screening,
 not road routing.
+
+![Global supplier origins connected to their nearest Canadian distribution node on a dark world map, with an evidence panel showing 23 governed points, 15 routes, the WGS 84 coordinate basis, and the screening limitation.](docs/assets/gis-network-risk-map.png)
+
+**How to read it.** Amber circles are synthetic supplier origins; cyan
+diamonds are Canadian distribution nodes. Each line terminates at the nearest
+node by great-circle distance. The visual is generated from the committed
+[`supplier route GeoJSON`](analytics/output/supplier_routes.geojson), not a
+hand-drawn mock-up. Reproduce it with `pip install -r gis/requirements-viz.txt`
+and `python gis/render_network_map.py`.
 
 ## The problem, in one walk through the warehouse
 
@@ -511,7 +520,7 @@ python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3,
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 665 tests: contracts, GIS, gate, quarantine, stream, promotion
+pytest tests/ -v                                     # 666 tests: contracts, GIS, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -708,7 +717,7 @@ deploy/             fabric-cicd deployment script + per-environment parameter.ym
 gis/                governed synthetic location references for GIS publication
 docs/               metric dictionary, pipeline spec, GIS analysis, process case,
                      MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              665 tests: contracts, GIS, gate, quarantine, streaming, observability,
+tests/              666 tests: contracts, GIS, gate, quarantine, streaming, observability,
                      promotion policy, KPI rules, sourcing risk, inventory health,
                      supplier scorecard, service economics, semantic-model
                      binding, report formatting

@@ -1,6 +1,7 @@
 """Contract tests for the GIS screening layer."""
 
 import json
+import struct
 import sys
 from pathlib import Path
 
@@ -62,3 +63,12 @@ def test_published_geojson_can_be_parsed_and_has_a_declared_basis():
     routes = json.loads((ROOT / "analytics" / "output" / "supplier_routes.geojson").read_text(encoding="utf-8"))
     assert all(feature["properties"]["analysis_basis"]
                == "nearest_node_great_circle_screening" for feature in routes["features"])
+
+
+def test_gis_readme_visual_is_a_1600_by_900_png():
+    """Keep the portfolio proof tied to a reviewable, high-resolution artifact."""
+    image = ROOT / "docs" / "assets" / "gis-network-risk-map.png"
+    payload = image.read_bytes()
+    assert payload[:8] == b"\x89PNG\r\n\x1a\n"
+    width, height = struct.unpack(">II", payload[16:24])
+    assert (width, height) == (1600, 900)
