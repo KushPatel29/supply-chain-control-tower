@@ -1,0 +1,16 @@
+supplier_id,supplier_name,supplier_country,warehouse_id,warehouse_name,distance_km,distance_band,analysis_basis
+1,Blair PLC,USA,1,Ontario DC 1,701.2,continental,nearest_node_great_circle_screening
+2,Dudley Group,Spain,3,Ontario DC 3,5986.4,intercontinental,nearest_node_great_circle_screening
+3,Arnold Ltd,Poland,3,Ontario DC 3,6577.0,intercontinental,nearest_node_great_circle_screening
+4,"Mcclure, Ward and Lee",Brazil,1,Ontario DC 1,8186.1,intercontinental,nearest_node_great_circle_screening
+5,Williams and Sons,Mexico,1,Ontario DC 1,2751.2,intercontinental,nearest_node_great_circle_screening
+6,Galloway-Wyatt,Mexico,1,Ontario DC 1,3261.0,intercontinental,nearest_node_great_circle_screening
+7,James Group,Vietnam,8,BC Interior DC 8,11452.5,intercontinental,nearest_node_great_circle_screening
+8,"Flowers, Martin and Kelly",Thailand,8,BC Interior DC 8,11450.1,intercontinental,nearest_node_great_circle_screening
+9,"Adams, Zuniga and Wong",Thailand,8,BC Interior DC 8,11496.4,intercontinental,nearest_node_great_circle_screening
+10,"Reid, Ferguson and Sanchez",India,8,BC Interior DC 8,11762.0,intercontinental,nearest_node_great_circle_screening
+11,Gray-Mayo,Mexico,1,Ontario DC 1,3384.5,intercontinental,nearest_node_great_circle_screening
+12,"Watts, Robinson and Nguyen",Brazil,1,Ontario DC 1,8240.4,intercontinental,nearest_node_great_circle_screening
+13,Perez Inc,Canada,3,Ontario DC 3,166.3,regional,nearest_node_great_circle_screening
+14,Morales-Jones,Mexico,7,BC Lower Mainland DC 7,1931.7,continental,nearest_node_great_circle_screening
+15,"Walter, Edwards and Rios",Spain,3,Ontario DC 3,6053.4,intercontinental,nearest_node_great_circle_screening

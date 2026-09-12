@@ -63,6 +63,9 @@ jobs:
       - name: Sourcing risk + perfect-order decomposition
         run: python analytics/supply_risk.py
 
+      - name: GIS network layers + nearest-node screening
+        run: python analytics/geospatial_network.py
+
       - name: Inventory position, cover vs lead, and the transfer opportunity
         run: python analytics/inventory_health.py
 

@@ -1,0 +1,24 @@
+entity_type,entity_id,name,country,region,longitude,latitude,location_basis
+warehouse,1,Ontario DC 1,Canada,Ontario,-79.3832,43.6532,synthetic_reference_point
+warehouse,2,Alberta DC 2,Canada,Alberta,-114.0719,51.0447,synthetic_reference_point
+warehouse,3,Ontario DC 3,Canada,Ontario,-75.6972,45.4215,synthetic_reference_point
+warehouse,4,BC Interior DC 4,Canada,BC Interior,-119.4960,49.8880,synthetic_reference_point
+warehouse,5,BC Interior DC 5,Canada,BC Interior,-120.3273,50.6745,synthetic_reference_point
+warehouse,6,Alberta DC 6,Canada,Alberta,-113.4909,53.5461,synthetic_reference_point
+warehouse,7,BC Lower Mainland DC 7,Canada,BC Lower Mainland,-123.1207,49.2827,synthetic_reference_point
+warehouse,8,BC Interior DC 8,Canada,BC Interior,-122.7497,53.9171,synthetic_reference_point
+supplier,1,Blair PLC,USA,North America,-87.6298,41.8781,synthetic_reference_point
+supplier,2,Dudley Group,Spain,Europe,-0.3763,39.4699,synthetic_reference_point
+supplier,3,Arnold Ltd,Poland,Europe,21.0122,52.2297,synthetic_reference_point
+supplier,4,"Mcclure, Ward and Lee",Brazil,South America,-46.6333,-23.5505,synthetic_reference_point
+supplier,5,Williams and Sons,Mexico,North America,-100.3161,25.6866,synthetic_reference_point
+supplier,6,Galloway-Wyatt,Mexico,North America,-99.1332,19.4326,synthetic_reference_point
+supplier,7,James Group,Vietnam,Asia Pacific,106.6297,10.8231,synthetic_reference_point
+supplier,8,"Flowers, Martin and Kelly",Thailand,Asia Pacific,100.5018,13.7563,synthetic_reference_point
+supplier,9,"Adams, Zuniga and Wong",Thailand,Asia Pacific,100.9847,13.0827,synthetic_reference_point
+supplier,10,"Reid, Ferguson and Sanchez",India,Asia Pacific,72.8777,19.0760,synthetic_reference_point
+supplier,11,Gray-Mayo,Mexico,North America,-103.3496,20.6597,synthetic_reference_point
+supplier,12,"Watts, Robinson and Nguyen",Brazil,South America,-46.3289,-23.9608,synthetic_reference_point
+supplier,13,Perez Inc,Canada,North America,-73.5673,45.5019,synthetic_reference_point
+supplier,14,Morales-Jones,Mexico,North America,-117.0382,32.5149,synthetic_reference_point
+supplier,15,"Walter, Edwards and Rios",Spain,Europe,2.1734,41.3851,synthetic_reference_point

@@ -7,7 +7,7 @@
 ![T-SQL](https://img.shields.io/badge/T--SQL-Star%20Schema-CC2927)
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
-![Tests](https://img.shields.io/badge/tests-659%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-665%20collected-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 In specialty food distribution, every pallet is a countdown timer. A case of
@@ -22,8 +22,26 @@ One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs a 518-test suite. The
+builds, exercises the model-promotion policy, and runs a 665-test suite. The
 green badge above covers the failure paths too.
+
+## Business process improvement case
+
+The [`inventory and supplier exception process`](docs/business_process_improvement_case.md)
+turns the control tower into a complete operating workflow: stakeholder roles,
+current- and future-state maps, requirements, a RACI, exception handling,
+change and adoption steps, and process measures. It also separates the
+transferable analysis pattern from municipal asset-management domain
+experience rather than claiming the two are the same.
+
+## GIS network analysis
+
+The [`GIS network analysis`](docs/gis_network_analysis.md) adds a governed
+spatial layer to the same workflow: 23 WGS 84 reference points,
+QGIS/ArcGIS-ready GeoJSON, nearest-node screening, a Power BI join surface,
+and automated controls that stop key, coordinate or route-selection drift.
+Locations are synthetic and straight-line distance is labelled as screening,
+not road routing.
 
 ## The problem, in one walk through the warehouse
 
@@ -493,7 +511,7 @@ python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3,
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 193 tests: contracts, gate, quarantine, stream, promotion
+pytest tests/ -v                                     # 665 tests: contracts, GIS, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -672,6 +690,8 @@ pipeline/           run_pipeline.py — orchestrator: contracts + quarantine + D
 notebooks/          PySpark: 01-04 medallion -> 05 streaming -> 06 metadata MERGE engine
 analytics/          demand_forecast.py — 4-model rolling-origin backtest + MLflow
                      model_lifecycle.py — drift watch + registry champion promotion
+                     geospatial_network.py — WGS 84 validation + GeoJSON layers
+                     and nearest-node distance screening
                      supply_risk.py — sourcing concentration, disruption scenario,
                      perfect-order decomposition
                      inventory_health.py — position vs policy, cover vs lead,
@@ -685,8 +705,10 @@ sql/                T-SQL DDL for the Gold star schema
 powerbi/            PBIP project (TMDL + PBIR): dynamic RLS + OLS roles,
                      Time Intelligence calculation group, DAX library, build guide
 deploy/             fabric-cicd deployment script + per-environment parameter.yml
-docs/               metric dictionary, pipeline spec, MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              518 tests: contracts, gate, quarantine, streaming, observability,
+gis/                governed synthetic location references for GIS publication
+docs/               metric dictionary, pipeline spec, GIS analysis, process case,
+                     MODEL_OPTIMIZATION.md, DEPLOYMENT.md
+tests/              665 tests: contracts, GIS, gate, quarantine, streaming, observability,
                      promotion policy, KPI rules, sourcing risk, inventory health,
                      supplier scorecard, service economics, semantic-model
                      binding, report formatting

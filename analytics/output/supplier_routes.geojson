@@ -1,0 +1,410 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "supplier-1-route",
+      "properties": {
+        "supplier_id": 1,
+        "supplier_name": "Blair PLC",
+        "supplier_country": "USA",
+        "warehouse_id": 1,
+        "warehouse_name": "Ontario DC 1",
+        "distance_km": 701.2,
+        "distance_band": "continental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -87.6298,
+            41.8781
+          ],
+          [
+            -79.3832,
+            43.6532
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-2-route",
+      "properties": {
+        "supplier_id": 2,
+        "supplier_name": "Dudley Group",
+        "supplier_country": "Spain",
+        "warehouse_id": 3,
+        "warehouse_name": "Ontario DC 3",
+        "distance_km": 5986.4,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -0.3763,
+            39.4699
+          ],
+          [
+            -75.6972,
+            45.4215
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-3-route",
+      "properties": {
+        "supplier_id": 3,
+        "supplier_name": "Arnold Ltd",
+        "supplier_country": "Poland",
+        "warehouse_id": 3,
+        "warehouse_name": "Ontario DC 3",
+        "distance_km": 6577.0,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.0122,
+            52.2297
+          ],
+          [
+            -75.6972,
+            45.4215
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-4-route",
+      "properties": {
+        "supplier_id": 4,
+        "supplier_name": "Mcclure, Ward and Lee",
+        "supplier_country": "Brazil",
+        "warehouse_id": 1,
+        "warehouse_name": "Ontario DC 1",
+        "distance_km": 8186.1,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -46.6333,
+            -23.5505
+          ],
+          [
+            -79.3832,
+            43.6532
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-5-route",
+      "properties": {
+        "supplier_id": 5,
+        "supplier_name": "Williams and Sons",
+        "supplier_country": "Mexico",
+        "warehouse_id": 1,
+        "warehouse_name": "Ontario DC 1",
+        "distance_km": 2751.2,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -100.3161,
+            25.6866
+          ],
+          [
+            -79.3832,
+            43.6532
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-6-route",
+      "properties": {
+        "supplier_id": 6,
+        "supplier_name": "Galloway-Wyatt",
+        "supplier_country": "Mexico",
+        "warehouse_id": 1,
+        "warehouse_name": "Ontario DC 1",
+        "distance_km": 3261.0,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -99.1332,
+            19.4326
+          ],
+          [
+            -79.3832,
+            43.6532
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-7-route",
+      "properties": {
+        "supplier_id": 7,
+        "supplier_name": "James Group",
+        "supplier_country": "Vietnam",
+        "warehouse_id": 8,
+        "warehouse_name": "BC Interior DC 8",
+        "distance_km": 11452.5,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.6297,
+            10.8231
+          ],
+          [
+            -122.7497,
+            53.9171
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-8-route",
+      "properties": {
+        "supplier_id": 8,
+        "supplier_name": "Flowers, Martin and Kelly",
+        "supplier_country": "Thailand",
+        "warehouse_id": 8,
+        "warehouse_name": "BC Interior DC 8",
+        "distance_km": 11450.1,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            100.5018,
+            13.7563
+          ],
+          [
+            -122.7497,
+            53.9171
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-9-route",
+      "properties": {
+        "supplier_id": 9,
+        "supplier_name": "Adams, Zuniga and Wong",
+        "supplier_country": "Thailand",
+        "warehouse_id": 8,
+        "warehouse_name": "BC Interior DC 8",
+        "distance_km": 11496.4,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            100.9847,
+            13.0827
+          ],
+          [
+            -122.7497,
+            53.9171
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-10-route",
+      "properties": {
+        "supplier_id": 10,
+        "supplier_name": "Reid, Ferguson and Sanchez",
+        "supplier_country": "India",
+        "warehouse_id": 8,
+        "warehouse_name": "BC Interior DC 8",
+        "distance_km": 11762.0,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8777,
+            19.076
+          ],
+          [
+            -122.7497,
+            53.9171
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-11-route",
+      "properties": {
+        "supplier_id": 11,
+        "supplier_name": "Gray-Mayo",
+        "supplier_country": "Mexico",
+        "warehouse_id": 1,
+        "warehouse_name": "Ontario DC 1",
+        "distance_km": 3384.5,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -103.3496,
+            20.6597
+          ],
+          [
+            -79.3832,
+            43.6532
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-12-route",
+      "properties": {
+        "supplier_id": 12,
+        "supplier_name": "Watts, Robinson and Nguyen",
+        "supplier_country": "Brazil",
+        "warehouse_id": 1,
+        "warehouse_name": "Ontario DC 1",
+        "distance_km": 8240.4,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -46.3289,
+            -23.9608
+          ],
+          [
+            -79.3832,
+            43.6532
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-13-route",
+      "properties": {
+        "supplier_id": 13,
+        "supplier_name": "Perez Inc",
+        "supplier_country": "Canada",
+        "warehouse_id": 3,
+        "warehouse_name": "Ontario DC 3",
+        "distance_km": 166.3,
+        "distance_band": "regional",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -73.5673,
+            45.5019
+          ],
+          [
+            -75.6972,
+            45.4215
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-14-route",
+      "properties": {
+        "supplier_id": 14,
+        "supplier_name": "Morales-Jones",
+        "supplier_country": "Mexico",
+        "warehouse_id": 7,
+        "warehouse_name": "BC Lower Mainland DC 7",
+        "distance_km": 1931.7,
+        "distance_band": "continental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -117.0382,
+            32.5149
+          ],
+          [
+            -123.1207,
+            49.2827
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-15-route",
+      "properties": {
+        "supplier_id": 15,
+        "supplier_name": "Walter, Edwards and Rios",
+        "supplier_country": "Spain",
+        "warehouse_id": 3,
+        "warehouse_name": "Ontario DC 3",
+        "distance_km": 6053.4,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            2.1734,
+            41.3851
+          ],
+          [
+            -75.6972,
+            45.4215
+          ]
+        ]
+      }
+    }
+  ]
+}
