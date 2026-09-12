@@ -22,7 +22,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r data_generator/requirements.txt
+          pip install -r requirements.txt
           pip install pytest jsonschema statsmodels matplotlib pyarrow mlflow scikit-learn
+
+      - name: Compile the decision-room application
+        run: python -m py_compile streamlit_app.py app/*.py
 
       - name: Generate fresh synthetic data
         run: python data_generator/generate_data.py
