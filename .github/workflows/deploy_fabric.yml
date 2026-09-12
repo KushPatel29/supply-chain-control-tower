@@ -26,8 +26,8 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Validate PBIP artifacts before any deployment
@@ -42,8 +42,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev        # auto-deploy target, no approval gate
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Publish semantic model + report to the Dev workspace
@@ -62,8 +62,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: qa         # configure a required reviewer on this environment
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Promote to the QA workspace
@@ -82,8 +82,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod       # required reviewer + wait timer belong here
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Promote to the Prod workspace
