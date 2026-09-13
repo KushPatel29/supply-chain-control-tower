@@ -95,4 +95,19 @@ jobs:
           fi
 
       - name: Run pipeline logic & data-invariant tests
-        run: pytest tests/ -v
+        run: |
+          # Bind pytest to the interpreter configured above and preserve a
+          # useful public annotation if a clean Linux runner ever diverges.
+          set +e
+          python -m pytest tests/ -v 2>&1 | tee pytest.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            tail -60 pytest.log | while IFS= read -r line; do
+              safe=${line//'%'/'%25'}
+              safe=${safe//$'\r'/'%0D'}
+              safe=${safe//$'\n'/'%0A'}
+              echo "::error title=Pytest failure::$safe"
+            done
+          fi
+          exit "$status"
