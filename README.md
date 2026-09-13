@@ -11,6 +11,8 @@
 ![Tests](https://img.shields.io/badge/tests-690%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
+**▶ Live decision studio: [kush-network-risk-decision-room.onrender.com](https://kush-network-risk-decision-room.onrender.com/)**
+
 In specialty food distribution, every pallet is a countdown timer. A case of
 striploin with 90 days of shelf life is inventory; the same case with 3 days
 left is a problem, and next week it's a write-off. I spent years building
@@ -37,7 +39,8 @@ experience rather than claiming the two are the same.
 
 ## Network Risk Decision Assurance Studio
 
-The [`Streamlit decision studio`](streamlit_app.py) turns the GIS evidence into
+The [live Streamlit decision studio](https://kush-network-risk-decision-room.onrender.com/)
+turns the GIS evidence into
 a governed decision-and-handoff workflow. It starts with a question—what breaks
 if an origin or distribution node is unavailable—and carries it through policy
 sensitivity, prioritized exceptions, accountable follow-up, requirement and UAT
@@ -75,7 +78,7 @@ eligible external alternate, and 7 of 23 whose eligible alternate lead time
 fits 30 days.** Capacity, terms, certification and operational routing remain
 explicit follow-up checks. The
 [`interview playbook`](docs/streamlit_interview_guide.md) explains the talk
-track, method boundary, likely questions and one-click Community Cloud setup.
+track, method boundary, likely questions and reproducible deployment setup.
 
 ## GIS network analysis
 

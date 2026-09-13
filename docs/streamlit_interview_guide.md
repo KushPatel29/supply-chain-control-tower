@@ -268,7 +268,16 @@ python -m streamlit run streamlit_app.py
 Open `http://localhost:8501`. The app needs no API key or secrets. Run the
 repository checks with `python -m pytest -q`.
 
-## Deploy to Streamlit Community Cloud
+## Live deployment
+
+The public interview build runs at
+[kush-network-risk-decision-room.onrender.com](https://kush-network-risk-decision-room.onrender.com/).
+Render builds the root `requirements.txt`, starts `streamlit_app.py`, checks
+Streamlit's `/_stcore/health` endpoint and auto-deploys accepted commits from
+`master`. The complete free-tier service definition is versioned in
+[`render.yaml`](../render.yaml); the app needs no secrets.
+
+## Optional Streamlit Community Cloud deployment
 
 After the app files are committed and pushed, open
 [Streamlit Community Cloud](https://share.streamlit.io), choose **Create app**,

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: kush-network-risk-decision-room
+    runtime: python
+    plan: free
+    region: oregon
+    branch: master
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run streamlit_app.py --server.address 0.0.0.0 --server.port $PORT --server.headless true --browser.gatherUsageStats false
+    healthCheckPath: /_stcore/health
+    autoDeployTrigger: commit
