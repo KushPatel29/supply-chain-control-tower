@@ -15,8 +15,14 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "analytics"))
 
-from demand_forecast import (HORIZON, MODELS, N_FOLDS, load_daily_demand,
-                             rolling_backtest, wape)
+from demand_forecast import (  # noqa: E402
+    HORIZON,
+    MODELS,
+    N_FOLDS,
+    load_daily_demand,
+    rolling_backtest,
+    wape,
+)
 
 
 @pytest.fixture(scope="module")

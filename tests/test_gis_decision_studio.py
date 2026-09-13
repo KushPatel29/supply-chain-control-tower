@@ -1,4 +1,4 @@
-"""Focused contract tests for the interview-ready GIS decision room.
+"""Focused contract tests for the interview-ready GIS decision assurance studio.
 
 The analytical modules remain the source of business truth.  These tests cover
 the app-specific joins, policy controls, publication gate and presentation
@@ -15,6 +15,10 @@ import pytest
 from PIL import Image
 from streamlit.testing.v1 import AppTest
 
+from app.advanced_decision_support import (
+    build_country_scenario_portfolio,
+    warehouse_inventory_risk_summary,
+)
 from app.gis_decision_engine import (
     country_disruption,
     filtered_route_geojson,
@@ -28,6 +32,8 @@ from app.gis_visuals import (
     network_map,
     reroute_penalty_chart,
     scenario_map,
+    scenario_landscape,
+    warehouse_posture_map,
 )
 
 
@@ -176,6 +182,16 @@ def test_decision_figures_are_nonempty_and_carry_the_expected_evidence(evidence)
         ].astype(int)
     )
     scenario = reroute_network(locations, routes, [1])
+    warehouse_risk = warehouse_inventory_risk_summary(
+        evidence["inventory_position"], evidence["warehouses"], locations
+    )
+    portfolio = build_country_scenario_portfolio(
+        evidence["sourcing"],
+        evidence["suppliers"],
+        evidence["products"],
+        evidence["concentration"],
+        evidence["scorecard"],
+    )
 
     figures = [
         network_map(locations, enriched, mexico_ids),
@@ -183,13 +199,15 @@ def test_decision_figures_are_nonempty_and_carry_the_expected_evidence(evidence)
         distance_score_scatter(enriched, mexico_ids),
         country_exposure_bar(evidence["country_exposure"], "Mexico"),
         reroute_penalty_chart(scenario),
+        warehouse_posture_map(locations, warehouse_risk, "Ontario DC 3"),
+        scenario_landscape(portfolio, "Mexico"),
     ]
 
     assert all(isinstance(figure, go.Figure) for figure in figures)
     assert all(len(figure.data) > 0 for figure in figures)
     assert all(int(figure.layout.height) >= 300 for figure in figures)
     assert "Distribution node" in {trace.name for trace in figures[0].data}
-    assert {"Blocked baseline", "Screened reroute"} <= {
+    assert {"Blocked baseline", "Next-nearest screen"} <= {
         trace.name for trace in figures[1].data
     }
 
@@ -203,25 +221,34 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
     ).run(timeout=30)
 
     assert not app.exception
-    assert [title.value for title in app.title] == ["Where does the network break first?"]
-    assert [tab.label for tab in app.tabs] == [
-        "Country disruption",
-        "Node outage",
-        "Evidence trail",
-        "Interview guide",
+    assert [title.value for title in app.title] == [
+        "Turn a network signal into an accountable decision."
     ]
+    tab_labels = [tab.label for tab in app.tabs]
+    assert tab_labels[:4] == [
+        "Origin scenario",
+        "Node scenario",
+        "Action & handoff",
+        "Assurance",
+    ]
+    assert tab_labels[-1] == "Case study"
+    assert {"Traceability", "Replayable UAT", "GIS governance", "Lineage"} <= set(
+        tab_labels
+    )
     assert app.selectbox[0].value == "Mexico"
     metrics = {metric.label: metric.value for metric in app.metric}
     assert metrics["Award-weighted COGS exposure"] == "$11.82M"
     assert metrics["Affected SKUs"] == "36"
-    assert metrics["No eligible alternate"] == "13"
-    assert metrics["Impacted suppliers"] == "6"
+    assert metrics["No eligible external alternate"] == "13"
+    assert metrics["Impacted supplier screens"] == "6"
     assert any("8 of 8 controls are green" in item.value for item in app.success)
 
     app.slider[0].set_value(60).run(timeout=30)
     stricter_metrics = {metric.label: metric.value for metric in app.metric}
-    assert stricter_metrics["No eligible alternate"] == "25"
-    assert stricter_metrics["Recoverable in window"] == "4 / 11"
+    assert stricter_metrics["No eligible external alternate"] == "25"
+    assert stricter_metrics["Eligible alternate lead time fits window"] == "4 / 11"
 
     app.toggle[0].set_value(True).run(timeout=30)
     assert any("Publication blocked" in item.value for item in app.error)
+    download_labels = [button.label for button in app.get("download_button")]
+    assert "Download five-file evidence pack" not in download_labels

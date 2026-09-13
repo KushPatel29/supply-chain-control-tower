@@ -7,8 +7,8 @@
 ![T-SQL](https://img.shields.io/badge/T--SQL-Star%20Schema-CC2927)
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
-![Streamlit](https://img.shields.io/badge/Streamlit-decision%20room-FF4B4B?logo=streamlit&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-674%20passing-3B8C6E)
+![Streamlit](https://img.shields.io/badge/Streamlit-decision%20assurance-FF4B4B?logo=streamlit&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-690%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 In specialty food distribution, every pallet is a countdown timer. A case of
@@ -23,7 +23,7 @@ One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs a 674-test suite. The
+builds, exercises the model-promotion policy, and runs a 690-test suite. The
 green badge above covers the failure paths too.
 
 ## Business process improvement case
@@ -35,23 +35,32 @@ change and adoption steps, and process measures. It also separates the
 transferable analysis pattern from municipal asset-management domain
 experience rather than claiming the two are the same.
 
-## Network Risk Decision Room
+## Network Risk Decision Assurance Studio
 
-The [`Streamlit decision room`](streamlit_app.py) turns the GIS evidence into
-an interview-ready workflow. It starts with a decision—what breaks if an origin
-or distribution node is unavailable—and carries that question through evidence,
-policy choices, an action register and a downloadable briefing note. It is not
-a second dashboard: it is the interactive layer where an analyst can test an
-assumption and show exactly what changes.
+The [`Streamlit decision studio`](streamlit_app.py) turns the GIS evidence into
+a governed decision-and-handoff workflow. It starts with a question—what breaks
+if an origin or distribution node is unavailable—and carries it through policy
+sensitivity, prioritized exceptions, accountable follow-up, requirement and UAT
+evidence, and a reproducible five-file evidence pack. It is not a second
+dashboard: it is the interactive layer where an analyst can challenge an
+assumption and preserve exactly what supported the decision.
 
-![Network Risk Decision Room showing the Mexico disruption controls, award-weighted COGS exposure, affected SKUs, recovery evidence and the governed global network map.](docs/assets/gis-network-risk-studio.png)
+![Decision Assurance Studio showing the five-step decision rail, Mexico disruption controls, award-weighted COGS exposure, affected SKUs, and visible evidence boundaries.](docs/assets/gis-network-risk-studio.png)
 
-| Mode | Decision it supports |
+| Workspace | Decision it supports |
 |---|---|
-| Country disruption | Vary the origin, alternate-score floor and recovery window; identify stranded SKUs and export the response brief. |
-| Node outage | Remove a Canadian distribution node; recompute the next-nearest screening destination and export the reroute register. |
-| Evidence trail | Inspect lineage and eight publication controls; inject an invalid latitude in memory to prove the GIS gate blocks it. |
-| Interview guide | Follow a six-minute case-study narrative from stakeholder question to acceptance evidence and production backlog. |
+| Origin scenario | Vary the supplier origin, alternate-score floor and recovery window; prioritize SKUs needing validation. |
+| Node scenario | Remove a Canadian distribution node and recompute transparent next-nearest proximity screening. |
+| Action & handoff | Select an exception, assign session-only ownership, record required validation and export the governed evidence pack. |
+| Assurance | Trace business and GIS requirements to acceptance evidence, replay UAT cases and prove the publication gate fails closed. |
+| Case study | Review the current/future process, stakeholder roles, implementation boundary and presenter notes. |
+
+The node scenario keeps the GIS claim precise: unavailable reference points
+are screened against the next-nearest governed node with Haversine distance.
+It does not present the result as a shipment lane, route plan, capacity promise,
+or execution approval.
+
+![GIS node scenario showing Ontario DC 1 unavailable, six changed supplier screens, the transparent distance deltas, and the governed world map.](docs/assets/gis-decision-node-scenario.png)
 
 Run it without credentials or live business-system connections:
 
@@ -62,7 +71,9 @@ streamlit run streamlit_app.py
 
 The default Mexico scenario reconciles to the committed analytical outputs:
 **$11.82M / 27.24% of award-weighted COGS, 36 affected SKUs, 13 without an
-eligible external alternate, and 7 of 23 recoverable inside 30 days.** The
+eligible external alternate, and 7 of 23 whose eligible alternate lead time
+fits 30 days.** Capacity, terms, certification and operational routing remain
+explicit follow-up checks. The
 [`interview playbook`](docs/streamlit_interview_guide.md) explains the talk
 track, method boundary, likely questions and one-click Community Cloud setup.
 
@@ -552,7 +563,7 @@ python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3,
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 674 tests: contracts, GIS, app, gate, quarantine, stream, promotion
+pytest tests/ -v                                     # 690 tests: contracts, GIS, app, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -675,7 +686,7 @@ python analytics/supplier_scorecard.py
 # 6. what the service policy costs, and what the same money could buy instead
 python analytics/service_economics.py
 
-# 7. launch the interactive GIS Network Risk Decision Room
+# 7. launch the interactive GIS Network Risk Decision Assurance Studio
 pip install -r requirements.txt
 streamlit run streamlit_app.py
 
@@ -745,8 +756,8 @@ analytics/          demand_forecast.py — 4-model rolling-origin backtest + MLf
                      against published anchors, tier vs measurement, award shift
                      service_economics.py — safety-stock exchange curve and a
                      constant-spend re-allocation by marginal return
-app/                 tested GIS disruption, rerouting and visual decision logic
-streamlit_app.py     interview-ready Network Risk Decision Room
+app/                 tested disruption, next-nearest screening, assurance and evidence-pack logic
+streamlit_app.py     Network Risk Decision Assurance Studio
 benchmarks/         10M-row Delta Lake benchmarks (MERGE, Z-order file skipping)
 sql/                T-SQL DDL for the Gold star schema
 powerbi/            PBIP project (TMDL + PBIR): dynamic RLS + OLS roles,
@@ -755,7 +766,7 @@ deploy/             fabric-cicd deployment script + per-environment parameter.ym
 gis/                governed synthetic location references for GIS publication
 docs/               metric dictionary, pipeline spec, GIS analysis, process case,
                      MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              674 tests: contracts, GIS, app, gate, quarantine, streaming, observability,
+tests/              690 tests: contracts, GIS, app, gate, quarantine, streaming, observability,
                      promotion policy, KPI rules, sourcing risk, inventory health,
                      supplier scorecard, service economics, semantic-model
                      binding, report formatting

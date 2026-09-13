@@ -1,4 +1,4 @@
-"""Pure data and scenario logic for the GIS Network Risk Decision Room.
+"""Pure data and scenario logic for the GIS Network Risk Decision Assurance Studio.
 
 The Streamlit page is deliberately thin. These functions hold the business
 rules so the calculations can be reviewed and tested without a browser.
@@ -36,9 +36,11 @@ def load_app_data(root: Path = ROOT) -> dict[str, object]:
         "scorecard": pd.read_csv(output / "supplier_scorecard.csv"),
         "country_exposure": pd.read_csv(output / "country_exposure.csv"),
         "concentration": pd.read_csv(output / "sourcing_concentration.csv"),
+        "inventory_position": pd.read_csv(output / "inventory_position.csv"),
         "sourcing": pd.read_csv(bronze / "fact_sourcing.csv"),
         "suppliers": pd.read_csv(bronze / "dim_supplier.csv"),
         "products": pd.read_csv(bronze / "dim_product.csv"),
+        "warehouses": pd.read_csv(bronze / "dim_warehouse.csv"),
     }
     _require(frames["locations"], {
         "entity_type", "entity_id", "name", "country", "region",
@@ -50,8 +52,15 @@ def load_app_data(root: Path = ROOT) -> dict[str, object]:
     }, "route summary")
     _require(frames["scorecard"], {
         "supplier_id", "spend", "otif_rate", "composite_score", "supplier_tier",
-        "measured_band", "tier_matches_measurement",
+        "measured_band", "tier_matches_measurement", "is_qualified_alternate",
     }, "supplier scorecard")
+    _require(frames["inventory_position"], {
+        "sku", "warehouse_name", "position_units", "reorder_point", "lead_days",
+        "covers_lead_time", "gap_value", "excess_value", "on_hand_value",
+    }, "inventory position")
+    _require(frames["warehouses"], {
+        "warehouse_id", "warehouse_name", "region", "city",
+    }, "warehouse dimension")
     for frame in frames.values():
         if isinstance(frame, pd.DataFrame):
             frame.columns = [str(column).strip() for column in frame.columns]
@@ -298,7 +307,7 @@ def country_decision_brief(
 - SKUs supplied: {int(exposure['skus_supplied'])}
 - Minimum acceptable alternate score: {float(minimum_alternate_score):.1f}
 - SKUs without an eligible external alternate: {len(stranded)}
-- Recoverable SKUs within the selected window: {within_window} of {len(recoverable)}
+- Eligible alternate lead time fits the selected window: {within_window} of {len(recoverable)}
 - Highest-COGS stranded SKU: {highest}
 - Mean best eligible-alternate contract lead time: {switch_text}
 

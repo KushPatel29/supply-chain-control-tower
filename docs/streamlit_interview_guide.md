@@ -1,4 +1,4 @@
-# Network Risk Decision Room: Interview Playbook
+# Network Risk Decision Assurance Studio: Interview Playbook
 
 Use this guide to demonstrate business-analysis judgement through the app. The
 strongest story is not “I built a dashboard.” It is: **I turned an ambiguous
@@ -6,10 +6,11 @@ operational question into a governed, testable decision workflow.**
 
 ## Before the interview
 
-- Open the app and leave **Country disruption** set to **Mexico**, minimum
+- Open the app and leave **Origin scenario** set to **Mexico**, minimum
   alternate score **0**, and recovery window **30 days**.
-- Open **Node outage** in a second browser tab with **Ontario DC 1** selected.
-- Confirm the **Evidence trail** publication gate passes before the call.
+- Open **Node scenario** in a second browser tab with **Ontario DC 1** selected.
+- Confirm the **Assurance** publication gate passes before the call and the
+  five-file evidence pack is available in **Action & handoff**.
 - Keep the repository, GIS analysis and test suite available as supporting
   evidence. Do not lead with code unless asked.
 - Say at the start that the business records and coordinates are synthetic.
@@ -18,7 +19,7 @@ operational question into a governed, testable decision workflow.**
 
 ### 0:00–0:40 — Frame the decision
 
-**Show:** the title, evidence boundary and four app tabs.
+**Show:** the title, evidence boundary and five app tabs.
 
 **Say:** “I started with a decision, not a map: if a sourcing origin or a
 distribution node becomes unavailable, which products need attention first,
@@ -33,7 +34,8 @@ that a stakeholder can act on.”
 **Say:** “Mexico is the largest modeled origin: four suppliers touch 36 SKUs
 and represent **$11,821,992.49**, or **27.24%**, of award-weighted network COGS.
 The qualified-alternate rule leaves **13 SKUs without an eligible external
-source**. Of the remaining 23, only **7 fit a 30-day recovery window**; their
+source**. Of the remaining 23, only **7 have an eligible alternate lead time
+that fits a 30-day recovery window**; their
 mean best contract lead is **31.7 days**. This converts a broad country-risk
 question into a prioritized SKU register.”
 
@@ -55,10 +57,10 @@ Restore the score floor to 0 before moving on.
 
 ### 2:40–3:40 — Test Ontario DC 1
 
-**Show:** **Node outage** with Ontario DC 1 unavailable.
+**Show:** **Node scenario** with Ontario DC 1 unavailable.
 
 **Say:** “Ontario DC 1 is the nearest screening node for six supplier reference
-points. Removing it reroutes those six to their next-nearest available node,
+points. Removing it screens those six against their next-nearest available node,
 adding **1,155.6 km** across the affected screening connections. The largest
 single increase is **342.3 km**, for Galloway-Wyatt moving from Ontario DC 1 to
 Ontario DC 3. The affected suppliers represent **$44,455,614.81** of annual
@@ -70,13 +72,15 @@ The model contains no shipment-lane or node-throughput fact.”
 
 ### 3:40–4:40 — Close the loop to action
 
-**Show:** the SKU response register and download a decision brief.
+**Show:** **Action & handoff**, select a SKU, assign an accountable role and
+download the evidence pack.
 
 **Say:** “A scenario is only useful if it changes work. Each row states whether
 a qualified alternate exists, the best available contract lead, whether it
-fits the selected window, and the next validation step. The exported brief
-retains the owner, thresholds and method boundary so the decision does not lose
-its assumptions when it leaves the app.”
+fits the selected window, and the next validation step. The evidence pack
+retains the session handoff, thresholds, affected records, selected GIS layer,
+source manifest and method boundary so the decision does not lose its
+assumptions when it leaves the app.”
 
 Name the hand-offs: procurement confirms qualification, capacity and terms;
 supply planning checks cover and timing; logistics validates the actual route
@@ -84,7 +88,8 @@ and node capacity.
 
 ### 4:40–6:00 — Prove why the evidence is trustworthy
 
-**Show:** **Evidence trail**, then enable the invalid-latitude toggle.
+**Show:** **Assurance**, review the requirement-to-test traceability and UAT
+cases, then enable the invalid-latitude toggle.
 
 **Say:** “The publication gate reconciles keys, checks WGS 84 bounds, confirms
 supplier coverage and recomputes the nearest node. A latitude of 95 degrees
@@ -108,8 +113,8 @@ a road or freight network, border time, capacity and approval history.”
 | Share of network COGS | 27.24% | Largest modeled origin exposure |
 | No qualified external alternate | 13 SKUs | No qualified awarded supplier outside Mexico |
 | Qualified external alternate exists | 23 SKUs | Capacity and commercial terms still require validation |
-| Recoverable within 30 days | 7 of 23 | Best eligible contract lead is at most 30 days |
-| Mean best alternate lead | 31.7 days | Simple mean of each recoverable SKU’s shortest eligible contract lead |
+| Eligible alternate lead fits 30 days | 7 of 23 | Best eligible contract lead is at most 30 days; capacity remains untested |
+| Mean best alternate lead | 31.7 days | Simple mean of each eligible SKU’s shortest alternate contract lead |
 
 ### Ontario DC 1 outage baseline
 
@@ -123,6 +128,16 @@ a road or freight network, border time, capacity and approval history.”
 Four affected suppliers screen next to Ontario DC 3; Williams and Sons and
 Gray-Mayo screen next to Alberta DC 2. None of these destinations is a capacity
 or service-territory recommendation.
+
+### Warehouse posture baseline
+
+| Measure | Exact result | Meaning |
+|---|---:|---|
+| Governed distribution nodes | 8 | Warehouse dimension reconciled to WGS 84 points by ID and name |
+| Inventory positions | 478 | SKU-by-warehouse analytical positions |
+| Replenishment gap value | $2,271,669.66 | Sum of positive modeled replenishment gaps |
+| Positions not covering lead | 127 | Snapshot evidence, not node throughput |
+| Highest gap node | Ontario DC 3 ($368,150.93) | First node for planner review under this snapshot |
 
 ## Business-analyst and stakeholder framing
 
@@ -142,8 +157,8 @@ Useful requirement framing:
   reference points and published screening routes.
 - **Business rules:** external supplier, qualified status, optional score floor
   and selected recovery window.
-- **Outputs:** exposure measures, exception register, reroute register and
-  downloadable decision brief.
+- **Outputs:** exposure measures, exception register, next-nearest node
+  screening register and a governed five-file evidence pack.
 - **Acceptance:** stable keys, valid coordinates, complete supplier coverage,
   reproducible nearest-node choice and visible limitations.
 
@@ -161,7 +176,7 @@ network_locations.csv ─ WGS 84 validation ─┬─ network_locations.geojson
                                               └─ supplier_routes.geojson
                                                  + gis_route_summary.csv
 
-tested decision functions ─ Streamlit interface ─ decision brief/register
+tested decision functions ─ Streamlit interface ─ handoff + evidence pack
 ```
 
 The interface reads committed evidence. It does not silently geocode locations,
@@ -181,7 +196,8 @@ call an external routing service or alter source files.
 - Freight, duty, FX, border delay, carbon, throughput and service territories
   are absent.
 - The Ontario outage’s spend figure is supplier context, not warehouse flow.
-- The app supports investigation and hand-off; it does not authorize execution.
+- The app supports investigation and handoff; its session fields are not a
+  persistent workflow system and it does not authorize execution.
 
 ## Likely interview questions
 
@@ -263,7 +279,7 @@ then **Yup, I have an app**, and use:
 | Repository | `KushPatel29/supply-chain-control-tower` |
 | Branch | `master` |
 | Main file path | `streamlit_app.py` |
-| App URL / custom subdomain | `kush-network-risk-studio` if available |
+| App URL / custom subdomain | `kush-network-risk-decision-room` if available |
 | Advanced settings → Python | `3.12` |
 | Secrets | Leave blank |
 

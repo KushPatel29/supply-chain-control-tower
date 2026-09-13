@@ -1,4 +1,4 @@
-"""Plotly figures for the GIS Network Risk Decision Room."""
+"""Plotly figures for the Network Risk Decision Assurance Studio."""
 
 from __future__ import annotations
 
@@ -69,10 +69,10 @@ def network_map(
 ) -> go.Figure:
     highlighted = {int(item) for item in highlighted_supplier_ids}
     fig = go.Figure()
-    legend_written = {"Focused route": False, "Other route": False}
+    legend_written = {"Focused screen": False, "Other screen": False}
     for row in routes.to_dict("records"):
         focus = not highlighted or int(row["supplier_id"]) in highlighted
-        name = "Focused route" if focus else "Other route"
+        name = "Focused screen" if focus else "Other screen"
         color = "rgba(228,179,90,0.74)" if focus else "rgba(142,167,168,0.16)"
         fig.add_trace(_route_trace(
             row, color, 1.8 if focus else 0.8, name,
@@ -120,7 +120,7 @@ def scenario_map(
     for row in routes.to_dict("records"):
         if int(row["supplier_id"]) in impacted_ids:
             continue
-        fig.add_trace(_route_trace(row, "rgba(142,167,168,0.15)", 0.8, "Unaffected route", showlegend=False))
+        fig.add_trace(_route_trace(row, "rgba(142,167,168,0.15)", 0.8, "Unaffected screen", showlegend=False))
 
     baseline_legend = False
     scenario_legend = False
@@ -137,10 +137,10 @@ def scenario_map(
             lon=[baseline["supplier_longitude"], destination.longitude],
             lat=[baseline["supplier_latitude"], destination.latitude],
             mode="lines", line={"width": 2.4, "color": CYAN},
-            name="Screened reroute", legendgroup="Screened reroute", showlegend=not scenario_legend,
+            name="Next-nearest screen", legendgroup="Next-nearest screen", showlegend=not scenario_legend,
             hovertemplate=(
                 f"<b>{decision['supplier_name']}</b><br>"
-                f"Reroute → {decision['scenario_warehouse_name']}<br>"
+                f"Next-nearest node → {decision['scenario_warehouse_name']}<br>"
                 f"{decision['scenario_distance_km']:,.1f} km · +{decision['extra_distance_km']:,.1f} km<extra></extra>"
             ),
         ))
@@ -229,13 +229,172 @@ def reroute_penalty_chart(scenario: pd.DataFrame) -> go.Figure:
         text=impacted.extra_distance_km, texttemplate="+%{text:,.0f} km",
         textposition="outside", cliponaxis=False,
         customdata=impacted[["scenario_warehouse_name", "scenario_distance_km"]],
-        hovertemplate="<b>%{y}</b><br>+%{x:,.1f} km<br>Reroute to %{customdata[0]} (%{customdata[1]:,.1f} km)<extra></extra>",
+        hovertemplate=(
+            "<b>%{y}</b><br>+%{x:,.1f} km<br>"
+            "Next-nearest node: %{customdata[0]} (%{customdata[1]:,.1f} km)"
+            "<extra></extra>"
+        ),
     ))
     fig.update_layout(
         height=max(310, 54 * max(1, len(impacted))), margin={"l": 6, "r": 12, "t": 20, "b": 20},
         paper_bgcolor=OCEAN, plot_bgcolor=OCEAN, font={"family": "Arial", "color": INK},
         xaxis={"title": "Additional screening distance (km)", "gridcolor": GRID, "rangemode": "tozero"},
         yaxis={"title": "", "gridcolor": OCEAN}, showlegend=False,
+        hoverlabel={"bgcolor": "#0d1b20", "bordercolor": GRID, "font": {"color": INK}},
+    )
+    return fig
+
+
+def warehouse_posture_map(
+    locations: pd.DataFrame,
+    warehouse_risk: pd.DataFrame,
+    selected_warehouse: str,
+) -> go.Figure:
+    """Map inventory-policy pressure at governed warehouse reference points."""
+    nodes = locations[locations.entity_type.eq("warehouse")][
+        ["entity_id", "name", "longitude", "latitude", "region"]
+    ].rename(columns={"entity_id": "warehouse_id", "name": "warehouse_name"})
+    risk_metrics = warehouse_risk.drop(
+        columns=["longitude", "latitude", "region"], errors="ignore"
+    )
+    plotted = nodes.merge(
+        risk_metrics,
+        on=["warehouse_id", "warehouse_name"],
+        how="left",
+        validate="one_to_one",
+    )
+    if plotted.gap_value.isna().any():
+        raise ValueError("warehouse posture map has an unmatched inventory summary")
+
+    maximum_gap = max(float(plotted.gap_value.max()), 1.0)
+    plotted["marker_size"] = 14 + 24 * (plotted.gap_value / maximum_gap).pow(0.5)
+    plotted["selected"] = plotted.warehouse_name.eq(selected_warehouse)
+
+    fig = go.Figure()
+    for selected, label, color in (
+        (False, "Other distribution node", CORAL),
+        (True, "Selected distribution node", AMBER),
+    ):
+        subset = plotted[plotted.selected.eq(selected)]
+        if subset.empty:
+            continue
+        fig.add_trace(go.Scattergeo(
+            lon=subset.longitude,
+            lat=subset.latitude,
+            mode="markers+text",
+            marker={
+                "size": subset.marker_size,
+                "color": color,
+                "opacity": 0.88 if selected else 0.58,
+                "symbol": "diamond",
+                "line": {"color": INK if selected else OCEAN, "width": 2 if selected else 1},
+            },
+            text=subset.warehouse_name,
+            textposition="top center",
+            textfont={"size": 10, "color": INK},
+            customdata=subset[[
+                "gap_value", "gap_positions", "not_covering_lead",
+                "excess_value", "on_hand_value",
+            ]],
+            hovertemplate=(
+                "<b>%{text}</b><br>"
+                "$%{customdata[0]:,.0f} replenishment gap<br>"
+                "%{customdata[1]} positions below policy<br>"
+                "%{customdata[2]} positions not covering lead<br>"
+                "$%{customdata[3]:,.0f} excess · $%{customdata[4]:,.0f} on hand"
+                "<extra></extra>"
+            ),
+            name=label,
+        ))
+
+    fig.update_layout(
+        height=455,
+        margin={"l": 0, "r": 0, "t": 8, "b": 0},
+        paper_bgcolor=OCEAN,
+        plot_bgcolor=OCEAN,
+        font={"family": "Arial, sans-serif", "color": INK},
+        legend={
+            "orientation": "h", "x": 0.01, "y": 0.02,
+            "bgcolor": "rgba(7,16,20,0.86)", "bordercolor": GRID, "borderwidth": 1,
+        },
+        geo={
+            "projection": {"type": "mercator"},
+            "fitbounds": "locations",
+            "showland": True, "landcolor": LAND,
+            "showocean": True, "oceancolor": OCEAN,
+            "showlakes": True, "lakecolor": OCEAN,
+            "showcoastlines": True, "coastlinecolor": GRID,
+            "showcountries": True, "countrycolor": GRID,
+            "showsubunits": True, "subunitcolor": "rgba(49,81,88,0.62)",
+            "bgcolor": OCEAN,
+        },
+        hoverlabel={"bgcolor": "#0d1b20", "bordercolor": GRID, "font": {"color": INK}},
+    )
+    return fig
+
+
+def scenario_landscape(
+    scenario_portfolio: pd.DataFrame,
+    selected_country: str = "Mexico",
+) -> go.Figure:
+    """Compare origin exposure and stranded-SKU outcomes under one policy."""
+    frame = scenario_portfolio.copy()
+    frame["selected"] = frame.country.eq(selected_country)
+    maximum_skus = max(float(frame.affected_skus.max()), 1.0)
+    frame["marker_size"] = 15 + 28 * (frame.affected_skus / maximum_skus).pow(0.5)
+
+    fig = go.Figure()
+    for selected, label, color in (
+        (False, "Other origin", CYAN),
+        (True, "Selected origin", AMBER),
+    ):
+        subset = frame[frame.selected.eq(selected)]
+        if subset.empty:
+            continue
+        fig.add_trace(go.Scatter(
+            x=subset.network_cogs_share,
+            y=subset.stranded_skus,
+            mode="markers+text",
+            marker={
+                "size": subset.marker_size,
+                "color": color,
+                "opacity": 0.8 if selected else 0.55,
+                "line": {"color": INK if selected else OCEAN, "width": 2 if selected else 1},
+            },
+            text=subset.country,
+            textposition="top center",
+            textfont={"size": 10, "color": INK},
+            customdata=subset[[
+                "affected_skus", "recoverable_skus", "recoverable_within_window",
+                "mean_best_alternate_lead_days", "award_weighted_cogs",
+            ]],
+            hovertemplate=(
+                "<b>%{text}</b><br>%{x:.1%} award-weighted COGS exposure<br>"
+                "%{y} stranded of %{customdata[0]} affected SKUs<br>"
+                "%{customdata[2]} of %{customdata[1]} eligible alternate leads fit the window<br>"
+                "%{customdata[3]:.1f} mean best-alternate days<br>"
+                "$%{customdata[4]:,.0f} exposed COGS<extra></extra>"
+            ),
+            name=label,
+        ))
+
+    fig.update_layout(
+        height=430,
+        margin={"l": 18, "r": 18, "t": 24, "b": 30},
+        paper_bgcolor=OCEAN,
+        plot_bgcolor=OCEAN,
+        font={"family": "Arial, sans-serif", "color": INK},
+        xaxis={
+            "title": "Award-weighted COGS exposure",
+            "tickformat": ".0%", "gridcolor": GRID, "zeroline": False,
+            "rangemode": "tozero",
+        },
+        yaxis={
+            "title": "SKUs without an eligible external alternate",
+            "gridcolor": GRID, "zeroline": False, "rangemode": "tozero",
+            "dtick": 5,
+        },
+        legend={"orientation": "h", "y": 1.12, "x": 0},
         hoverlabel={"bgcolor": "#0d1b20", "bordercolor": GRID, "font": {"color": INK}},
     )
     return fig
