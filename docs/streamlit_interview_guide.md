@@ -6,11 +6,11 @@ operational question into a governed, testable decision workflow.**
 
 ## Before the interview
 
-- Open the app and leave **Origin scenario** set to **Mexico**, minimum
+- Open the app and confirm the **Executive brief** opens with **Mexico**, minimum
   alternate score **0**, and recovery window **30 days**.
-- Open **Node scenario** in a second browser tab with **Ontario DC 1** selected.
+- Open **Node outage** in a second browser tab with **Ontario DC 1** selected.
 - Confirm the **Assurance** publication gate passes before the call and the
-  five-file evidence pack is available in **Action & handoff**.
+  five-file evidence pack is available in **Handoff**.
 - Keep the repository, GIS analysis and test suite available as supporting
   evidence. Do not lead with code unless asked.
 - Say at the start that the business records and coordinates are synthetic.
@@ -19,7 +19,7 @@ operational question into a governed, testable decision workflow.**
 
 ### 0:00–0:40 — Frame the decision
 
-**Show:** the title, evidence boundary and five app tabs.
+**Show:** the live executive brief and six decision workspaces.
 
 **Say:** “I started with a decision, not a map: if a sourcing origin or a
 distribution node becomes unavailable, which products need attention first,
@@ -57,7 +57,7 @@ Restore the score floor to 0 before moving on.
 
 ### 2:40–3:40 — Test Ontario DC 1
 
-**Show:** **Node scenario** with Ontario DC 1 unavailable.
+**Show:** **Node outage** with Ontario DC 1 unavailable.
 
 **Say:** “Ontario DC 1 is the nearest screening node for six supplier reference
 points. Removing it screens those six against their next-nearest available node,
@@ -72,7 +72,7 @@ The model contains no shipment-lane or node-throughput fact.”
 
 ### 3:40–4:40 — Close the loop to action
 
-**Show:** **Action & handoff**, select a SKU, assign an accountable role and
+**Show:** **Handoff**, select a SKU, assign an accountable role and
 download the evidence pack.
 
 **Say:** “A scenario is only useful if it changes work. Each row states whether
@@ -270,12 +270,11 @@ repository checks with `python -m pytest -q`.
 
 ## Live deployment
 
-The public interview build runs at
-[kush-network-risk-decision-room.onrender.com](https://kush-network-risk-decision-room.onrender.com/).
-Render builds the root `requirements.txt`, starts `streamlit_app.py`, checks
-Streamlit's `/_stcore/health` endpoint and auto-deploys accepted commits from
-`master`. The complete free-tier service definition is versioned in
-[`render.yaml`](../render.yaml); the app needs no secrets.
+The public interview build runs on Streamlit Community Cloud at
+[kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/).
+It builds the root `requirements.txt`, starts `streamlit_app.py` and auto-deploys
+accepted commits from `master`. The app needs no secrets. The versioned
+[`render.yaml`](../render.yaml) remains an optional deployment reference.
 
 ## Optional Streamlit Community Cloud deployment
 

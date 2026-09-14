@@ -11,7 +11,7 @@
 ![Tests](https://img.shields.io/badge/tests-690%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-**▶ Live decision studio: [kush-network-risk-decision-room.onrender.com](https://kush-network-risk-decision-room.onrender.com/)**
+**▶ Live decision studio: [kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/)**
 
 In specialty food distribution, every pallet is a countdown timer. A case of
 striploin with 90 days of shelf life is inventory; the same case with 3 days
@@ -39,22 +39,25 @@ experience rather than claiming the two are the same.
 
 ## Network Risk Decision Assurance Studio
 
-The [live Streamlit decision studio](https://kush-network-risk-decision-room.onrender.com/)
+The [live Streamlit decision studio](https://kush-network-risk-decision-room.streamlit.app/)
 turns the GIS evidence into
 a governed decision-and-handoff workflow. It starts with a question—what breaks
 if an origin or distribution node is unavailable—and carries it through policy
 sensitivity, prioritized exceptions, accountable follow-up, requirement and UAT
 evidence, and a reproducible five-file evidence pack. It is not a second
 dashboard: it is the interactive layer where an analyst can challenge an
-assumption and preserve exactly what supported the decision.
+assumption and preserve exactly what supported the decision. A concise executive
+brief opens first, and only the selected workspace is rendered, keeping the
+review faster and focused while preserving the deeper evidence on demand.
 
 ![Decision Assurance Studio showing the five-step decision rail, Mexico disruption controls, award-weighted COGS exposure, affected SKUs, and visible evidence boundaries.](docs/assets/gis-network-risk-studio.png)
 
 | Workspace | Decision it supports |
 |---|---|
-| Origin scenario | Vary the supplier origin, alternate-score floor and recovery window; prioritize SKUs needing validation. |
-| Node scenario | Remove a Canadian distribution node and recompute transparent next-nearest proximity screening. |
-| Action & handoff | Select an exception, assign session-only ownership, record required validation and export the governed evidence pack. |
+| Executive brief | See the situation, evidence boundary, unresolved questions and next accountable decision before opening the detailed analysis. |
+| Origin risk | Vary the supplier origin, alternate-score floor and recovery window; prioritize SKUs needing validation. |
+| Node outage | Remove a Canadian distribution node and recompute transparent next-nearest proximity screening. |
+| Handoff | Select an exception, assign session-only ownership, record required validation and export the governed evidence pack. |
 | Assurance | Trace business and GIS requirements to acceptance evidence, replay UAT cases and prove the publication gate fails closed. |
 | Case study | Review the current/future process, stakeholder roles, implementation boundary and presenter notes. |
 

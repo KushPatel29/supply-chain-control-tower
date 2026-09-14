@@ -67,6 +67,27 @@ st.markdown(
   a { color: var(--cyan) !important; }
   :focus-visible { outline: 3px solid var(--amber) !important; outline-offset: 3px !important; }
   .studio-lede { max-width: 840px; margin: 1rem 0 1.2rem; font-size: 1.05rem; line-height: 1.7; }
+  .studio-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem 1rem; margin: .15rem 0 1rem; color: var(--muted); font-size: .78rem; }
+  .studio-meta strong { color: var(--cyan); font-weight: 700; }
+  .studio-meta span { padding-left: 1rem; border-left: 1px solid var(--line); }
+  .brief-shell { display: grid; grid-template-columns: minmax(0,1.55fr) minmax(260px,.75fr); border: 1px solid var(--line); background: linear-gradient(120deg,rgba(70,229,213,.055),rgba(228,179,90,.035)); margin: 1.1rem 0 1.25rem; }
+  .brief-primary { padding: 1.25rem 1.35rem 1.35rem; }
+  .brief-primary small { display: block; color: var(--amber); margin-bottom: .5rem; font-weight: 650; }
+  .brief-primary strong { display: block; max-width: 24ch; color: var(--ink); font-size: clamp(1.35rem,2.2vw,2.15rem); line-height: 1.15; letter-spacing: -.025em; }
+  .brief-primary p { max-width: 70ch; margin: .72rem 0 0; line-height: 1.6; }
+  .brief-next { padding: 1.25rem 1.35rem; border-left: 1px solid var(--line); background: rgba(7,16,20,.42); }
+  .brief-next small { display: block; color: var(--muted); margin-bottom: .45rem; }
+  .brief-next strong { display: block; color: var(--cyan); line-height: 1.4; }
+  .brief-next p { margin: .55rem 0 0; font-size: .88rem; line-height: 1.55; }
+  .workspace-intro { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 1.4rem 0 .55rem; }
+  .workspace-intro strong { color: var(--ink); font-size: 1.05rem; }
+  .workspace-intro span { color: var(--muted); font-size: .82rem; }
+  .brief-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); margin: 1rem 0 1.2rem; border: 1px solid var(--line); }
+  .brief-grid div { padding: 1rem 1.05rem; border-right: 1px solid var(--line); }
+  .brief-grid div:last-child { border-right: 0; }
+  .brief-grid b { display: block; color: var(--amber); margin-bottom: .4rem; }
+  .brief-grid strong { display: block; color: var(--ink); margin-bottom: .35rem; }
+  .brief-grid span { color: var(--muted); font-size: .86rem; line-height: 1.55; }
   .truth-strip { display: flex; flex-wrap: wrap; gap: .65rem 1.35rem; margin: 1rem 0 1.3rem; padding: .82rem 1rem; border-left: 3px solid var(--amber); background: rgba(228,179,90,.055); color: #c5d2d2; font: .76rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
   .truth-strip strong { color: var(--amber); }
   .decision-rail { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); border: 1px solid var(--line); margin: 1.1rem 0 1.6rem; background: var(--panel); }
@@ -102,11 +123,18 @@ st.markdown(
   [data-testid="stDataFrame"] { border: 1px solid var(--line); }
   .stButton > button, .stDownloadButton > button { border-radius: 2px; border: 1px solid var(--cyan); min-height: 2.8rem; background: transparent; color: var(--cyan); font-weight: 650; }
   .stButton > button:hover, .stDownloadButton > button:hover { border-color: #8af6ed; color: #8af6ed; background: rgba(70,229,213,.07); }
+  div[data-testid="stSegmentedControl"] { margin-bottom: 1.1rem; }
+  div[data-testid="stSegmentedControl"] button { min-height: 2.75rem; font-weight: 650; }
   .stSelectbox [data-baseweb="select"] > div, .stMultiSelect [data-baseweb="select"] > div { border-radius: 2px; border-color: var(--line); }
   @media (max-width: 900px) {
     .block-container { padding-top: 3.1rem; }
     h1 { font-size: 2.5rem !important; }
-    .decision-rail, .process-grid { grid-template-columns: 1fr; }
+    .brief-shell, .brief-grid, .decision-rail, .process-grid { grid-template-columns: 1fr; }
+    .brief-next { border-left: 0; border-top: 1px solid var(--line); }
+    .brief-grid div { border-right: 0; border-bottom: 1px solid var(--line); }
+    .brief-grid div:last-child { border-bottom: 0; }
+    .workspace-intro { display: block; }
+    .workspace-intro span { display: block; margin-top: .25rem; }
     .decision-rail div { border-right: 0; border-bottom: 1px solid var(--line); }
     .decision-rail div:last-child { border-bottom: 0; }
     .process-grid div, .process-grid div:nth-child(3n+2), .process-grid div:nth-child(3n+3) { padding-left: 0; border-left: 0; }
@@ -194,6 +222,56 @@ checks = governance_checks(checked_locations, routes, scorecard)
 blocked_controls = checks[checks.status.eq("BLOCK")]
 publication_ready = blocked_controls.empty
 
+ordered_countries = country_exposure.country.tolist()
+selected_country = st.session_state.get("origin_country", "Mexico")
+if selected_country not in ordered_countries:
+    selected_country = "Mexico"
+minimum_score = int(st.session_state.get("origin_minimum_score", 0))
+recovery_days = int(st.session_state.get("origin_recovery_days", 30))
+selected_exposure = country_exposure[country_exposure.country.eq(selected_country)].iloc[0]
+response = country_disruption(
+    selected_country,
+    data["sourcing"],
+    data["suppliers"],
+    data["products"],
+    data["concentration"],
+    scorecard,
+    minimum_score,
+    recovery_days,
+)
+stranded = response[response.decision_status.eq("No qualified alternate")]
+eligible = response[response.decision_status.ne("No qualified alternate")]
+within_window = int(eligible.within_recovery_window.sum()) if not eligible.empty else 0
+highlighted_ids = set(
+    data["suppliers"].loc[
+        data["suppliers"].country.eq(selected_country), "supplier_id"
+    ].astype(int)
+)
+portfolio = build_country_scenario_portfolio(
+    data["sourcing"],
+    data["suppliers"],
+    data["products"],
+    data["concentration"],
+    scorecard,
+    minimum_score,
+    recovery_days,
+)
+response_display = response.assign(
+    priority=response.decision_status.eq("No qualified alternate").map(
+        {True: 0, False: 1}
+    )
+).sort_values(["priority", "cogs"], ascending=[True, False])
+warehouse_rows = locations[locations.entity_type.eq("warehouse")].sort_values(
+    "entity_id"
+)
+warehouse_options = dict(
+    zip(warehouse_rows.name, warehouse_rows.entity_id.astype(int))
+)
+
+
+def open_workspace(name: str) -> None:
+    st.session_state["workspace"] = name
+
 with st.sidebar:
     st.markdown("### Decision Assurance Studio")
     st.markdown(
@@ -210,32 +288,154 @@ with st.sidebar:
         "[Repository evidence](https://github.com/KushPatel29/supply-chain-control-tower)"
     )
 
-st.title("Turn a network signal into an accountable decision.")
 st.markdown(
-    '<p class="studio-lede">Test a sourcing or distribution-node assumption, inspect the governed evidence, and package the next validation step without overstating what the model knows.</p>',
+    f'<p class="studio-meta"><strong>Decision Assurance Studio</strong><span>Opening scenario: {selected_country}</span><span>Publication gate: {"PASS" if publication_ready else "BLOCKED"}</span><span>690 automated tests</span></p>',
+    unsafe_allow_html=True,
+)
+st.title(
+    f"{selected_country} disruption leaves {len(stranded)} SKUs without a qualified alternate."
+)
+st.markdown(
+    '<p class="studio-lede">Move from a network signal to a reviewable decision: challenge the policy, inspect the governed spatial evidence, assign the next validation, and export the exact evidence considered.</p>',
     unsafe_allow_html=True,
 )
 st.markdown(
-    '<div class="truth-strip"><strong>Evidence boundary</strong><span>All records and coordinates are synthetic.</span><span>WGS 84 and great-circle screening.</span><span>No live business-system connection.</span><span>Not an authorization to execute.</span></div>',
+    f"""
+<div class="brief-shell">
+  <div class="brief-primary">
+    <small>Live decision brief · score floor {minimum_score} · {recovery_days}-day review window</small>
+    <strong>{money(float(selected_exposure.exposed_cogs))} of award-weighted COGS is exposed.</strong>
+    <p>{len(response)} SKUs are touched by the scenario. {len(stranded)} have no eligible external alternate under the selected rule; {within_window} of {len(eligible)} eligible alternates fit the contract-lead review window.</p>
+  </div>
+  <div class="brief-next">
+    <small>Next accountable decision</small>
+    <strong>Validate qualification, capacity, commercial terms, and operational feasibility.</strong>
+    <p>Proximity and annual supplier score support screening. They do not authorize a supplier switch or distribution change.</p>
+  </div>
+</div>
+""",
     unsafe_allow_html=True,
 )
 st.markdown(
-    '<div class="decision-rail"><div><b>Question</b><span>Choose the disruption.</span></div><div><b>Rules</b><span>Expose policy assumptions.</span></div><div><b>Outcome</b><span>Prioritize exceptions.</span></div><div><b>Handoff</b><span>Name the next validation.</span></div><div><b>Assurance</b><span>Trace and test the evidence.</span></div></div>',
+    '<div class="workspace-intro"><strong>Choose a decision workspace</strong><span>Only the selected workspace is rendered for a faster, calmer review.</span></div>',
     unsafe_allow_html=True,
+)
+workspace = st.segmented_control(
+    "Decision workspace",
+    [
+        "Executive brief",
+        "Origin risk",
+        "Node outage",
+        "Handoff",
+        "Assurance",
+        "Case study",
+    ],
+    default="Executive brief",
+    key="workspace",
+    required=True,
+    label_visibility="collapsed",
+    width="stretch",
+    wrap=True,
 )
 
-origin_tab, node_tab, handoff_tab, assurance_tab, case_tab = st.tabs(
-    ["Origin scenario", "Node scenario", "Action & handoff", "Assurance", "Case study"]
-)
+if workspace == "Executive brief":
+    brief_1, brief_2, brief_3, brief_4 = st.columns(4)
+    brief_1.metric(
+        "Award-weighted COGS exposure",
+        money(float(selected_exposure.exposed_cogs)),
+        f"{float(selected_exposure.exposed_share):.1%} of network",
+        delta_color="off",
+        delta_arrow="off",
+    )
+    brief_2.metric(
+        "Affected SKUs",
+        f"{len(response)}",
+        f"{int(selected_exposure.suppliers)} suppliers",
+        delta_color="off",
+        delta_arrow="off",
+    )
+    brief_3.metric(
+        "No eligible alternate",
+        f"{len(stranded)}",
+        "qualification or escalation",
+        delta_color="off",
+        delta_arrow="off",
+    )
+    brief_4.metric(
+        "Lead time fits window",
+        f"{within_window} / {len(eligible)}",
+        f"≤ {recovery_days} contract days",
+        delta_color="off",
+        delta_arrow="off",
+    )
+    st.markdown(
+        """
+<div class="brief-grid">
+  <div><b>What the evidence supports</b><strong>A prioritized validation queue</strong><span>Exposure, alternative eligibility, contract lead time, governed keys, and spatial screening are traceable to committed synthetic sources.</span></div>
+  <div><b>What remains unknown</b><strong>Operational feasibility</strong><span>Capacity, certification, commercial terms, road or freight routing, border time, throughput, and authorization are not modeled.</span></div>
+  <div><b>What happens next</b><strong>Named owner, evidence, and close condition</strong><span>Route one exception to the accountable role, record the unresolved question, and export the controlled evidence package.</span></div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+    brief_map, brief_register = st.columns([1.08, .92])
+    with brief_map:
+        st.markdown("## Governed spatial context")
+        plot(network_map(locations, routes_enriched, highlighted_ids), "brief-network-map")
+        st.caption(
+            f"{len(highlighted_ids)} supplier reference points in {selected_country} are highlighted. Lines are nearest-node great-circle screens, not shipment lanes."
+        )
+    with brief_register:
+        st.markdown("### First exceptions to validate")
+        st.dataframe(
+            response_display[
+                ["sku", "category", "cogs", "decision_status", "recommended_next_check"]
+            ].head(8),
+            hide_index=True,
+            width="stretch",
+            height=355,
+            column_config={
+                "cogs": st.column_config.NumberColumn("Product COGS", format="$%,.0f"),
+            },
+        )
+    action_1, action_2, action_3 = st.columns(3)
+    action_1.button(
+        "Challenge origin policy",
+        key="brief_open_origin",
+        on_click=open_workspace,
+        args=("Origin risk",),
+        width="stretch",
+    )
+    action_2.button(
+        "Prepare stakeholder handoff",
+        key="brief_open_handoff",
+        on_click=open_workspace,
+        args=("Handoff",),
+        width="stretch",
+    )
+    action_3.button(
+        "Inspect assurance evidence",
+        key="brief_open_assurance",
+        on_click=open_workspace,
+        args=("Assurance",),
+        width="stretch",
+    )
+    st.markdown(
+        '<div class="truth-strip"><strong>Evidence boundary</strong><span>All records and coordinates are synthetic.</span><span>WGS 84 and great-circle screening.</span><span>No live business-system connection.</span><span>Not an authorization to execute.</span></div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="decision-rail"><div><b>Question</b><span>Choose the disruption.</span></div><div><b>Rules</b><span>Expose policy assumptions.</span></div><div><b>Outcome</b><span>Prioritize exceptions.</span></div><div><b>Handoff</b><span>Name the next validation.</span></div><div><b>Assurance</b><span>Trace and test the evidence.</span></div></div>',
+        unsafe_allow_html=True,
+    )
 
-with origin_tab:
+if workspace == "Origin risk":
     st.subheader("Origin disruption scenario")
     st.markdown(
         '<p class="section-note">If one supplier origin becomes unavailable, which SKUs have no eligible external alternate, and whose validation is required next?</p>',
         unsafe_allow_html=True,
     )
     control_1, control_2, control_3 = st.columns([1.1, 1, 1])
-    ordered_countries = country_exposure.country.tolist()
     with control_1:
         selected_country = st.selectbox(
             "Unavailable supplier country",
@@ -256,22 +456,6 @@ with origin_tab:
             help="Compares the best eligible alternate's contract lead to the selected window.",
             key="origin_recovery_days",
         )
-
-    selected_exposure = country_exposure[country_exposure.country.eq(selected_country)].iloc[0]
-    response = country_disruption(
-        selected_country, data["sourcing"], data["suppliers"], data["products"],
-        data["concentration"], scorecard, minimum_score, recovery_days,
-    )
-    stranded = response[response.decision_status.eq("No qualified alternate")]
-    eligible = response[response.decision_status.ne("No qualified alternate")]
-    within_window = int(eligible.within_recovery_window.sum()) if not eligible.empty else 0
-    highlighted_ids = set(
-        data["suppliers"].loc[data["suppliers"].country.eq(selected_country), "supplier_id"].astype(int)
-    )
-    portfolio = build_country_scenario_portfolio(
-        data["sourcing"], data["suppliers"], data["products"], data["concentration"],
-        scorecard, minimum_score, recovery_days,
-    )
 
     metric_1, metric_2, metric_3, metric_4 = st.columns(4)
     metric_1.metric(
@@ -297,7 +481,7 @@ with origin_tab:
 
     map_col, register_col = st.columns([1.05, .95])
     with map_col:
-        st.markdown("#### Governed spatial context")
+        st.markdown("## Governed spatial context")
         plot(network_map(locations, routes_enriched, highlighted_ids), "origin-network-map")
         st.markdown(
             f'<p class="map-caption">{len(highlighted_ids)} supplier reference point(s) in {selected_country} are highlighted. Lines terminate at the nearest synthetic Canadian node by great-circle distance; they are not shipment lanes.</p>',
@@ -305,9 +489,6 @@ with origin_tab:
         )
     with register_col:
         st.markdown("#### Prioritized SKU exceptions")
-        response_display = response.assign(
-            priority=response.decision_status.eq("No qualified alternate").map({True: 0, False: 1})
-        ).sort_values(["priority", "cogs"], ascending=[True, False])
         st.dataframe(
             response_display[[
                 "sku", "category", "cogs", "decision_status", "qualified_alternate",
@@ -373,14 +554,12 @@ with origin_tab:
                 },
             )
 
-with node_tab:
+if workspace == "Node outage":
     st.subheader("Distribution-node screening scenario")
     st.markdown(
         '<p class="section-note">Remove one or more synthetic nodes. The model identifies the next-nearest available node and its great-circle distance difference. This is screening evidence, not an operational route recommendation.</p>',
         unsafe_allow_html=True,
     )
-    warehouse_rows = locations[locations.entity_type.eq("warehouse")].sort_values("entity_id")
-    warehouse_options = dict(zip(warehouse_rows.name, warehouse_rows.entity_id.astype(int)))
     offline_names = st.multiselect(
         "Nodes unavailable in this scenario", list(warehouse_options), default=["Ontario DC 1"],
         help="At least one synthetic distribution node must remain available.",
@@ -467,7 +646,7 @@ with node_tab:
             },
         )
 
-with handoff_tab:
+if workspace == "Handoff":
     st.subheader("Action and stakeholder handoff")
     st.markdown(
         '<p class="section-note">Choose one origin exception and preserve its assumptions, accountable role, required validation, and completion evidence. Entries below live only in this browser session.</p>',
@@ -572,7 +751,7 @@ with handoff_tab:
             f"Evidence pack blocked: {len(blocked_controls)} publication control(s) failed. Correct the evidence or turn off the assurance test injection before export."
         )
 
-with assurance_tab:
+if workspace == "Assurance":
     st.subheader("Requirements, acceptance, and GIS governance")
     st.markdown(
         '<p class="section-note">This workspace connects stakeholder needs to rules, outputs, and repeatable technical evidence. Business UAT sign-off remains intentionally separate.</p>',
@@ -585,12 +764,12 @@ with assurance_tab:
     with assurance_requirements:
         traceability = pd.DataFrame(
             [
-                ["BR-01", "Every exception has an owner and next action", "Action & handoff", "Selected exception retains owner, status, target, and note", "Session handoff + evidence brief", "PARTIAL - session only; target may be unset"],
-                ["BR-04", "Supplier performance uses published anchors", "Origin scenario", "Changing score floor changes eligibility without changing the source score", "Policy sensitivity replay", "DEMONSTRATED"],
+                ["BR-01", "Every exception has an owner and next action", "Handoff", "Selected exception retains owner, status, target, and note", "Session handoff + evidence brief", "PARTIAL - session only; target may be unset"],
+                ["BR-04", "Supplier performance uses published anchors", "Origin risk", "Changing score floor changes eligibility without changing the source score", "Policy sensitivity replay", "DEMONSTRATED"],
                 ["BR-05", "Users can identify source and quality status", "Assurance", "Each export lists source path, row count, bytes, and SHA-256", "Evidence manifest", "DEMONSTRATED"],
                 ["BR-06", "Critical quality failure blocks publication", "Assurance", "Invalid WGS 84 latitude prevents ZIP export", "Publication-gate replay", "DEMONSTRATED"],
                 ["GIS-01", "Spatial records use governed business keys", "GIS governance", "Supplier and warehouse IDs reconcile to master dimensions", "Business-key controls", "DEMONSTRATED"],
-                ["GIS-03", "Each supplier has one transparent node screen", "Node scenario", "Published destination recomputes to minimum Haversine distance", "Nearest-node technical test", "DEMONSTRATED"],
+                ["GIS-03", "Each supplier has one transparent node screen", "Node outage", "Published destination recomputes to minimum Haversine distance", "Nearest-node technical test", "DEMONSTRATED"],
                 ["GIS-04", "Analytical limits remain visible", "All workspaces", "Screens and exports state proximity, capacity, and synthetic-data limits", "Visible boundary + assumptions README", "DEMONSTRATED"],
             ],
             columns=["Requirement", "Stakeholder need", "Interface/output", "Acceptance condition", "Evidence", "Coverage"],
@@ -702,7 +881,7 @@ with assurance_tab:
         with st.expander("Inspect source manifest"):
             st.dataframe(manifest_display, hide_index=True, width="stretch")
 
-with case_tab:
+if workspace == "Case study":
     st.subheader("Case study: from ambiguous signal to controlled handoff")
     st.markdown(
         '<p class="section-note">The domain is synthetic specialty-food distribution. The reusable contribution is the analysis pattern: clarify the decision, expose the rule, route the exception, and preserve acceptance evidence.</p>',

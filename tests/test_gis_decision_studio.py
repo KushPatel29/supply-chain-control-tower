@@ -222,32 +222,47 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
 
     assert not app.exception
     assert [title.value for title in app.title] == [
-        "Turn a network signal into an accountable decision."
+        "Mexico disruption leaves 13 SKUs without a qualified alternate."
     ]
-    tab_labels = [tab.label for tab in app.tabs]
-    assert tab_labels[:4] == [
-        "Origin scenario",
-        "Node scenario",
-        "Action & handoff",
+    workspace = app.get("button_group")[0]
+    assert workspace.value == "Executive brief"
+    assert workspace.options == [
+        "Executive brief",
+        "Origin risk",
+        "Node outage",
+        "Handoff",
         "Assurance",
+        "Case study",
     ]
-    assert tab_labels[-1] == "Case study"
-    assert {"Traceability", "Replayable UAT", "GIS governance", "Lineage"} <= set(
-        tab_labels
-    )
-    assert app.selectbox[0].value == "Mexico"
     metrics = {metric.label: metric.value for metric in app.metric}
     assert metrics["Award-weighted COGS exposure"] == "$11.82M"
     assert metrics["Affected SKUs"] == "36"
-    assert metrics["No eligible external alternate"] == "13"
-    assert metrics["Impacted supplier screens"] == "6"
-    assert any("8 of 8 controls are green" in item.value for item in app.success)
+    assert metrics["No eligible alternate"] == "13"
+
+    workspace.set_value("Origin risk").run(timeout=30)
+    assert not app.exception
+    assert app.selectbox[0].value == "Mexico"
+    origin_metrics = {metric.label: metric.value for metric in app.metric}
+    assert origin_metrics["No eligible external alternate"] == "13"
 
     app.slider[0].set_value(60).run(timeout=30)
     stricter_metrics = {metric.label: metric.value for metric in app.metric}
     assert stricter_metrics["No eligible external alternate"] == "25"
     assert stricter_metrics["Eligible alternate lead time fits window"] == "4 / 11"
 
+    app.get("button_group")[0].set_value("Node outage").run(timeout=30)
+    node_metrics = {metric.label: metric.value for metric in app.metric}
+    assert node_metrics["Impacted supplier screens"] == "6"
+
+    app.get("button_group")[0].set_value("Assurance").run(timeout=30)
+    tab_labels = [tab.label for tab in app.tabs]
+    assert tab_labels == [
+        "Traceability",
+        "Replayable UAT",
+        "GIS governance",
+        "Lineage",
+    ]
+    assert any("8 of 8 controls are green" in item.value for item in app.success)
     app.toggle[0].set_value(True).run(timeout=30)
     assert any("Publication blocked" in item.value for item in app.error)
     download_labels = [button.label for button in app.get("download_button")]
