@@ -3,9 +3,9 @@
   "name": "visual067",
   "position": {
     "x": 660,
-    "y": 374,
+    "y": 397,
     "z": 1000,
-    "height": 204,
+    "height": 177,
     "width": 600,
     "tabOrder": 1000
   },
@@ -28,7 +28,8 @@
                 }
               },
               "queryRef": "inventory_position.sku",
-              "nativeQueryRef": "sku"
+              "nativeQueryRef": "sku",
+              "displayName": "SKU"
             },
             {
               "field": {
@@ -42,7 +43,8 @@
                 }
               },
               "queryRef": "inventory_position.warehouse_name",
-              "nativeQueryRef": "warehouse_name"
+              "nativeQueryRef": "warehouse_name",
+              "displayName": "Warehouse"
             },
             {
               "field": {
@@ -56,7 +58,8 @@
                 }
               },
               "queryRef": "inventory_position.lane",
-              "nativeQueryRef": "lane"
+              "nativeQueryRef": "lane",
+              "displayName": "Lane"
             },
             {
               "field": {

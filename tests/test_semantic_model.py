@@ -227,6 +227,8 @@ def test_every_measure_reference_resolves():
         columns |= {c.strip().strip("'")
                     for c in re.findall(r"^\tcolumn '?([^'\n]+?)'?$", text, re.M)}
         referenced |= set(MEASURE_REF_RE.findall(dax))
+        # a column a table function defines inside the expression, ADDCOLUMNS(..., "@lots", ...)
+        columns |= set(re.findall(r'"(@[^"]+)"', dax))
 
     assert defined, "no measures found, so this proves nothing"
     unknown = {r for r in referenced if r not in defined and r not in columns}

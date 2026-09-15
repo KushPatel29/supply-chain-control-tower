@@ -3,9 +3,9 @@
   "name": "visual087",
   "position": {
     "x": 440,
-    "y": 418,
+    "y": 413,
     "z": 1000,
-    "height": 188,
+    "height": 162,
     "width": 820,
     "tabOrder": 1000
   },
@@ -28,7 +28,8 @@
                 }
               },
               "queryRef": "award_shift_candidates.sku",
-              "nativeQueryRef": "sku"
+              "nativeQueryRef": "sku",
+              "displayName": "SKU"
             },
             {
               "field": {
@@ -42,7 +43,8 @@
                 }
               },
               "queryRef": "award_shift_candidates.incumbent",
-              "nativeQueryRef": "incumbent"
+              "nativeQueryRef": "incumbent",
+              "displayName": "Incumbent"
             },
             {
               "field": {
@@ -56,7 +58,8 @@
                 }
               },
               "queryRef": "award_shift_candidates.alternate",
-              "nativeQueryRef": "alternate"
+              "nativeQueryRef": "alternate",
+              "displayName": "Alternate"
             },
             {
               "field": {
@@ -168,6 +171,91 @@
         {
           "properties": {
             "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "152D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "award_shift_candidates.sku"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "152D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "award_shift_candidates.incumbent"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "152D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "award_shift_candidates.alternate"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "121D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Spend At Risk"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "202D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Price Impact of Shifting"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
                   "Value": "false"

@@ -3,70 +3,41 @@
   "name": "visual062",
   "position": {
     "x": 660,
-    "y": 20,
+    "y": 88,
     "z": 1000,
-    "height": 118,
+    "height": 107,
     "width": 300,
     "tabOrder": 1000
   },
   "visual": {
-    "visualType": "card",
-    "drillFilterOtherVisuals": true,
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Stockout Window"
-                }
-              },
-              "queryRef": "_Measures.Stockout Window",
-              "nativeQueryRef": "Stockout Window"
-            }
-          ]
-        }
-      }
-    },
-    "visualContainerObjects": {
-      "subTitle": [
+    "visualType": "image",
+    "objects": {
+      "image": [
         {
           "properties": {
-            "text": {
+            "sourceType": {
               "expr": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Stockout Reference"
+                "Literal": {
+                  "Value": "'imageUrl'"
                 }
               }
             },
-            "show": {
+            "sourceUrl": {
               "expr": {
-                "Literal": {
-                  "Value": "true"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "KPI SVG Stockout Window | Stockout Reference | Stockout Colour"
                 }
               }
-            }
-          }
-        }
-      ],
-      "general": [
-        {
-          "properties": {
-            "altText": {
+            },
+            "fit": {
               "expr": {
                 "Literal": {
-                  "Value": "'Card. Shows Stockout Window.'"
+                  "Value": "'Fit'"
                 }
               }
             }
@@ -74,23 +45,61 @@
         }
       ]
     },
-    "objects": {
-      "labels": [
+    "visualContainerObjects": {
+      "general": [
         {
           "properties": {
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "_Measures"
-                        }
-                      },
-                      "Property": "Stockout Colour"
-                    }
-                  }
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'KPI tile: Stockout Window, with Stockout Reference.'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -3,9 +3,9 @@
   "name": "visual017",
   "position": {
     "x": 660,
-    "y": 410,
+    "y": 441,
     "z": 8000,
-    "height": 290,
+    "height": 263,
     "width": 600,
     "tabOrder": 8000
   },
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_lot.lot_id",
-              "nativeQueryRef": "lot_id"
+              "nativeQueryRef": "lot_id",
+              "displayName": "Lot"
             },
             {
               "field": {
@@ -41,7 +42,23 @@
                 }
               },
               "queryRef": "dim_lot.expiry_date",
-              "nativeQueryRef": "expiry_date"
+              "nativeQueryRef": "expiry_date",
+              "displayName": "Expires"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Weighted Days To Expiry"
+                }
+              },
+              "queryRef": "_Measures.Weighted Days To Expiry",
+              "nativeQueryRef": "Weighted Days To Expiry",
+              "displayName": "Days left"
             },
             {
               "field": {
@@ -55,7 +72,8 @@
                 }
               },
               "queryRef": "_Measures.Qty On Hand",
-              "nativeQueryRef": "Qty On Hand"
+              "nativeQueryRef": "Qty On Hand",
+              "displayName": "Units"
             },
             {
               "field": {
@@ -69,10 +87,29 @@
                 }
               },
               "queryRef": "_Measures.Total Inventory Value",
-              "nativeQueryRef": "Total Inventory Value"
+              "nativeQueryRef": "Total Inventory Value",
+              "displayName": "Value"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_lot"
+                  }
+                },
+                "Property": "expiry_date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "drillFilterOtherVisuals": true,
@@ -103,10 +140,97 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Table titled Lot-Level Traceability. Shows lot id, expiry date, Qty On Hand and Total Inventory Value.'"
+                  "Value": "'Table titled Lot-Level Traceability. Shows lot, expiry date, days left, units and value for every lot in the as-of snapshot, soonest expiry first.'"
                 }
               }
             }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "70D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_lot.lot_id"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "125D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_lot.expiry_date"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "120D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Weighted Days To Expiry"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "107D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Qty On Hand"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "135D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Total Inventory Value"
           }
         }
       ]

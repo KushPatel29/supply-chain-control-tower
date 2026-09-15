@@ -3,10 +3,10 @@
   "name": "visual007",
   "position": {
     "x": 20,
-    "y": 450,
+    "y": 478,
     "z": 7000,
-    "height": 250,
-    "width": 740,
+    "height": 226,
+    "width": 720,
     "tabOrder": 7000
   },
   "visual": {

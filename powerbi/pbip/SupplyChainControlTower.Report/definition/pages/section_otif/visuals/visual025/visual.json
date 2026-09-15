@@ -3,9 +3,9 @@
   "name": "visual025",
   "position": {
     "x": 660,
-    "y": 430,
+    "y": 459,
     "z": 8000,
-    "height": 270,
+    "height": 245,
     "width": 600,
     "tabOrder": 8000
   },
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_customer.customer_name",
-              "nativeQueryRef": "customer_name"
+              "nativeQueryRef": "customer_name",
+              "displayName": "Customer"
             },
             {
               "field": {
@@ -118,6 +119,93 @@
               "expr": {
                 "Literal": {
                   "Value": "'Table titled Customer Scorecard. Shows customer name, Total Orders, OTIF Orders, OTIF % and Avg Fill Rate.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "194D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_customer.customer_name"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "99D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Total Orders"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "93D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.OTIF Orders"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.OTIF %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "106D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Avg Fill Rate"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

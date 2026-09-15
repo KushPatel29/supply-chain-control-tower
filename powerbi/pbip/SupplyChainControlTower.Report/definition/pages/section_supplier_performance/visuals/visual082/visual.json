@@ -3,70 +3,103 @@
   "name": "visual082",
   "position": {
     "x": 660,
-    "y": 20,
+    "y": 88,
     "z": 1000,
-    "height": 118,
+    "height": 105,
     "width": 300,
     "tabOrder": 1000
   },
   "visual": {
-    "visualType": "card",
-    "drillFilterOtherVisuals": true,
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Overbilled Dollars"
-                }
-              },
-              "queryRef": "_Measures.Overbilled Dollars",
-              "nativeQueryRef": "Overbilled Dollars"
-            }
-          ]
-        }
-      }
-    },
-    "visualContainerObjects": {
-      "subTitle": [
+    "visualType": "image",
+    "objects": {
+      "image": [
         {
           "properties": {
-            "text": {
+            "sourceType": {
               "expr": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "PPV Reference"
+                "Literal": {
+                  "Value": "'imageUrl'"
                 }
               }
             },
-            "show": {
+            "sourceUrl": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "KPI SVG Overbilled Dollars | PPV Reference"
+                }
+              }
+            },
+            "fit": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "'Fit'"
                 }
               }
             }
           }
         }
-      ],
+      ]
+    },
+    "visualContainerObjects": {
       "general": [
         {
           "properties": {
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Card. Shows Overbilled Dollars.'"
+                  "Value": "'KPI tile: Overbilled Dollars, with PPV Reference.'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

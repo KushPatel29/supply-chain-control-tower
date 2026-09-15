@@ -35,26 +35,19 @@ Qty Shipped = SUM(fact_orders[qty_shipped])
 // ---------- Inventory & Expiry Risk ----------
 
 // Stock on hand as of the latest snapshot in the current filter context.
-// fact_inventory holds one row per lot per WEEKLY snapshot, so a plain SUM adds
-// 26 separate photographs of the same warehouse together: $34,564,500 against a
-// real position of $202,393 - overstated 171x. Inventory is semi-additive: it
-// adds across lots and warehouses, never across dates. The as-of date ignores
-// the expiry-risk flag so Critical and Warning are shares of the same snapshot.
+// Stock on hand as of [Inventory Snapshot Date], the latest complete weekly snapshot.
+// A plain SUM adds 26 weekly photographs: $34,564,500 against $1,166,666 on Jun 4, 2025.
 Total Inventory Value =
-VAR vAsOfDate =
-    CALCULATE(
-        MAX(fact_inventory[date_key]),
-        REMOVEFILTERS(fact_inventory[expiry_risk_flag])
-    )
+VAR vAsOfDate = [Inventory Snapshot Date]
 RETURN
     CALCULATE(
         SUM(fact_inventory[inventory_value]),
-        fact_inventory[date_key] = vAsOfDate
+        fact_inventory[snapshot_date] = vAsOfDate
     )
 
 // The date those stock figures are as of.
 Inventory As Of =
-CALCULATE(MAX(dim_date[full_date]), fact_inventory[date_key] = CALCULATE(MAX(fact_inventory[date_key])))
+[Inventory Snapshot Date]
 
 // The as-of date as text, for the card subtitle on the inventory page.
 Inventory As Of Label =
@@ -63,23 +56,17 @@ RETURN
     IF(
         ISBLANK(vAsOf),
         "No stock in scope",
-        "Stock as of " & FORMAT(vAsOf, "mmm d, yyyy")
+        "Stock as of " & FORMAT(vAsOf, "mmm d, yyyy") & ", last complete snapshot"
     )
 
-// Units on hand as of the latest snapshot, semi-additive for the same reason
-// as Total Inventory Value: summing 26 snapshots reads 1,519,002 units
-// against the latest snapshot's 8,735. That snapshot is a thin one -- see
-// tests/test_inventory_is_semi_additive.py.
+// Units on hand as of [Inventory Snapshot Date]: 1,519,002 summed across 26 snapshots
+// against 51,428 on Jun 4, 2025.
 Qty On Hand =
-VAR vAsOfDate =
-    CALCULATE(
-        MAX(fact_inventory[date_key]),
-        REMOVEFILTERS(fact_inventory[expiry_risk_flag])
-    )
+VAR vAsOfDate = [Inventory Snapshot Date]
 RETURN
     CALCULATE(
         SUM(fact_inventory[qty_on_hand]),
-        fact_inventory[date_key] = vAsOfDate
+        fact_inventory[snapshot_date] = vAsOfDate
     )
 
 Critical Expiry Value =
@@ -97,6 +84,103 @@ DIVIDE([Critical Expiry Value] + [Warning Expiry Value], [Total Inventory Value]
 // across multiple weekly snapshots instead of averaging them.
 Avg Inventory Value =
 AVERAGEX(VALUES(dim_date[full_date]), [Total Inventory Value])
+
+// ---------- Inventory risk: the complete snapshot and the expiry window ----------
+
+// The snapshot every stock figure is read from: the latest weekly snapshot that
+// is complete, meaning it carries at least 75% of the median snapshot's lots.
+// The generated data's last three snapshots are thin (171, 142 and 116 lots
+// against a median of 280, nothing within 61 days of expiry), and reading the very
+// last one reported $202,393 of stock and 0.0% at risk - the tail of the data, not
+// the state of the warehouses. The date is judged across the whole inventory, not
+// inside a row: judged per row, a lot's own last snapshot counted as complete, so
+// the Jun 4 lot table listed lots last counted in April and the product rows added
+// to 47,472 units under a total of 51,428. Only the calendar filter is kept.
+Inventory Snapshot Date =
+VAR vSnapshots =
+    CALCULATETABLE(
+        ADDCOLUMNS(VALUES(fact_inventory[snapshot_date]), "@lots", CALCULATE(COUNTROWS(fact_inventory))),
+        REMOVEFILTERS(fact_inventory),
+        VALUES(dim_date[full_date])
+    )
+VAR vTypical = MEDIANX(vSnapshots, [@lots])
+VAR vComplete = FILTER(vSnapshots, [@lots] >= 0.75 * vTypical)
+RETURN
+    MAXX(vComplete, fact_inventory[snapshot_date])
+
+Selected Expiry Window Days =
+SELECTEDVALUE('Expiry Window'[Days], 5)
+
+Expiry Window Label =
+"within " & [Selected Expiry Window Days] & " days"
+
+// Stock value in the snapshot that expires inside the selected window.
+Value Expiring In Window =
+VAR vAsOfDate = [Inventory Snapshot Date]
+VAR vDays = [Selected Expiry Window Days]
+RETURN
+    CALCULATE(
+        SUM(fact_inventory[inventory_value]),
+        fact_inventory[snapshot_date] = vAsOfDate,
+        fact_inventory[days_until_expiry] <= vDays
+    )
+
+Units Expiring In Window =
+VAR vAsOfDate = [Inventory Snapshot Date]
+VAR vDays = [Selected Expiry Window Days]
+RETURN
+    CALCULATE(
+        SUM(fact_inventory[qty_on_hand]),
+        fact_inventory[snapshot_date] = vAsOfDate,
+        fact_inventory[days_until_expiry] <= vDays
+    )
+
+Lots Expiring In Window =
+VAR vAsOfDate = [Inventory Snapshot Date]
+VAR vDays = [Selected Expiry Window Days]
+RETURN
+    CALCULATE(
+        COUNTROWS(fact_inventory),
+        fact_inventory[snapshot_date] = vAsOfDate,
+        fact_inventory[days_until_expiry] <= vDays,
+        fact_inventory[qty_on_hand] > 0
+    )
+
+Stocked Lots =
+VAR vAsOfDate = [Inventory Snapshot Date]
+RETURN
+    CALCULATE(
+        COUNTROWS(fact_inventory),
+        fact_inventory[snapshot_date] = vAsOfDate,
+        fact_inventory[qty_on_hand] > 0
+    )
+
+% Value Expiring In Window =
+DIVIDE(COALESCE([Value Expiring In Window], 0), [Total Inventory Value])
+
+// Shelf life left in the snapshot, weighted by value: where the money actually sits.
+Weighted Days To Expiry =
+VAR vAsOfDate = [Inventory Snapshot Date]
+RETURN
+    DIVIDE(
+        CALCULATE(
+            SUMX(fact_inventory, fact_inventory[inventory_value] * fact_inventory[days_until_expiry]),
+            fact_inventory[snapshot_date] = vAsOfDate
+        ),
+        [Total Inventory Value]
+    )
+
+Expiry Window Reference =
+FORMAT(COALESCE([% Value Expiring In Window], 0), "0.0%") & " of stock value · " & FORMAT(COALESCE([Units Expiring In Window], 0), "#,0") & " units"
+
+Lots Expiring Reference =
+FORMAT(COALESCE([Lots Expiring In Window], 0), "#,0") & " of " & FORMAT([Stocked Lots], "#,0") & " stocked lots " & [Expiry Window Label]
+
+Shelf Life Reference =
+"Days on hand " & FORMAT([Days On Hand], "0.0") & " · turns " & FORMAT([Inventory Turns], "0.0")
+
+Warehouse Expiry Chart Title =
+"Value expiring " & [Expiry Window Label] & ", by warehouse"
 
 // Annualized inventory turns: how many times inventory is sold through per year.
 // Standard formula = COGS / Average Inventory Value, scaled to the period in filter context.

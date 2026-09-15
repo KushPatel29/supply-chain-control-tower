@@ -8,7 +8,7 @@
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
 ![Streamlit](https://img.shields.io/badge/Streamlit-decision%20assurance-FF4B4B?logo=streamlit&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-704%20collected-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-814%20collected-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 **▶ Live decision studio: [kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/)**
@@ -146,6 +146,31 @@ coloured by a `Status` measure rather than by eye, and each page states its own
 conclusion in a sentence built from DAX — so the narrative cannot drift away
 from the numbers under it.
 
+### How the report is built
+
+- **28 KPI tiles are SVG drawn by DAX measures** (`dataCategory: ImageUrl`),
+  each from the measure its card already showed, the card's reference line and,
+  where one exists, its status colour. Rates carry a progress rail.
+- **Every page opens with a header** stating the page, its place in the report
+  and the filters in effect, with Previous and Next page buttons.
+- **Slicers:** an expiry-window button slicer switches the inventory risk
+  tiles and warehouse chart between 5, 90, 120, 150 and 180 days; the
+  Executive Overview's channel and region slicers sit in a filter panel that
+  two bookmarks open and close without resetting a filter, while the header
+  and the Filters button (`Filters · 2`) keep the filter state on screen.
+- **Tables read as tables:** columns get plain headers (`Supplier`, not
+  `supplier_name`) and widths that fill the visual, and each page's narrative
+  card has room for its whole sentence.
+- **Dark filter chrome:** the theme now styles the filter pane, filter cards and
+  dropdown lists, which had opened white.
+
+Microsoft's `powerbi-report-author validate` passes with no errors or warnings,
+and every page was rendered in Power BI Desktop for the screenshots below.
+[`tests/test_report_interactions.py`](tests/test_report_interactions.py)
+pins the ways these patterns fail silently: an unescaped `%` turns every SVG
+fill black, a bookmark that also captures data resets the filters, and a button
+pointing at a deleted bookmark does nothing.
+
 **Executive Overview** — revenue, margin, OTIF and expiry risk on one screen:
 
 ![Executive Overview](powerbi/screenshots/01-executive-overview.png)
@@ -176,9 +201,14 @@ identical budget, and the textbook ABC ladder going backwards on unit fill:
 
 ![Service Level Economics](powerbi/screenshots/05-service-level-economics.png)
 
-**Inventory & Expiry Risk** — FEFO banding, value at risk by warehouse, and
-lot-level traceability (the "which customers got batch X" question, answered
-in seconds):
+**Inventory & Expiry Risk** — stock read from the last complete weekly
+snapshot, an expiry-window switch (5 to 180 days) that sizes the value, units
+and lots about to expire and where they sit by warehouse, FEFO banding, and
+lot-level traceability, soonest expiry first (the "which customers got batch X"
+question, answered in seconds). The snapshot is chosen once for the whole
+inventory: chosen per row, each lot and product found its own "latest" week,
+so the lot table listed lots last counted in April and the product rows added
+up to 47,472 units under a total of 51,428:
 
 ![Inventory & Expiry Risk](powerbi/screenshots/06-inventory-expiry-risk.png)
 

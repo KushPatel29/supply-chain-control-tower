@@ -158,15 +158,41 @@ def test_every_measure_that_adds_the_snapshot_restricts_to_one_date(source):
         text = (TMDL if source == "tmdl" else DAX).read_text(encoding="utf-8")
         body = (_tmdl_measures(text) if source == "tmdl" else _dax_measures(text))[name]
         cols = ", ".join(_adds_the_snapshot(body))
-        assert re.search(r"MAX\(\s*fact_inventory\[date_key\]\s*\)", body), (
+        # The Power BI table loads the bronze snapshot, whose date column is
+        # snapshot_date. This used to demand date_key - the gold parquet's name -
+        # and so held the measures to a column the model does not have, which put
+        # every inventory visual into an error state while this test passed.
+        # The as-of date is taken either inline or from the one measure that
+        # defines it for the whole model, [Inventory Snapshot Date].
+        as_of = _as_of_source(body, text, source)
+        assert re.search(r"MAXX?\(", as_of) and "fact_inventory[snapshot_date]" in as_of, (
             f"[{name}] in the {source} adds {cols} without taking an as-of date "
-            "from the fact's latest snapshot, so it is adding every weekly "
-            "snapshot together"
+            "from the fact's snapshots, so it is adding every weekly snapshot "
+            "together"
         )
-        assert re.search(r"fact_inventory\[date_key\]\s*=", body), (
+        assert re.search(r"fact_inventory\[snapshot_date\]\s*=", body), (
             f"[{name}] in the {source} computes an as-of date but never filters "
             "to it"
         )
+
+
+def _releases(as_of: str, column: str) -> bool:
+    """True when the as-of date ignores a filter on `column`, either named or as
+    part of clearing every filter on the fact."""
+    return (f"REMOVEFILTERS(fact_inventory[{column}])" in as_of
+            or re.search(r"REMOVEFILTERS\(\s*fact_inventory\s*\)", as_of) is not None)
+
+
+def _as_of_source(body: str, text: str, source: str) -> str:
+    """The DAX that decides a measure's as-of date: its own body, or the body of
+    [Inventory Snapshot Date] when it calls that measure instead."""
+    if "[Inventory Snapshot Date]" in body:
+        parsed = _tmdl_measures(text) if source == "tmdl" else _dax_measures(text)
+        assert "Inventory Snapshot Date" in parsed, (
+            f"the {source} calls [Inventory Snapshot Date] but does not define it"
+        )
+        return parsed["Inventory Snapshot Date"]
+    return body
 
 
 @pytest.mark.parametrize("source", ["tmdl", "dax"])
@@ -175,15 +201,86 @@ def test_the_as_of_date_ignores_the_risk_flag(source):
 
     Without this, slicing to Critical would find the last date that happens to
     have a Critical lot, and '% Inventory at Risk' would divide two different
-    days by each other.
+    days by each other. The expiry window is released for the same reason.
     """
     text = (TMDL if source == "tmdl" else DAX).read_text(encoding="utf-8")
     parsed = _tmdl_measures(text) if source == "tmdl" else _dax_measures(text)
     for name in _restricting_measures(source):
-        assert "REMOVEFILTERS(fact_inventory[expiry_risk_flag])" in parsed[name], (
+        as_of = _as_of_source(parsed[name], text, source)
+        assert _releases(as_of, "expiry_risk_flag"), (
             f"[{name}]'s as-of date responds to the expiry-risk flag, so the risk "
             "split and its denominator can land on different snapshots"
         )
+
+
+@pytest.mark.parametrize("source", ["tmdl", "dax"])
+def test_the_as_of_date_skips_a_thin_trailing_snapshot(source):
+    """The generated data's last three weekly snapshots are thin: 171, 142 and
+    116 lots against a median of 280, with nothing inside 61 days of expiry.
+    Reading the very last one reported $202,393 of stock and 0.0% of it at
+    risk. The as-of date has to be the latest COMPLETE snapshot, judged against
+    the median snapshot, not simply the maximum date."""
+    text = (TMDL if source == "tmdl" else DAX).read_text(encoding="utf-8")
+    parsed = _tmdl_measures(text) if source == "tmdl" else _dax_measures(text)
+    helper = parsed.get("Inventory Snapshot Date", "")
+    assert "MEDIANX(" in helper and "COUNTROWS(fact_inventory)" in helper, (
+        f"the {source} does not judge snapshots against the median lot count"
+    )
+    assert _releases(helper, "days_until_expiry"), (
+        "the as-of date responds to the expiry window, so the share expiring "
+        "inside it could divide two different snapshots"
+    )
+
+
+@pytest.mark.parametrize("source", ["tmdl", "dax"])
+def test_the_as_of_date_is_one_date_for_every_row(source):
+    """Judged inside a row, 'the latest complete snapshot' is a different date for
+    every lot and every product: a lot's own last snapshot always looks complete
+    to itself. The Jun 4 lot table listed lots last counted in April, and the
+    product rows added to 47,472 units under a total of 51,428. The date has to
+    be judged across the whole fact, keeping only the calendar."""
+    text = (TMDL if source == "tmdl" else DAX).read_text(encoding="utf-8")
+    parsed = _tmdl_measures(text) if source == "tmdl" else _dax_measures(text)
+    helper = parsed.get("Inventory Snapshot Date", "")
+    assert re.search(r"REMOVEFILTERS\(\s*fact_inventory\s*\)", helper), (
+        f"the {source}'s as-of date still responds to the lot, product or warehouse "
+        "in context, so each row can read a different snapshot"
+    )
+    assert "VALUES(dim_date[full_date])" in helper, (
+        f"the {source}'s as-of date drops the calendar filter along with the rest, "
+        "so a date slicer or a trend by date would all read one snapshot"
+    )
+
+
+def test_lots_really_leave_before_the_last_complete_snapshot(fact):
+    """The data half of the rule above: lots whose last snapshot is earlier than
+    the as-of date exist, so a per-row as-of date really does resurrect them."""
+    lots = fact.groupby("date_key").size().sort_index()
+    as_of = lots[lots >= 0.75 * lots.median()].index.max()
+    last_seen = fact.groupby("lot_key")["date_key"].max()
+    stale = int((last_seen < as_of).sum())
+    assert stale > 0, (
+        "every lot is still present on the as-of snapshot; the whole-inventory "
+        "rule in [Inventory Snapshot Date] would no longer change any row"
+    )
+
+
+def test_the_trailing_snapshots_really_are_thin(fact):
+    """The data half of the rule above, so the threshold keeps a reason."""
+    lots = fact.groupby("date_key").size().sort_index()
+    typical = lots.median()
+    assert (lots.iloc[-3:] < 0.75 * typical).all(), (
+        f"the last three snapshots carry {list(lots.iloc[-3:])} lots against a "
+        f"median of {typical}; if they are no longer thin, the complete-snapshot "
+        "rule in [Inventory Snapshot Date] no longer has a job to do"
+    )
+    # The first week is a ramp-up and also falls short; the rule only needs the
+    # LATEST complete snapshot, which is the fourth from the end.
+    complete = lots[lots >= 0.75 * typical]
+    assert complete.index.max() == lots.index[-4], (
+        f"the latest complete snapshot is {complete.index.max()}, not the fourth "
+        f"from the end ({lots.index[-4]})"
+    )
 
 
 def test_the_two_sources_agree_on_which_measures_are_semi_additive():

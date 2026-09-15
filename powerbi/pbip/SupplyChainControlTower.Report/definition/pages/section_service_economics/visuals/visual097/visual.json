@@ -3,9 +3,9 @@
   "name": "visual097",
   "position": {
     "x": 660,
-    "y": 418,
+    "y": 413,
     "z": 1000,
-    "height": 188,
+    "height": 162,
     "width": 600,
     "tabOrder": 1000
   },
@@ -28,7 +28,8 @@
                 }
               },
               "queryRef": "service_exchange_curve.service_level",
-              "nativeQueryRef": "service_level"
+              "nativeQueryRef": "service_level",
+              "displayName": "Service Level"
             },
             {
               "field": {
@@ -154,6 +155,77 @@
         {
           "properties": {
             "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "162D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "service_exchange_curve.service_level"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "169D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Safety Stock Value"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "129D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Cost vs Today"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "98D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Fill Rate"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
                   "Value": "false"

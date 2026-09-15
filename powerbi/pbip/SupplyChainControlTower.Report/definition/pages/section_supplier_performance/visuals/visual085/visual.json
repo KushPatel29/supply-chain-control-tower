@@ -3,9 +3,9 @@
   "name": "visual085",
   "position": {
     "x": 660,
-    "y": 148,
+    "y": 202,
     "z": 1000,
-    "height": 260,
+    "height": 203,
     "width": 600,
     "tabOrder": 1000
   },
@@ -28,7 +28,8 @@
                 }
               },
               "queryRef": "supplier_scorecard.supplier_name",
-              "nativeQueryRef": "supplier_name"
+              "nativeQueryRef": "supplier_name",
+              "displayName": "Supplier"
             },
             {
               "field": {
@@ -42,7 +43,8 @@
                 }
               },
               "queryRef": "supplier_scorecard.supplier_tier",
-              "nativeQueryRef": "supplier_tier"
+              "nativeQueryRef": "supplier_tier",
+              "displayName": "Supplier Tier"
             },
             {
               "field": {
@@ -56,7 +58,8 @@
                 }
               },
               "queryRef": "supplier_scorecard.measured_band",
-              "nativeQueryRef": "measured_band"
+              "nativeQueryRef": "measured_band",
+              "displayName": "Measured Band"
             },
             {
               "field": {

@@ -3,70 +3,103 @@
   "name": "visual050",
   "position": {
     "x": 20,
-    "y": 20,
+    "y": 88,
     "z": 1000,
-    "height": 118,
+    "height": 107,
     "width": 300,
     "tabOrder": 1000
   },
   "visual": {
-    "visualType": "card",
-    "drillFilterOtherVisuals": true,
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Single-Source SKUs"
-                }
-              },
-              "queryRef": "_Measures.Single-Source SKUs",
-              "nativeQueryRef": "Single-Source SKUs"
-            }
-          ]
-        }
-      }
-    },
-    "visualContainerObjects": {
-      "subTitle": [
+    "visualType": "image",
+    "objects": {
+      "image": [
         {
           "properties": {
-            "text": {
+            "sourceType": {
               "expr": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Single-Source Reference"
+                "Literal": {
+                  "Value": "'imageUrl'"
                 }
               }
             },
-            "show": {
+            "sourceUrl": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "KPI SVG Single-Source SKUs | Single-Source Reference"
+                }
+              }
+            },
+            "fit": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "'Fit'"
                 }
               }
             }
           }
         }
-      ],
+      ]
+    },
+    "visualContainerObjects": {
       "general": [
         {
           "properties": {
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Card. Shows Single-Source SKUs.'"
+                  "Value": "'KPI tile: Single-Source SKUs, with Single-Source Reference.'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

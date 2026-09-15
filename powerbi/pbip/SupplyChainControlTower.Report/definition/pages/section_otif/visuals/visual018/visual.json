@@ -3,70 +3,41 @@
   "name": "visual018",
   "position": {
     "x": 20,
-    "y": 20,
+    "y": 88,
     "z": 1000,
-    "height": 118,
+    "height": 107,
     "width": 300,
     "tabOrder": 1000
   },
   "visual": {
-    "visualType": "card",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "OTIF %"
-                }
-              },
-              "queryRef": "_Measures.OTIF %",
-              "nativeQueryRef": "OTIF %"
-            }
-          ]
-        }
-      }
-    },
-    "drillFilterOtherVisuals": true,
-    "visualContainerObjects": {
-      "subTitle": [
+    "visualType": "image",
+    "objects": {
+      "image": [
         {
           "properties": {
-            "text": {
+            "sourceType": {
               "expr": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "OTIF Reference"
+                "Literal": {
+                  "Value": "'imageUrl'"
                 }
               }
             },
-            "show": {
+            "sourceUrl": {
               "expr": {
-                "Literal": {
-                  "Value": "true"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "KPI SVG OTIF % | OTIF Reference | OTIF Colour"
                 }
               }
-            }
-          }
-        }
-      ],
-      "general": [
-        {
-          "properties": {
-            "altText": {
+            },
+            "fit": {
               "expr": {
                 "Literal": {
-                  "Value": "'Card. Shows OTIF %.'"
+                  "Value": "'Fit'"
                 }
               }
             }
@@ -74,23 +45,61 @@
         }
       ]
     },
-    "objects": {
-      "labels": [
+    "visualContainerObjects": {
+      "general": [
         {
           "properties": {
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "_Measures"
-                        }
-                      },
-                      "Property": "OTIF Colour"
-                    }
-                  }
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'KPI tile: OTIF %, with OTIF Reference.'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -1,0 +1,24 @@
+table 'Expiry Window'
+	lineageTag: 8662f1c5-dcc9-5c94-85e9-dc9970250101
+
+	column Window
+		dataType: string
+		lineageTag: 377955d3-5d5d-5bbc-badc-bbcec75cf487
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Window]
+		sortByColumn: Days
+
+	column Days
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1adcba60-adea-583a-8587-21abba46fe46
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Days]
+
+	partition 'Expiry Window' = calculated
+		mode: import
+		source = DATATABLE("Window", STRING, "Days", INTEGER, {{"5 days", 5}, {"90 days", 90}, {"120 days", 120}, {"150 days", 150}, {"180 days", 180}})
+

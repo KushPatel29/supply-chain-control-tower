@@ -3,9 +3,9 @@
   "name": "visual015",
   "position": {
     "x": 660,
-    "y": 150,
+    "y": 206,
     "z": 6000,
-    "height": 240,
+    "height": 217,
     "width": 600,
     "tabOrder": 6000
   },
@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Total Inventory Value"
+                  "Property": "Value Expiring In Window"
                 }
               },
-              "queryRef": "_Measures.Total Inventory Value",
-              "nativeQueryRef": "Total Inventory Value"
+              "queryRef": "_Measures.Value Expiring In Window",
+              "nativeQueryRef": "Value Expiring In Window"
             }
           ]
         }
@@ -56,17 +56,22 @@
       "title": [
         {
           "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Inventory Value by Warehouse'"
-                }
-              }
-            },
             "show": {
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Warehouse Expiry Chart Title"
                 }
               }
             }
@@ -79,7 +84,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Column chart titled Inventory Value by Warehouse. Plots Total Inventory Value by warehouse name.'"
+                  "Value": "'Column chart. Value Expiring In Window by warehouse_name, for the selected expiry window.'"
                 }
               }
             }

@@ -3,9 +3,9 @@
   "name": "visual016",
   "position": {
     "x": 20,
-    "y": 410,
+    "y": 441,
     "z": 7000,
-    "height": 290,
+    "height": 263,
     "width": 620,
     "tabOrder": 7000
   },
@@ -28,7 +28,8 @@
               },
               "queryRef": "dim_product.category",
               "nativeQueryRef": "category",
-              "active": true
+              "active": true,
+              "displayName": "Category"
             },
             {
               "field": {
@@ -43,7 +44,8 @@
               },
               "queryRef": "dim_product.product_name",
               "nativeQueryRef": "product_name",
-              "active": false
+              "active": false,
+              "displayName": "Product"
             }
           ]
         },
@@ -116,6 +118,65 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "254D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_product.category"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "121D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Qty On Hand"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "204D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Total Inventory Value"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }
