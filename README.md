@@ -8,7 +8,7 @@
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
 ![Streamlit](https://img.shields.io/badge/Streamlit-decision%20assurance-FF4B4B?logo=streamlit&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-690%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-704%20collected-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 **▶ Live decision studio: [kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/)**
@@ -25,7 +25,7 @@ One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs a 690-test suite. The
+builds, exercises the model-promotion policy, and runs a 704-test suite. The
 green badge above covers the failure paths too.
 
 ## Business process improvement case
@@ -44,7 +44,9 @@ turns the GIS evidence into
 a governed decision-and-handoff workflow. It starts with a question—what breaks
 if an origin or distribution node is unavailable—and carries it through policy
 sensitivity, prioritized exceptions, accountable follow-up, requirement and UAT
-evidence, and a reproducible five-file evidence pack. It is not a second
+evidence, an event-to-action service clock, governed disruption playbooks, an
+accountable action queue, a controlled decision journal, and a reproducible
+nine-file evidence pack. It is not a second
 dashboard: it is the interactive layer where an analyst can challenge an
 assumption and preserve exactly what supported the decision. A concise executive
 brief opens first, and only the selected workspace is rendered, keeping the
@@ -55,6 +57,7 @@ review faster and focused while preserving the deeper evidence on demand.
 | Workspace | Decision it supports |
 |---|---|
 | Executive brief | See the situation, evidence boundary, unresolved questions and next accountable decision before opening the detailed analysis. |
+| Incident command | Move a disruption through source event, ingestion, detection, triage, recommendation, approval, action and recovery; inspect service clocks, playbooks, owner-routed actions and the decision journal. |
 | Origin risk | Vary the supplier origin, alternate-score floor and recovery window; prioritize SKUs needing validation. |
 | Node outage | Remove a Canadian distribution node and recompute transparent next-nearest proximity screening. |
 | Handoff | Select an exception, assign session-only ownership, record required validation and export the governed evidence pack. |
@@ -569,7 +572,7 @@ python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3,
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 690 tests: contracts, GIS, app, gate, quarantine, stream, promotion
+pytest tests/ -v                                     # 704 tests: contracts, GIS, incident command, app, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -772,7 +775,7 @@ deploy/             fabric-cicd deployment script + per-environment parameter.ym
 gis/                governed synthetic location references for GIS publication
 docs/               metric dictionary, pipeline spec, GIS analysis, process case,
                      MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              690 tests: contracts, GIS, app, gate, quarantine, streaming, observability,
+tests/              704 tests: contracts, GIS, incident command, app, gate, quarantine, streaming, observability,
                      promotion policy, KPI rules, sourcing risk, inventory health,
                      supplier scorecard, service economics, semantic-model
                      binding, report formatting

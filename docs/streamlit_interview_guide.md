@@ -10,16 +10,16 @@ operational question into a governed, testable decision workflow.**
   alternate score **0**, and recovery window **30 days**.
 - Open **Node outage** in a second browser tab with **Ontario DC 1** selected.
 - Confirm the **Assurance** publication gate passes before the call and the
-  five-file evidence pack is available in **Handoff**.
+  nine-file evidence pack is available in **Handoff**.
 - Keep the repository, GIS analysis and test suite available as supporting
   evidence. Do not lead with code unless asked.
 - Say at the start that the business records and coordinates are synthetic.
 
-## Six-minute talk track
+## Seven-minute talk track
 
 ### 0:00–0:40 — Frame the decision
 
-**Show:** the live executive brief and six decision workspaces.
+**Show:** the live executive brief and seven decision workspaces.
 
 **Say:** “I started with a decision, not a map: if a sourcing origin or a
 distribution node becomes unavailable, which products need attention first,
@@ -43,7 +43,22 @@ Point out that the map highlights supplier reference locations while the table
 contains the decision evidence. The map is context; the register is the action
 surface.
 
-### 1:40–2:40 — Make the assumption visible
+### 1:40–2:40 — Run incident command
+
+**Show:** **Incident command**, the eight-stage service clock, P0 queue, and
+controlled decision journal.
+
+**Say:** “I designed the operating layer as well as the analysis. A source
+event moves through ingestion, detection, triage, recommendation, approval,
+action, and recovery. Five playbooks define owners, SLAs, escalation, rollback,
+and closure evidence. For this supplier outage, 13 SKUs enter the P0 validation
+queue. The journal records the recommended and rejected options, but remains
+explicitly not approved and shows that no real outcome was measured.”
+
+Point out that T+ values are deterministic demonstration timings, not claimed
+historical performance. An operational team would approve the thresholds.
+
+### 2:40–3:40 — Make the assumption visible
 
 **Do:** raise the minimum alternate score from 0 to 55, then to 60.
 
@@ -55,7 +70,7 @@ alternate.”
 
 Restore the score floor to 0 before moving on.
 
-### 2:40–3:40 — Test Ontario DC 1
+### 3:40–4:40 — Test Ontario DC 1
 
 **Show:** **Node outage** with Ontario DC 1 unavailable.
 
@@ -70,7 +85,7 @@ Immediately qualify the last number: “That spend belongs to the six suppliers;
 it is context, not proof that the money physically flowed through Ontario DC 1.
 The model contains no shipment-lane or node-throughput fact.”
 
-### 3:40–4:40 — Close the loop to action
+### 4:40–5:40 — Close the loop to action
 
 **Show:** **Handoff**, select a SKU, assign an accountable role and
 download the evidence pack.
@@ -86,7 +101,7 @@ Name the hand-offs: procurement confirms qualification, capacity and terms;
 supply planning checks cover and timing; logistics validates the actual route
 and node capacity.
 
-### 4:40–6:00 — Prove why the evidence is trustworthy
+### 5:40–7:00 — Prove why the evidence is trustworthy
 
 **Show:** **Assurance**, review the requirement-to-test traceability and UAT
 cases, then enable the invalid-latitude toggle.
@@ -158,7 +173,7 @@ Useful requirement framing:
 - **Business rules:** external supplier, qualified status, optional score floor
   and selected recovery window.
 - **Outputs:** exposure measures, exception register, next-nearest node
-  screening register and a governed five-file evidence pack.
+  screening register and a governed nine-file evidence pack.
 - **Acceptance:** stable keys, valid coordinates, complete supplier coverage,
   reproducible nearest-node choice and visible limitations.
 
@@ -176,7 +191,7 @@ network_locations.csv ─ WGS 84 validation ─┬─ network_locations.geojson
                                               └─ supplier_routes.geojson
                                                  + gis_route_summary.csv
 
-tested decision functions ─ Streamlit interface ─ handoff + evidence pack
+tested decision functions ─ incident command ─ Streamlit interface ─ handoff + evidence pack
 ```
 
 The interface reads committed evidence. It does not silently geocode locations,

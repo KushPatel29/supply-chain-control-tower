@@ -20,6 +20,12 @@ from zipfile import ZIP_STORED, ZipFile, ZipInfo
 import pandas as pd
 
 from app.gis_decision_engine import country_disruption
+from app.incident_command import (
+    controlled_decision_journal,
+    event_to_action_timeline,
+    incident_action_register,
+    incident_playbook_catalogue,
+)
 
 
 DEFAULT_EVIDENCE_FILES = (
@@ -557,7 +563,11 @@ def _evidence_readme(
 ) -> str:
     files = (
         "decision-brief.md — scenario result, owner and required next checks",
+        "decision-journal.csv — recommendation, rejected options, decision basis and next approval gate",
         "sku-response-register.csv — one decision row per affected SKU",
+        "incident-action-register.csv — priority, owner, service clock and closure evidence per affected SKU",
+        "incident-playbook.csv — selected trigger, service levels, escalation, rollback and closure controls",
+        "incident-timeline.csv — event-to-recovery stages, latency, owners and service-clock status",
         "selected-supplier-routes.geojson — screening routes for suppliers in the selected origin",
         "evidence-manifest.csv — row counts, byte counts and SHA-256 hashes",
         "README-assumptions.md — this inventory and the model boundaries",
@@ -621,8 +631,9 @@ def build_evidence_pack(
 ) -> bytes:
     """Build a byte-reproducible, in-memory ZIP for one origin scenario.
 
-    The pack includes a decision brief, SKU register, selected route GeoJSON,
-    source manifest and assumptions README. It contains no invented route,
+    The pack includes a decision brief, decision journal, action register,
+    incident playbook, event-to-recovery timeline, SKU register, selected route
+    GeoJSON, source manifest and assumptions README. It contains no invented route,
     capacity or throughput data and performs no filesystem writes. Optional
     handoff metadata is embedded in the existing brief and assumptions README.
     ``selected_sku`` may identify one affected exception to foreground in the
@@ -676,6 +687,19 @@ def build_evidence_pack(
     ).sort_values(["_priority", "cogs", "sku"], ascending=[True, False, True])
     sku_csv = ordered[list(_SKU_EXPORT_COLUMNS)].to_csv(index=False, lineterminator="\n")
 
+    incident_type = "Supplier outage"
+    scenario_name = f"{country} supplier-origin disruption"
+    playbook = incident_playbook_catalogue().query(
+        "incident_type == @incident_type"
+    )
+    timeline = event_to_action_timeline(incident_type, scenario_name)
+    action_register = incident_action_register(
+        response, incident_type, scenario_name
+    )
+    decision_journal = controlled_decision_journal(
+        action_register, incident_type, scenario_name
+    )
+
     selected_supplier_ids = routes.loc[
         routes["supplier_country"].eq(country), "supplier_id"
     ].astype(int)
@@ -701,7 +725,11 @@ def build_evidence_pack(
             session_note,
             selected_exception,
         ),
+        "decision-journal.csv": decision_journal.to_csv(index=False, lineterminator="\n"),
         "evidence-manifest.csv": manifest_csv,
+        "incident-action-register.csv": action_register.to_csv(index=False, lineterminator="\n"),
+        "incident-playbook.csv": playbook.to_csv(index=False, lineterminator="\n"),
+        "incident-timeline.csv": timeline.to_csv(index=False, lineterminator="\n"),
         "selected-supplier-routes.geojson": selected_geojson,
         "sku-response-register.csv": sku_csv,
     }

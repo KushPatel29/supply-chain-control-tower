@@ -228,6 +228,7 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
     assert workspace.value == "Executive brief"
     assert workspace.options == [
         "Executive brief",
+        "Incident command",
         "Origin risk",
         "Node outage",
         "Handoff",
@@ -239,7 +240,17 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
     assert metrics["Affected SKUs"] == "36"
     assert metrics["No eligible alternate"] == "13"
 
-    workspace.set_value("Origin risk").run(timeout=30)
+    workspace.set_value("Incident command").run(timeout=30)
+    assert not app.exception
+    command_metrics = {metric.label: metric.value for metric in app.metric}
+    assert command_metrics["Incident"] == "INC-MEXICOSU-SO-001"
+    assert command_metrics["P0 validation queue"] == "13"
+    assert command_metrics["Action SLA"] == "240 min"
+    assert command_metrics["Recovery target"] == "24 hr"
+    download_labels = [button.label for button in app.get("download_button")]
+    assert "Download incident action register" in download_labels
+
+    app.get("button_group")[0].set_value("Origin risk").run(timeout=30)
     assert not app.exception
     assert app.selectbox[0].value == "Mexico"
     origin_metrics = {metric.label: metric.value for metric in app.metric}
@@ -266,4 +277,4 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
     app.toggle[0].set_value(True).run(timeout=30)
     assert any("Publication blocked" in item.value for item in app.error)
     download_labels = [button.label for button in app.get("download_button")]
-    assert "Download five-file evidence pack" not in download_labels
+    assert "Download nine-file evidence pack" not in download_labels

@@ -29,7 +29,11 @@ ROOT = Path(__file__).resolve().parent.parent
 PACK_MEMBERS = [
     "README-assumptions.md",
     "decision-brief.md",
+    "decision-journal.csv",
     "evidence-manifest.csv",
+    "incident-action-register.csv",
+    "incident-playbook.csv",
+    "incident-timeline.csv",
     "selected-supplier-routes.geojson",
     "sku-response-register.csv",
 ]
@@ -326,6 +330,10 @@ def test_evidence_zip_is_exact_parseable_safe_deterministic_and_handoff_ready(
             assert member.file_size > 0
 
         register = pd.read_csv(io.BytesIO(archive.read("sku-response-register.csv")))
+        action_register = pd.read_csv(io.BytesIO(archive.read("incident-action-register.csv")))
+        playbook = pd.read_csv(io.BytesIO(archive.read("incident-playbook.csv")))
+        timeline = pd.read_csv(io.BytesIO(archive.read("incident-timeline.csv")))
+        journal = pd.read_csv(io.BytesIO(archive.read("decision-journal.csv")))
         archived_manifest = pd.read_csv(
             io.BytesIO(archive.read("evidence-manifest.csv"))
         )
@@ -335,6 +343,16 @@ def test_evidence_zip_is_exact_parseable_safe_deterministic_and_handoff_ready(
 
     assert len(register) == 36
     assert register.product_id.is_unique
+    assert len(action_register) == 36
+    assert action_register.sku.is_unique
+    assert len(playbook) == 1
+    assert playbook.iloc[0].incident_type == "Supplier outage"
+    assert timeline.stage.tolist() == [
+        "Source event", "Ingestion", "Detection", "Triage",
+        "Recommendation", "Approval", "Action", "Recovery",
+    ]
+    assert len(journal) == 1
+    assert journal.iloc[0].decision_status == "RECOMMENDATION — NOT APPROVED"
     assert archived_manifest.path.tolist() == manifest.path.tolist()
     assert archived_manifest.sha256.tolist() == manifest.sha256.tolist()
     assert routes["type"] == "FeatureCollection"

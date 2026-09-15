@@ -35,6 +35,12 @@ from app.gis_visuals import (
     scenario_map,
     warehouse_posture_map,
 )
+from app.incident_command import (
+    controlled_decision_journal,
+    event_to_action_timeline,
+    incident_action_register,
+    incident_playbook_catalogue,
+)
 
 
 ROOT = Path(__file__).resolve().parent
@@ -289,7 +295,7 @@ with st.sidebar:
     )
 
 st.markdown(
-    f'<p class="studio-meta"><strong>Decision Assurance Studio</strong><span>Opening scenario: {selected_country}</span><span>Publication gate: {"PASS" if publication_ready else "BLOCKED"}</span><span>690 automated tests</span></p>',
+    f'<p class="studio-meta"><strong>Decision Assurance Studio</strong><span>Opening scenario: {selected_country}</span><span>Publication gate: {"PASS" if publication_ready else "BLOCKED"}</span><span>704 automated tests</span></p>',
     unsafe_allow_html=True,
 )
 st.title(
@@ -324,6 +330,7 @@ workspace = st.segmented_control(
     "Decision workspace",
     [
         "Executive brief",
+        "Incident command",
         "Origin risk",
         "Node outage",
         "Handoff",
@@ -427,6 +434,124 @@ if workspace == "Executive brief":
     st.markdown(
         '<div class="decision-rail"><div><b>Question</b><span>Choose the disruption.</span></div><div><b>Rules</b><span>Expose policy assumptions.</span></div><div><b>Outcome</b><span>Prioritize exceptions.</span></div><div><b>Handoff</b><span>Name the next validation.</span></div><div><b>Assurance</b><span>Trace and test the evidence.</span></div></div>',
         unsafe_allow_html=True,
+    )
+
+if workspace == "Incident command":
+    st.subheader("Incident command: from signal to controlled response")
+    st.markdown(
+        '<p class="section-note">Replay a supplier-origin disruption through an eight-stage service clock. Detection, triage, recommendation, approval, execution, and recovery stay separate so a fast response never bypasses accountable validation.</p>',
+        unsafe_allow_html=True,
+    )
+    incident_type = "Supplier outage"
+    scenario_name = f"{selected_country} supplier-origin disruption"
+    playbooks = incident_playbook_catalogue()
+    selected_playbook = playbooks[playbooks.incident_type.eq(incident_type)].iloc[0]
+    incident_timeline = event_to_action_timeline(incident_type, scenario_name)
+    incident_actions = incident_action_register(response, incident_type, scenario_name)
+    decision_journal = controlled_decision_journal(
+        incident_actions, incident_type, scenario_name
+    )
+    incident_id = str(incident_timeline.iloc[0].event_id)
+    p0_actions = incident_actions[incident_actions.priority.eq("P0")]
+    command_1, command_2, command_3, command_4 = st.columns(4)
+    command_1.metric("Incident", incident_id, "simulated event", delta_color="off", delta_arrow="off")
+    command_2.metric("P0 validation queue", len(p0_actions), f"of {len(incident_actions)} affected SKUs", delta_color="off", delta_arrow="off")
+    command_3.metric("Action SLA", f"{int(selected_playbook.action_sla_min)} min", str(selected_playbook.incident_commander), delta_color="off", delta_arrow="off")
+    command_4.metric("Recovery target", f"{int(selected_playbook.recovery_target_min / 60)} hr", "clock starts at source event", delta_color="off", delta_arrow="off")
+
+    st.markdown(
+        f'<div class="decision-line"><strong>Containment:</strong> {selected_playbook.default_containment}<br><strong>Escalation:</strong> {selected_playbook.escalation_rule}</div>',
+        unsafe_allow_html=True,
+    )
+    timeline_col, playbook_col = st.columns([1.25, .75])
+    with timeline_col:
+        st.markdown("#### Event-to-action service clock")
+        st.dataframe(
+            incident_timeline[[
+                "sequence", "stage", "elapsed_min", "stage_latency_min",
+                "cumulative_sla_min", "service_clock_status", "accountable_role",
+            ]],
+            hide_index=True,
+            width="stretch",
+            height=330,
+            column_config={
+                "sequence": st.column_config.NumberColumn("Step", format="%d"),
+                "elapsed_min": st.column_config.NumberColumn("Elapsed T+ min", format="%d"),
+                "stage_latency_min": st.column_config.NumberColumn("Stage min", format="%d"),
+                "cumulative_sla_min": st.column_config.NumberColumn("SLA T+ min", format="%d"),
+                "service_clock_status": "Clock",
+                "accountable_role": "Accountable role",
+            },
+        )
+        st.caption("T+ values are deterministic demonstration timings, not historical timestamps or claimed operating performance.")
+    with playbook_col:
+        st.markdown("#### Control conditions")
+        st.markdown(
+            f"**Trigger**  \n{selected_playbook.trigger}\n\n"
+            f"**Severity rule**  \n{selected_playbook.severity_rule}\n\n"
+            f"**Rollback**  \n{selected_playbook.rollback_condition}\n\n"
+            f"**Close only with**  \n{selected_playbook.closure_evidence}"
+        )
+
+    st.markdown("#### Prioritized action queue")
+    action_filter = st.segmented_control(
+        "Action priority",
+        ["P0", "P1", "P2", "All"],
+        default="P0",
+        key="incident_priority_filter",
+        label_visibility="collapsed",
+    )
+    visible_actions = (
+        incident_actions
+        if action_filter == "All"
+        else incident_actions[incident_actions.priority.eq(action_filter)]
+    )
+    st.dataframe(
+        visible_actions[[
+            "sku", "category", "priority", "award_weighted_cogs", "exception",
+            "accountable_role", "response_action", "status",
+        ]],
+        hide_index=True,
+        width="stretch",
+        height=330,
+        column_config={
+            "award_weighted_cogs": st.column_config.NumberColumn("Award-weighted COGS", format="$%,.0f"),
+            "accountable_role": "Accountable role",
+            "response_action": "Next controlled action",
+        },
+    )
+
+    st.markdown("#### Controlled decision journal")
+    journal_record = decision_journal.iloc[0]
+    journal_1, journal_2 = st.columns([1.05, .95])
+    with journal_1:
+        st.markdown(
+            f'<div class="handoff-card"><b>{journal_record.decision_status}</b><strong>{journal_record.selected_option}</strong><span>{journal_record.decision_basis}<br><br>Expected benefit: {journal_record.expected_benefit}</span></div>',
+            unsafe_allow_html=True,
+        )
+    with journal_2:
+        st.markdown(
+            f'<div class="handoff-card"><b>Next approval gate</b><strong>{journal_record.accountable_role}</strong><span>{journal_record.next_gate}<br><br>Actual outcome: {journal_record.actual_outcome}</span></div>',
+            unsafe_allow_html=True,
+        )
+    with st.expander("Compare all five governed response playbooks"):
+        st.dataframe(
+            playbooks[[
+                "incident_type", "incident_commander", "detect_sla_min",
+                "triage_sla_min", "decision_sla_min", "action_sla_min",
+                "recovery_target_min", "escalation_rule", "rollback_condition",
+            ]],
+            hide_index=True,
+            width="stretch",
+        )
+        st.caption("Catalogue includes supplier outage, lane closure, port delay, demand spike, and data-feed failure. Thresholds are portfolio design assumptions requiring operational approval before use.")
+    st.download_button(
+        "Download incident action register",
+        incident_actions.to_csv(index=False),
+        file_name=f"{selected_country.lower().replace(' ', '-')}-incident-action-register.csv",
+        mime="text/csv",
+        width="stretch",
+        key="incident_action_register_download",
     )
 
 if workspace == "Origin risk":
@@ -713,7 +838,7 @@ if workspace == "Handoff":
 
     st.markdown("#### Governed evidence package")
     st.markdown(
-        '<p class="section-note">The ZIP contains exactly five files: a decision brief with this session handoff, the SKU register, selected supplier-route GeoJSON, a source manifest with hashes, and the assumptions README.</p>',
+        '<p class="section-note">The ZIP contains nine controlled files: a decision brief and journal, incident playbook and timeline, action and SKU registers, selected supplier-route GeoJSON, source manifest with hashes, and the assumptions README.</p>',
         unsafe_allow_html=True,
     )
     if publication_ready:
@@ -742,7 +867,7 @@ if workspace == "Handoff":
             "scenario or session handoff changes"
         )
         st.download_button(
-            "Download five-file evidence pack", pack,
+            "Download nine-file evidence pack", pack,
             file_name=f"{selected_country.lower().replace(' ', '-')}-decision-evidence.zip",
             mime="application/zip", width="stretch", key="handoff_evidence_pack_download",
         )
@@ -847,7 +972,7 @@ if workspace == "Assurance":
         if publication_ready:
             st.success(f"Publication gate passed: {len(checks)} of {len(checks)} controls are green.")
         else:
-            st.error(f"Publication blocked: {len(blocked_controls)} control(s) failed. The five-file evidence pack is unavailable until the evidence passes.")
+            st.error(f"Publication blocked: {len(blocked_controls)} control(s) failed. The nine-file evidence pack is unavailable until the evidence passes.")
         st.dataframe(checks, hide_index=True, width="stretch")
 
         st.markdown("#### Governed layer catalogue")
@@ -936,15 +1061,16 @@ Microsoft 365 administration.
         '<div class="closing-line">The map is a presentation layer. The analytical contribution is the traceable path from a stakeholder question, through governed evidence and acceptance criteria, to the next accountable decision.</div>',
         unsafe_allow_html=True,
     )
-    with st.expander("Presenter notes - six-minute walkthrough"):
+    with st.expander("Presenter notes - seven-minute walkthrough"):
         st.markdown(
             """
 1. **Frame the decision (0:00–0:40).** Start with the operating question and synthetic evidence boundary.
 2. **Run the Mexico scenario (0:40–1:40).** Show exposure, affected SKUs, and the exception register.
-3. **Challenge the policy (1:40–2:40).** Raise the score floor and explain why sensitivity is not a forecast.
-4. **Test a node assumption (2:40–3:40).** Remove Ontario DC 1 and call the result next-nearest node screening.
-5. **Complete the handoff (3:40–4:40).** Select one exception, assign a session-only owner, and package its evidence.
-6. **Prove trust (4:40–6:00).** Inject an invalid latitude, show the export block, and separate technical PASS from business UAT sign-off.
+3. **Command the incident (1:40–2:40).** Trace the service clock, P0 queue, playbook controls, and non-approval decision journal.
+4. **Challenge the policy (2:40–3:40).** Raise the score floor and explain why sensitivity is not a forecast.
+5. **Test a node assumption (3:40–4:40).** Remove Ontario DC 1 and call the result next-nearest node screening.
+6. **Complete the handoff (4:40–5:40).** Select one exception, assign a session-only owner, and package its evidence.
+7. **Prove trust (5:40–7:00).** Inject an invalid latitude, show the export block, and separate technical PASS from business UAT sign-off.
 """
         )
     with st.expander("Production backlog and adoption path"):

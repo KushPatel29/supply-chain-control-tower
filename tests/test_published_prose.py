@@ -126,15 +126,15 @@ def test_the_reader_with_a_calculator_is_not_the_first_line_of_defence(inventory
 
 
 def test_the_page_and_test_counts_on_the_badge_are_real(prose):
-    badge = re.search(r"tests-(\d+)%20passing", prose)
+    badge = re.search(r"tests-(\d+)%20collected", prose)
     assert badge, "README no longer carries a test-count badge"
     # A lower bound is not a guard. This asserted only that the badge was at
     # least the number of test *definitions*, so a badge could drift arbitrarily
     # high — or stay behind while parametrised cases were added — and still
     # pass. healthcare-claims-analytics had the strict version of this same
     # confusion, pinned to definitions rather than cases, and published 182 for
-    # months while its suite collected 345. The badge means collected cases, so
-    # that is what gets counted, in a subprocess so the answer does not depend
+    # months while its suite collected 345. The badge explicitly says collected,
+    # so that is what gets counted, in a subprocess so the answer does not depend
     # on how this run was invoked.
     completed = subprocess.run(
         [sys.executable, "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider",
