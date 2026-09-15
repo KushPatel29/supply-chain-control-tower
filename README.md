@@ -8,7 +8,7 @@
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
 ![Streamlit](https://img.shields.io/badge/Streamlit-decision%20assurance-FF4B4B?logo=streamlit&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-814%20collected-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-815%20collected-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 **▶ Live decision studio: [kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/)**

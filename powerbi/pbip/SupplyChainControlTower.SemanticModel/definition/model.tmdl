@@ -7,7 +7,7 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["dim_product","dim_supplier","dim_warehouse","dim_customer","dim_lot","dim_date","fact_orders","fact_inventory","_Measures","DataPath","security_mapping"]
+annotation PBI_QueryOrder = ["dim_product", "dim_supplier", "dim_warehouse", "dim_customer", "dim_lot", "dim_date", "fact_orders", "fact_inventory", "_Measures", "security_mapping", "award_shift_candidates", "country_exposure", "fact_sourcing", "inventory_position", "inventory_trend", "perfect_order", "perfect_order_failures", "reject_reasons", "service_exchange_curve", "service_headline", "service_policy_by_class", "service_policy_options", "supplier_headline", "supplier_scorecard", "transfer_opportunities", "DataPath"]
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 

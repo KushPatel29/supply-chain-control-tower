@@ -253,6 +253,13 @@
                   "Value": "'section_sourcing_risk'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Go to Global Sourcing Risk. Ctrl+click in Power BI Desktop \u00b7 click in the Power BI service'"
+                }
+              }
             }
           }
         }

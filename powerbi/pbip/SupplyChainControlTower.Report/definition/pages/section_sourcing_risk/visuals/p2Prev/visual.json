@@ -253,6 +253,13 @@
                   "Value": "'section_exec_overview'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Go to Executive Overview. Ctrl+click in Power BI Desktop \u00b7 click in the Power BI service'"
+                }
+              }
             }
           }
         }
