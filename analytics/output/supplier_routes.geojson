@@ -6,24 +6,24 @@
       "id": "supplier-1-route",
       "properties": {
         "supplier_id": 1,
-        "supplier_name": "Blair PLC",
-        "supplier_country": "USA",
-        "warehouse_id": 1,
-        "warehouse_name": "Ontario DC 1",
-        "distance_km": 701.2,
-        "distance_band": "continental",
+        "supplier_name": "Harborview Industries",
+        "supplier_country": "Mexico",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 2737.9,
+        "distance_band": "intercontinental",
         "analysis_basis": "nearest_node_great_circle_screening"
       },
       "geometry": {
         "type": "LineString",
         "coordinates": [
           [
-            -87.6298,
-            41.8781
+            -100.5508,
+            25.3354
           ],
           [
-            -79.3832,
-            43.6532
+            -79.8711,
+            43.2557
           ]
         ]
       }
@@ -33,65 +33,11 @@
       "id": "supplier-2-route",
       "properties": {
         "supplier_id": 2,
-        "supplier_name": "Dudley Group",
-        "supplier_country": "Spain",
-        "warehouse_id": 3,
-        "warehouse_name": "Ontario DC 3",
-        "distance_km": 5986.4,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -0.3763,
-            39.4699
-          ],
-          [
-            -75.6972,
-            45.4215
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-3-route",
-      "properties": {
-        "supplier_id": 3,
-        "supplier_name": "Arnold Ltd",
-        "supplier_country": "Poland",
-        "warehouse_id": 3,
-        "warehouse_name": "Ontario DC 3",
-        "distance_km": 6577.0,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            21.0122,
-            52.2297
-          ],
-          [
-            -75.6972,
-            45.4215
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-4-route",
-      "properties": {
-        "supplier_id": 4,
-        "supplier_name": "Mcclure, Ward and Lee",
-        "supplier_country": "Brazil",
+        "supplier_name": "Kingsford Manufacturing",
+        "supplier_country": "China",
         "warehouse_id": 1,
-        "warehouse_name": "Ontario DC 1",
-        "distance_km": 8186.1,
+        "warehouse_name": "BC Lower Mainland Cross-Dock 1",
+        "distance_km": 8977.5,
         "distance_band": "intercontinental",
         "analysis_basis": "nearest_node_great_circle_screening"
       },
@@ -99,278 +45,8 @@
         "type": "LineString",
         "coordinates": [
           [
-            -46.6333,
-            -23.5505
-          ],
-          [
-            -79.3832,
-            43.6532
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-5-route",
-      "properties": {
-        "supplier_id": 5,
-        "supplier_name": "Williams and Sons",
-        "supplier_country": "Mexico",
-        "warehouse_id": 1,
-        "warehouse_name": "Ontario DC 1",
-        "distance_km": 2751.2,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -100.3161,
-            25.6866
-          ],
-          [
-            -79.3832,
-            43.6532
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-6-route",
-      "properties": {
-        "supplier_id": 6,
-        "supplier_name": "Galloway-Wyatt",
-        "supplier_country": "Mexico",
-        "warehouse_id": 1,
-        "warehouse_name": "Ontario DC 1",
-        "distance_km": 3261.0,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -99.1332,
-            19.4326
-          ],
-          [
-            -79.3832,
-            43.6532
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-7-route",
-      "properties": {
-        "supplier_id": 7,
-        "supplier_name": "James Group",
-        "supplier_country": "Vietnam",
-        "warehouse_id": 8,
-        "warehouse_name": "BC Interior DC 8",
-        "distance_km": 11452.5,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            106.6297,
-            10.8231
-          ],
-          [
-            -122.7497,
-            53.9171
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-8-route",
-      "properties": {
-        "supplier_id": 8,
-        "supplier_name": "Flowers, Martin and Kelly",
-        "supplier_country": "Thailand",
-        "warehouse_id": 8,
-        "warehouse_name": "BC Interior DC 8",
-        "distance_km": 11450.1,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            100.5018,
-            13.7563
-          ],
-          [
-            -122.7497,
-            53.9171
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-9-route",
-      "properties": {
-        "supplier_id": 9,
-        "supplier_name": "Adams, Zuniga and Wong",
-        "supplier_country": "Thailand",
-        "warehouse_id": 8,
-        "warehouse_name": "BC Interior DC 8",
-        "distance_km": 11496.4,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            100.9847,
-            13.0827
-          ],
-          [
-            -122.7497,
-            53.9171
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-10-route",
-      "properties": {
-        "supplier_id": 10,
-        "supplier_name": "Reid, Ferguson and Sanchez",
-        "supplier_country": "India",
-        "warehouse_id": 8,
-        "warehouse_name": "BC Interior DC 8",
-        "distance_km": 11762.0,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            72.8777,
-            19.076
-          ],
-          [
-            -122.7497,
-            53.9171
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-11-route",
-      "properties": {
-        "supplier_id": 11,
-        "supplier_name": "Gray-Mayo",
-        "supplier_country": "Mexico",
-        "warehouse_id": 1,
-        "warehouse_name": "Ontario DC 1",
-        "distance_km": 3384.5,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -103.3496,
-            20.6597
-          ],
-          [
-            -79.3832,
-            43.6532
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-12-route",
-      "properties": {
-        "supplier_id": 12,
-        "supplier_name": "Watts, Robinson and Nguyen",
-        "supplier_country": "Brazil",
-        "warehouse_id": 1,
-        "warehouse_name": "Ontario DC 1",
-        "distance_km": 8240.4,
-        "distance_band": "intercontinental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -46.3289,
-            -23.9608
-          ],
-          [
-            -79.3832,
-            43.6532
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-13-route",
-      "properties": {
-        "supplier_id": 13,
-        "supplier_name": "Perez Inc",
-        "supplier_country": "Canada",
-        "warehouse_id": 3,
-        "warehouse_name": "Ontario DC 3",
-        "distance_km": 166.3,
-        "distance_band": "regional",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -73.5673,
-            45.5019
-          ],
-          [
-            -75.6972,
-            45.4215
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "supplier-14-route",
-      "properties": {
-        "supplier_id": 14,
-        "supplier_name": "Morales-Jones",
-        "supplier_country": "Mexico",
-        "warehouse_id": 7,
-        "warehouse_name": "BC Lower Mainland DC 7",
-        "distance_km": 1931.7,
-        "distance_band": "continental",
-        "analysis_basis": "nearest_node_great_circle_screening"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -117.0382,
-            32.5149
+            121.6025,
+            31.6769
           ],
           [
             -123.1207,
@@ -381,14 +57,68 @@
     },
     {
       "type": "Feature",
-      "id": "supplier-15-route",
+      "id": "supplier-3-route",
       "properties": {
-        "supplier_id": 15,
-        "supplier_name": "Walter, Edwards and Rios",
+        "supplier_id": 3,
+        "supplier_name": "Thornbury Home Goods",
+        "supplier_country": "USA",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 626.2,
+        "distance_band": "continental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -87.3951,
+            42.1728
+          ],
+          [
+            -79.8711,
+            43.2557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-4-route",
+      "properties": {
+        "supplier_id": 4,
+        "supplier_name": "Ridgemont Supply Co",
+        "supplier_country": "USA",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 667.8,
+        "distance_band": "continental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -87.9245,
+            42.2046
+          ],
+          [
+            -79.8711,
+            43.2557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-5-route",
+      "properties": {
+        "supplier_id": 5,
+        "supplier_name": "Blackpine Supply Co",
         "supplier_country": "Spain",
-        "warehouse_id": 3,
-        "warehouse_name": "Ontario DC 3",
-        "distance_km": 6053.4,
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 5804.0,
         "distance_band": "intercontinental",
         "analysis_basis": "nearest_node_great_circle_screening"
       },
@@ -396,12 +126,525 @@
         "type": "LineString",
         "coordinates": [
           [
-            2.1734,
-            41.3851
+            -0.3957,
+            39.867
           ],
           [
-            -75.6972,
-            45.4215
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-6-route",
+      "properties": {
+        "supplier_id": 6,
+        "supplier_name": "Copper Creek Supply Co",
+        "supplier_country": "Canada",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 40.9,
+        "distance_band": "regional",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -73.2232,
+            45.2248
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-7-route",
+      "properties": {
+        "supplier_id": 7,
+        "supplier_name": "Northwind Distribution",
+        "supplier_country": "Poland",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 6449.7,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            20.7069,
+            51.995
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-8-route",
+      "properties": {
+        "supplier_id": 8,
+        "supplier_name": "Crestline Industries",
+        "supplier_country": "New Zealand",
+        "warehouse_id": 1,
+        "warehouse_name": "BC Lower Mainland Cross-Dock 1",
+        "distance_km": 11337.7,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            175.1815,
+            -36.8644
+          ],
+          [
+            -123.1207,
+            49.2827
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-9-route",
+      "properties": {
+        "supplier_id": 9,
+        "supplier_name": "Silverbrook Foods",
+        "supplier_country": "USA",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 644.7,
+        "distance_band": "continental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -87.381,
+            41.5552
+          ],
+          [
+            -79.8711,
+            43.2557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-10-route",
+      "properties": {
+        "supplier_id": 10,
+        "supplier_name": "Redstone Brands",
+        "supplier_country": "Turkiye",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 7695.8,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.8637,
+            41.077
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-11-route",
+      "properties": {
+        "supplier_id": 11,
+        "supplier_name": "Elkhorn Foods",
+        "supplier_country": "Canada",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 27.9,
+        "distance_band": "regional",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -73.2302,
+            45.419
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-12-route",
+      "properties": {
+        "supplier_id": 12,
+        "supplier_name": "Ironvale Consumer Products",
+        "supplier_country": "USA",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 692.8,
+        "distance_band": "continental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -88.0551,
+            41.6999
+          ],
+          [
+            -79.8711,
+            43.2557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-13-route",
+      "properties": {
+        "supplier_id": 13,
+        "supplier_name": "Sandhill Industries",
+        "supplier_country": "Mexico",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 2679.5,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -100.6885,
+            26.1084
+          ],
+          [
+            -79.8711,
+            43.2557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-14-route",
+      "properties": {
+        "supplier_id": 14,
+        "supplier_name": "Grayrock Supply Co",
+        "supplier_country": "Poland",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 6451.4,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.1057,
+            52.3232
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-15-route",
+      "properties": {
+        "supplier_id": 15,
+        "supplier_name": "Larkspur Partners",
+        "supplier_country": "Thailand",
+        "warehouse_id": 1,
+        "warehouse_name": "BC Lower Mainland Cross-Dock 1",
+        "distance_km": 11824.8,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            100.2636,
+            13.6804
+          ],
+          [
+            -123.1207,
+            49.2827
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-16-route",
+      "properties": {
+        "supplier_id": 16,
+        "supplier_name": "Fairmont Home Goods",
+        "supplier_country": "Poland",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 6480.7,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            21.0387,
+            51.8009
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-17-route",
+      "properties": {
+        "supplier_id": 17,
+        "supplier_name": "Maplewood Global",
+        "supplier_country": "Mexico",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 2730.8,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -100.4414,
+            25.339
+          ],
+          [
+            -79.8711,
+            43.2557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-18-route",
+      "properties": {
+        "supplier_id": 18,
+        "supplier_name": "Brightwater Manufacturing",
+        "supplier_country": "Turkiye",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 7741.4,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            29.2837,
+            40.8158
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-19-route",
+      "properties": {
+        "supplier_id": 19,
+        "supplier_name": "Windrow Brands",
+        "supplier_country": "Turkiye",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 7744.8,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            29.2908,
+            40.777
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-20-route",
+      "properties": {
+        "supplier_id": 20,
+        "supplier_name": "Bayfield Global",
+        "supplier_country": "Turkiye",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 7688.6,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            29.0296,
+            41.3064
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-21-route",
+      "properties": {
+        "supplier_id": 21,
+        "supplier_name": "Cascadia Home Goods",
+        "supplier_country": "Brazil",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 8181.0,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -46.3068,
+            -23.764
+          ],
+          [
+            -73.5673,
+            45.5019
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-22-route",
+      "properties": {
+        "supplier_id": 22,
+        "supplier_name": "Whitecourt Supply Co",
+        "supplier_country": "Vietnam",
+        "warehouse_id": 1,
+        "warehouse_name": "BC Lower Mainland Cross-Dock 1",
+        "distance_km": 11784.2,
+        "distance_band": "intercontinental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.2326,
+            10.8072
+          ],
+          [
+            -123.1207,
+            49.2827
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-23-route",
+      "properties": {
+        "supplier_id": 23,
+        "supplier_name": "Alderwood Manufacturing",
+        "supplier_country": "USA",
+        "warehouse_id": 9,
+        "warehouse_name": "Ontario Cold Chain DC 9",
+        "distance_km": 654.0,
+        "distance_band": "continental",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -87.5857,
+            41.7493
+          ],
+          [
+            -79.8711,
+            43.2557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-24-route",
+      "properties": {
+        "supplier_id": 24,
+        "supplier_name": "Stonebridge Consumer Products",
+        "supplier_country": "Canada",
+        "warehouse_id": 10,
+        "warehouse_name": "Quebec Cross-Dock 10",
+        "distance_km": 24.5,
+        "distance_band": "regional",
+        "analysis_basis": "nearest_node_great_circle_screening"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -73.2585,
+            45.5425
+          ],
+          [
+            -73.5673,
+            45.5019
           ]
         ]
       }

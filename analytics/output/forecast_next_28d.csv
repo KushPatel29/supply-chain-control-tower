@@ -1,113 +1,281 @@
 category,date,forecast_units,model
-Deli,2025-07-01,2716.8,moving_avg_28d
-Deli,2025-07-02,2716.8,moving_avg_28d
-Deli,2025-07-03,2716.8,moving_avg_28d
-Deli,2025-07-04,2716.8,moving_avg_28d
-Deli,2025-07-05,2716.8,moving_avg_28d
-Deli,2025-07-06,2716.8,moving_avg_28d
-Deli,2025-07-07,2716.8,moving_avg_28d
-Deli,2025-07-08,2716.8,moving_avg_28d
-Deli,2025-07-09,2716.8,moving_avg_28d
-Deli,2025-07-10,2716.8,moving_avg_28d
-Deli,2025-07-11,2716.8,moving_avg_28d
-Deli,2025-07-12,2716.8,moving_avg_28d
-Deli,2025-07-13,2716.8,moving_avg_28d
-Deli,2025-07-14,2716.8,moving_avg_28d
-Deli,2025-07-15,2716.8,moving_avg_28d
-Deli,2025-07-16,2716.8,moving_avg_28d
-Deli,2025-07-17,2716.8,moving_avg_28d
-Deli,2025-07-18,2716.8,moving_avg_28d
-Deli,2025-07-19,2716.8,moving_avg_28d
-Deli,2025-07-20,2716.8,moving_avg_28d
-Deli,2025-07-21,2716.8,moving_avg_28d
-Deli,2025-07-22,2716.8,moving_avg_28d
-Deli,2025-07-23,2716.8,moving_avg_28d
-Deli,2025-07-24,2716.8,moving_avg_28d
-Deli,2025-07-25,2716.8,moving_avg_28d
-Deli,2025-07-26,2716.8,moving_avg_28d
-Deli,2025-07-27,2716.8,moving_avg_28d
-Deli,2025-07-28,2716.8,moving_avg_28d
-Fresh Meat,2025-07-01,2783.3,moving_avg_28d
-Fresh Meat,2025-07-02,2783.3,moving_avg_28d
-Fresh Meat,2025-07-03,2783.3,moving_avg_28d
-Fresh Meat,2025-07-04,2783.3,moving_avg_28d
-Fresh Meat,2025-07-05,2783.3,moving_avg_28d
-Fresh Meat,2025-07-06,2783.3,moving_avg_28d
-Fresh Meat,2025-07-07,2783.3,moving_avg_28d
-Fresh Meat,2025-07-08,2783.3,moving_avg_28d
-Fresh Meat,2025-07-09,2783.3,moving_avg_28d
-Fresh Meat,2025-07-10,2783.3,moving_avg_28d
-Fresh Meat,2025-07-11,2783.3,moving_avg_28d
-Fresh Meat,2025-07-12,2783.3,moving_avg_28d
-Fresh Meat,2025-07-13,2783.3,moving_avg_28d
-Fresh Meat,2025-07-14,2783.3,moving_avg_28d
-Fresh Meat,2025-07-15,2783.3,moving_avg_28d
-Fresh Meat,2025-07-16,2783.3,moving_avg_28d
-Fresh Meat,2025-07-17,2783.3,moving_avg_28d
-Fresh Meat,2025-07-18,2783.3,moving_avg_28d
-Fresh Meat,2025-07-19,2783.3,moving_avg_28d
-Fresh Meat,2025-07-20,2783.3,moving_avg_28d
-Fresh Meat,2025-07-21,2783.3,moving_avg_28d
-Fresh Meat,2025-07-22,2783.3,moving_avg_28d
-Fresh Meat,2025-07-23,2783.3,moving_avg_28d
-Fresh Meat,2025-07-24,2783.3,moving_avg_28d
-Fresh Meat,2025-07-25,2783.3,moving_avg_28d
-Fresh Meat,2025-07-26,2783.3,moving_avg_28d
-Fresh Meat,2025-07-27,2783.3,moving_avg_28d
-Fresh Meat,2025-07-28,2783.3,moving_avg_28d
-Frozen,2025-07-01,2851.0,moving_avg_28d
-Frozen,2025-07-02,2851.0,moving_avg_28d
-Frozen,2025-07-03,2851.0,moving_avg_28d
-Frozen,2025-07-04,2851.0,moving_avg_28d
-Frozen,2025-07-05,2851.0,moving_avg_28d
-Frozen,2025-07-06,2851.0,moving_avg_28d
-Frozen,2025-07-07,2851.0,moving_avg_28d
-Frozen,2025-07-08,2851.0,moving_avg_28d
-Frozen,2025-07-09,2851.0,moving_avg_28d
-Frozen,2025-07-10,2851.0,moving_avg_28d
-Frozen,2025-07-11,2851.0,moving_avg_28d
-Frozen,2025-07-12,2851.0,moving_avg_28d
-Frozen,2025-07-13,2851.0,moving_avg_28d
-Frozen,2025-07-14,2851.0,moving_avg_28d
-Frozen,2025-07-15,2851.0,moving_avg_28d
-Frozen,2025-07-16,2851.0,moving_avg_28d
-Frozen,2025-07-17,2851.0,moving_avg_28d
-Frozen,2025-07-18,2851.0,moving_avg_28d
-Frozen,2025-07-19,2851.0,moving_avg_28d
-Frozen,2025-07-20,2851.0,moving_avg_28d
-Frozen,2025-07-21,2851.0,moving_avg_28d
-Frozen,2025-07-22,2851.0,moving_avg_28d
-Frozen,2025-07-23,2851.0,moving_avg_28d
-Frozen,2025-07-24,2851.0,moving_avg_28d
-Frozen,2025-07-25,2851.0,moving_avg_28d
-Frozen,2025-07-26,2851.0,moving_avg_28d
-Frozen,2025-07-27,2851.0,moving_avg_28d
-Frozen,2025-07-28,2851.0,moving_avg_28d
-Seafood,2025-07-01,3060.1,moving_avg_28d
-Seafood,2025-07-02,3060.1,moving_avg_28d
-Seafood,2025-07-03,3060.1,moving_avg_28d
-Seafood,2025-07-04,3060.1,moving_avg_28d
-Seafood,2025-07-05,3060.1,moving_avg_28d
-Seafood,2025-07-06,3060.1,moving_avg_28d
-Seafood,2025-07-07,3060.1,moving_avg_28d
-Seafood,2025-07-08,3060.1,moving_avg_28d
-Seafood,2025-07-09,3060.1,moving_avg_28d
-Seafood,2025-07-10,3060.1,moving_avg_28d
-Seafood,2025-07-11,3060.1,moving_avg_28d
-Seafood,2025-07-12,3060.1,moving_avg_28d
-Seafood,2025-07-13,3060.1,moving_avg_28d
-Seafood,2025-07-14,3060.1,moving_avg_28d
-Seafood,2025-07-15,3060.1,moving_avg_28d
-Seafood,2025-07-16,3060.1,moving_avg_28d
-Seafood,2025-07-17,3060.1,moving_avg_28d
-Seafood,2025-07-18,3060.1,moving_avg_28d
-Seafood,2025-07-19,3060.1,moving_avg_28d
-Seafood,2025-07-20,3060.1,moving_avg_28d
-Seafood,2025-07-21,3060.1,moving_avg_28d
-Seafood,2025-07-22,3060.1,moving_avg_28d
-Seafood,2025-07-23,3060.1,moving_avg_28d
-Seafood,2025-07-24,3060.1,moving_avg_28d
-Seafood,2025-07-25,3060.1,moving_avg_28d
-Seafood,2025-07-26,3060.1,moving_avg_28d
-Seafood,2025-07-27,3060.1,moving_avg_28d
-Seafood,2025-07-28,3060.1,moving_avg_28d
+Apparel,2026-07-01,233.6,moving_avg_28d
+Apparel,2026-07-02,233.6,moving_avg_28d
+Apparel,2026-07-03,233.6,moving_avg_28d
+Apparel,2026-07-04,233.6,moving_avg_28d
+Apparel,2026-07-05,233.6,moving_avg_28d
+Apparel,2026-07-06,233.6,moving_avg_28d
+Apparel,2026-07-07,233.6,moving_avg_28d
+Apparel,2026-07-08,233.6,moving_avg_28d
+Apparel,2026-07-09,233.6,moving_avg_28d
+Apparel,2026-07-10,233.6,moving_avg_28d
+Apparel,2026-07-11,233.6,moving_avg_28d
+Apparel,2026-07-12,233.6,moving_avg_28d
+Apparel,2026-07-13,233.6,moving_avg_28d
+Apparel,2026-07-14,233.6,moving_avg_28d
+Apparel,2026-07-15,233.6,moving_avg_28d
+Apparel,2026-07-16,233.6,moving_avg_28d
+Apparel,2026-07-17,233.6,moving_avg_28d
+Apparel,2026-07-18,233.6,moving_avg_28d
+Apparel,2026-07-19,233.6,moving_avg_28d
+Apparel,2026-07-20,233.6,moving_avg_28d
+Apparel,2026-07-21,233.6,moving_avg_28d
+Apparel,2026-07-22,233.6,moving_avg_28d
+Apparel,2026-07-23,233.6,moving_avg_28d
+Apparel,2026-07-24,233.6,moving_avg_28d
+Apparel,2026-07-25,233.6,moving_avg_28d
+Apparel,2026-07-26,233.6,moving_avg_28d
+Apparel,2026-07-27,233.6,moving_avg_28d
+Apparel,2026-07-28,233.6,moving_avg_28d
+Dairy & Frozen,2026-07-01,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-02,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-03,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-04,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-05,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-06,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-07,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-08,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-09,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-10,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-11,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-12,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-13,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-14,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-15,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-16,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-17,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-18,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-19,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-20,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-21,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-22,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-23,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-24,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-25,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-26,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-27,635.6,moving_avg_28d
+Dairy & Frozen,2026-07-28,635.6,moving_avg_28d
+Electronics,2026-07-01,195.1,moving_avg_28d
+Electronics,2026-07-02,195.1,moving_avg_28d
+Electronics,2026-07-03,195.1,moving_avg_28d
+Electronics,2026-07-04,195.1,moving_avg_28d
+Electronics,2026-07-05,195.1,moving_avg_28d
+Electronics,2026-07-06,195.1,moving_avg_28d
+Electronics,2026-07-07,195.1,moving_avg_28d
+Electronics,2026-07-08,195.1,moving_avg_28d
+Electronics,2026-07-09,195.1,moving_avg_28d
+Electronics,2026-07-10,195.1,moving_avg_28d
+Electronics,2026-07-11,195.1,moving_avg_28d
+Electronics,2026-07-12,195.1,moving_avg_28d
+Electronics,2026-07-13,195.1,moving_avg_28d
+Electronics,2026-07-14,195.1,moving_avg_28d
+Electronics,2026-07-15,195.1,moving_avg_28d
+Electronics,2026-07-16,195.1,moving_avg_28d
+Electronics,2026-07-17,195.1,moving_avg_28d
+Electronics,2026-07-18,195.1,moving_avg_28d
+Electronics,2026-07-19,195.1,moving_avg_28d
+Electronics,2026-07-20,195.1,moving_avg_28d
+Electronics,2026-07-21,195.1,moving_avg_28d
+Electronics,2026-07-22,195.1,moving_avg_28d
+Electronics,2026-07-23,195.1,moving_avg_28d
+Electronics,2026-07-24,195.1,moving_avg_28d
+Electronics,2026-07-25,195.1,moving_avg_28d
+Electronics,2026-07-26,195.1,moving_avg_28d
+Electronics,2026-07-27,195.1,moving_avg_28d
+Electronics,2026-07-28,195.1,moving_avg_28d
+Fresh & Produce,2026-07-01,705.8,moving_avg_28d
+Fresh & Produce,2026-07-02,705.8,moving_avg_28d
+Fresh & Produce,2026-07-03,705.8,moving_avg_28d
+Fresh & Produce,2026-07-04,705.8,moving_avg_28d
+Fresh & Produce,2026-07-05,705.8,moving_avg_28d
+Fresh & Produce,2026-07-06,705.8,moving_avg_28d
+Fresh & Produce,2026-07-07,705.8,moving_avg_28d
+Fresh & Produce,2026-07-08,705.8,moving_avg_28d
+Fresh & Produce,2026-07-09,705.8,moving_avg_28d
+Fresh & Produce,2026-07-10,705.8,moving_avg_28d
+Fresh & Produce,2026-07-11,705.8,moving_avg_28d
+Fresh & Produce,2026-07-12,705.8,moving_avg_28d
+Fresh & Produce,2026-07-13,705.8,moving_avg_28d
+Fresh & Produce,2026-07-14,705.8,moving_avg_28d
+Fresh & Produce,2026-07-15,705.8,moving_avg_28d
+Fresh & Produce,2026-07-16,705.8,moving_avg_28d
+Fresh & Produce,2026-07-17,705.8,moving_avg_28d
+Fresh & Produce,2026-07-18,705.8,moving_avg_28d
+Fresh & Produce,2026-07-19,705.8,moving_avg_28d
+Fresh & Produce,2026-07-20,705.8,moving_avg_28d
+Fresh & Produce,2026-07-21,705.8,moving_avg_28d
+Fresh & Produce,2026-07-22,705.8,moving_avg_28d
+Fresh & Produce,2026-07-23,705.8,moving_avg_28d
+Fresh & Produce,2026-07-24,705.8,moving_avg_28d
+Fresh & Produce,2026-07-25,705.8,moving_avg_28d
+Fresh & Produce,2026-07-26,705.8,moving_avg_28d
+Fresh & Produce,2026-07-27,705.8,moving_avg_28d
+Fresh & Produce,2026-07-28,705.8,moving_avg_28d
+Grocery,2026-07-01,976.7,moving_avg_28d
+Grocery,2026-07-02,976.7,moving_avg_28d
+Grocery,2026-07-03,976.7,moving_avg_28d
+Grocery,2026-07-04,976.7,moving_avg_28d
+Grocery,2026-07-05,976.7,moving_avg_28d
+Grocery,2026-07-06,976.7,moving_avg_28d
+Grocery,2026-07-07,976.7,moving_avg_28d
+Grocery,2026-07-08,976.7,moving_avg_28d
+Grocery,2026-07-09,976.7,moving_avg_28d
+Grocery,2026-07-10,976.7,moving_avg_28d
+Grocery,2026-07-11,976.7,moving_avg_28d
+Grocery,2026-07-12,976.7,moving_avg_28d
+Grocery,2026-07-13,976.7,moving_avg_28d
+Grocery,2026-07-14,976.7,moving_avg_28d
+Grocery,2026-07-15,976.7,moving_avg_28d
+Grocery,2026-07-16,976.7,moving_avg_28d
+Grocery,2026-07-17,976.7,moving_avg_28d
+Grocery,2026-07-18,976.7,moving_avg_28d
+Grocery,2026-07-19,976.7,moving_avg_28d
+Grocery,2026-07-20,976.7,moving_avg_28d
+Grocery,2026-07-21,976.7,moving_avg_28d
+Grocery,2026-07-22,976.7,moving_avg_28d
+Grocery,2026-07-23,976.7,moving_avg_28d
+Grocery,2026-07-24,976.7,moving_avg_28d
+Grocery,2026-07-25,976.7,moving_avg_28d
+Grocery,2026-07-26,976.7,moving_avg_28d
+Grocery,2026-07-27,976.7,moving_avg_28d
+Grocery,2026-07-28,976.7,moving_avg_28d
+Health & Wellness,2026-07-01,348.8,moving_avg_28d
+Health & Wellness,2026-07-02,348.8,moving_avg_28d
+Health & Wellness,2026-07-03,348.8,moving_avg_28d
+Health & Wellness,2026-07-04,348.8,moving_avg_28d
+Health & Wellness,2026-07-05,348.8,moving_avg_28d
+Health & Wellness,2026-07-06,348.8,moving_avg_28d
+Health & Wellness,2026-07-07,348.8,moving_avg_28d
+Health & Wellness,2026-07-08,348.8,moving_avg_28d
+Health & Wellness,2026-07-09,348.8,moving_avg_28d
+Health & Wellness,2026-07-10,348.8,moving_avg_28d
+Health & Wellness,2026-07-11,348.8,moving_avg_28d
+Health & Wellness,2026-07-12,348.8,moving_avg_28d
+Health & Wellness,2026-07-13,348.8,moving_avg_28d
+Health & Wellness,2026-07-14,348.8,moving_avg_28d
+Health & Wellness,2026-07-15,348.8,moving_avg_28d
+Health & Wellness,2026-07-16,348.8,moving_avg_28d
+Health & Wellness,2026-07-17,348.8,moving_avg_28d
+Health & Wellness,2026-07-18,348.8,moving_avg_28d
+Health & Wellness,2026-07-19,348.8,moving_avg_28d
+Health & Wellness,2026-07-20,348.8,moving_avg_28d
+Health & Wellness,2026-07-21,348.8,moving_avg_28d
+Health & Wellness,2026-07-22,348.8,moving_avg_28d
+Health & Wellness,2026-07-23,348.8,moving_avg_28d
+Health & Wellness,2026-07-24,348.8,moving_avg_28d
+Health & Wellness,2026-07-25,348.8,moving_avg_28d
+Health & Wellness,2026-07-26,348.8,moving_avg_28d
+Health & Wellness,2026-07-27,348.8,moving_avg_28d
+Health & Wellness,2026-07-28,348.8,moving_avg_28d
+Home & Kitchen,2026-07-01,261.5,moving_avg_28d
+Home & Kitchen,2026-07-02,261.5,moving_avg_28d
+Home & Kitchen,2026-07-03,261.5,moving_avg_28d
+Home & Kitchen,2026-07-04,261.5,moving_avg_28d
+Home & Kitchen,2026-07-05,261.5,moving_avg_28d
+Home & Kitchen,2026-07-06,261.5,moving_avg_28d
+Home & Kitchen,2026-07-07,261.5,moving_avg_28d
+Home & Kitchen,2026-07-08,261.5,moving_avg_28d
+Home & Kitchen,2026-07-09,261.5,moving_avg_28d
+Home & Kitchen,2026-07-10,261.5,moving_avg_28d
+Home & Kitchen,2026-07-11,261.5,moving_avg_28d
+Home & Kitchen,2026-07-12,261.5,moving_avg_28d
+Home & Kitchen,2026-07-13,261.5,moving_avg_28d
+Home & Kitchen,2026-07-14,261.5,moving_avg_28d
+Home & Kitchen,2026-07-15,261.5,moving_avg_28d
+Home & Kitchen,2026-07-16,261.5,moving_avg_28d
+Home & Kitchen,2026-07-17,261.5,moving_avg_28d
+Home & Kitchen,2026-07-18,261.5,moving_avg_28d
+Home & Kitchen,2026-07-19,261.5,moving_avg_28d
+Home & Kitchen,2026-07-20,261.5,moving_avg_28d
+Home & Kitchen,2026-07-21,261.5,moving_avg_28d
+Home & Kitchen,2026-07-22,261.5,moving_avg_28d
+Home & Kitchen,2026-07-23,261.5,moving_avg_28d
+Home & Kitchen,2026-07-24,261.5,moving_avg_28d
+Home & Kitchen,2026-07-25,261.5,moving_avg_28d
+Home & Kitchen,2026-07-26,261.5,moving_avg_28d
+Home & Kitchen,2026-07-27,261.5,moving_avg_28d
+Home & Kitchen,2026-07-28,261.5,moving_avg_28d
+Household Essentials,2026-07-01,410.1,moving_avg_28d
+Household Essentials,2026-07-02,410.1,moving_avg_28d
+Household Essentials,2026-07-03,410.1,moving_avg_28d
+Household Essentials,2026-07-04,410.1,moving_avg_28d
+Household Essentials,2026-07-05,410.1,moving_avg_28d
+Household Essentials,2026-07-06,410.1,moving_avg_28d
+Household Essentials,2026-07-07,410.1,moving_avg_28d
+Household Essentials,2026-07-08,410.1,moving_avg_28d
+Household Essentials,2026-07-09,410.1,moving_avg_28d
+Household Essentials,2026-07-10,410.1,moving_avg_28d
+Household Essentials,2026-07-11,410.1,moving_avg_28d
+Household Essentials,2026-07-12,410.1,moving_avg_28d
+Household Essentials,2026-07-13,410.1,moving_avg_28d
+Household Essentials,2026-07-14,410.1,moving_avg_28d
+Household Essentials,2026-07-15,410.1,moving_avg_28d
+Household Essentials,2026-07-16,410.1,moving_avg_28d
+Household Essentials,2026-07-17,410.1,moving_avg_28d
+Household Essentials,2026-07-18,410.1,moving_avg_28d
+Household Essentials,2026-07-19,410.1,moving_avg_28d
+Household Essentials,2026-07-20,410.1,moving_avg_28d
+Household Essentials,2026-07-21,410.1,moving_avg_28d
+Household Essentials,2026-07-22,410.1,moving_avg_28d
+Household Essentials,2026-07-23,410.1,moving_avg_28d
+Household Essentials,2026-07-24,410.1,moving_avg_28d
+Household Essentials,2026-07-25,410.1,moving_avg_28d
+Household Essentials,2026-07-26,410.1,moving_avg_28d
+Household Essentials,2026-07-27,410.1,moving_avg_28d
+Household Essentials,2026-07-28,410.1,moving_avg_28d
+Meat & Seafood,2026-07-01,547.0,moving_avg_28d
+Meat & Seafood,2026-07-02,547.0,moving_avg_28d
+Meat & Seafood,2026-07-03,547.0,moving_avg_28d
+Meat & Seafood,2026-07-04,547.0,moving_avg_28d
+Meat & Seafood,2026-07-05,547.0,moving_avg_28d
+Meat & Seafood,2026-07-06,547.0,moving_avg_28d
+Meat & Seafood,2026-07-07,547.0,moving_avg_28d
+Meat & Seafood,2026-07-08,547.0,moving_avg_28d
+Meat & Seafood,2026-07-09,547.0,moving_avg_28d
+Meat & Seafood,2026-07-10,547.0,moving_avg_28d
+Meat & Seafood,2026-07-11,547.0,moving_avg_28d
+Meat & Seafood,2026-07-12,547.0,moving_avg_28d
+Meat & Seafood,2026-07-13,547.0,moving_avg_28d
+Meat & Seafood,2026-07-14,547.0,moving_avg_28d
+Meat & Seafood,2026-07-15,547.0,moving_avg_28d
+Meat & Seafood,2026-07-16,547.0,moving_avg_28d
+Meat & Seafood,2026-07-17,547.0,moving_avg_28d
+Meat & Seafood,2026-07-18,547.0,moving_avg_28d
+Meat & Seafood,2026-07-19,547.0,moving_avg_28d
+Meat & Seafood,2026-07-20,547.0,moving_avg_28d
+Meat & Seafood,2026-07-21,547.0,moving_avg_28d
+Meat & Seafood,2026-07-22,547.0,moving_avg_28d
+Meat & Seafood,2026-07-23,547.0,moving_avg_28d
+Meat & Seafood,2026-07-24,547.0,moving_avg_28d
+Meat & Seafood,2026-07-25,547.0,moving_avg_28d
+Meat & Seafood,2026-07-26,547.0,moving_avg_28d
+Meat & Seafood,2026-07-27,547.0,moving_avg_28d
+Meat & Seafood,2026-07-28,547.0,moving_avg_28d
+Toys & Seasonal,2026-07-01,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-02,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-03,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-04,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-05,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-06,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-07,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-08,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-09,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-10,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-11,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-12,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-13,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-14,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-15,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-16,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-17,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-18,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-19,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-20,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-21,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-22,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-23,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-24,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-25,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-26,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-27,178.7,moving_avg_28d
+Toys & Seasonal,2026-07-28,178.7,moving_avg_28d

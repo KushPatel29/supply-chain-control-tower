@@ -273,6 +273,11 @@ warehouse_rows = locations[locations.entity_type.eq("warehouse")].sort_values(
 warehouse_options = dict(
     zip(warehouse_rows.name, warehouse_rows.entity_id.astype(int))
 )
+# The node the outage scenario opens on: the one the most supplier screens land on,
+# found from the routes rather than named. A named node ties the app to one drawing
+# of the network and raises a KeyError the day the network is redrawn.
+BUSIEST_NODE_ID = int(routes.warehouse_id.value_counts().index[0])
+BUSIEST_NODE_NAME = next(name for name, wid in warehouse_options.items() if wid == BUSIEST_NODE_ID)
 
 
 def open_workspace(name: str) -> None:
@@ -686,7 +691,7 @@ if workspace == "Node outage":
         unsafe_allow_html=True,
     )
     offline_names = st.multiselect(
-        "Nodes unavailable in this scenario", list(warehouse_options), default=["Ontario DC 1"],
+        "Nodes unavailable in this scenario", list(warehouse_options), default=[BUSIEST_NODE_NAME],
         help="At least one synthetic distribution node must remain available.",
         key="node_unavailable_names",
     )
@@ -911,12 +916,11 @@ if workspace == "Assurance":
             "Mexico", data["sourcing"], data["suppliers"], data["products"],
             data["concentration"], scorecard, 60, 30,
         )
-        ontario_id = warehouse_options["Ontario DC 1"]
-        ontario_scenario = reroute_network(locations, routes, {ontario_id})
+        busiest_scenario = reroute_network(locations, routes, {BUSIEST_NODE_ID})
         mexico_baseline_stranded = int(mexico_baseline.decision_status.eq("No qualified alternate").sum())
         mexico_baseline_within = int(mexico_baseline.within_recovery_window.sum())
         mexico_strict_stranded = int(mexico_strict.decision_status.eq("No qualified alternate").sum())
-        ontario_impacted = ontario_scenario[ontario_scenario.impacted]
+        busiest_impacted = busiest_scenario[busiest_scenario.impacted]
         invalid_locations = locations.copy()
         invalid_locations.loc[invalid_locations.index[0], "latitude"] = 95.0
         invalid_check = governance_checks(invalid_locations, routes, scorecard)
@@ -940,10 +944,10 @@ if workspace == "Assurance":
                 "Technical status": "PASS" if mexico_strict_stranded == 25 else "FAIL",
             },
             {
-                "Case": "UAT-03 Ontario DC 1 unavailable",
-                "Expected": "6 screens change; +1,155.6 km",
-                "Computed": f"{len(ontario_impacted)} screens change; +{ontario_impacted.extra_distance_km.sum():,.1f} km",
-                "Technical status": "PASS" if len(ontario_impacted) == 6 and abs(float(ontario_impacted.extra_distance_km.sum()) - 1155.6) < .05 else "FAIL",
+                "Case": f"UAT-03 {BUSIEST_NODE_NAME} unavailable",
+                "Expected": "12 screens change; +1,581.8 km",
+                "Computed": f"{len(busiest_impacted)} screens change; +{busiest_impacted.extra_distance_km.sum():,.1f} km",
+                "Technical status": "PASS" if len(busiest_impacted) == 12 and abs(float(busiest_impacted.extra_distance_km.sum()) - 1581.8) < .05 else "FAIL",
             },
             {
                 "Case": "UAT-04 invalid latitude",
@@ -1068,7 +1072,7 @@ Microsoft 365 administration.
 2. **Run the Mexico scenario (0:40–1:40).** Show exposure, affected SKUs, and the exception register.
 3. **Command the incident (1:40–2:40).** Trace the service clock, P0 queue, playbook controls, and non-approval decision journal.
 4. **Challenge the policy (2:40–3:40).** Raise the score floor and explain why sensitivity is not a forecast.
-5. **Test a node assumption (3:40–4:40).** Remove Ontario DC 1 and call the result next-nearest node screening.
+5. **Test a node assumption (3:40–4:40).** Remove the busiest distribution node and call the result next-nearest node screening.
 6. **Complete the handoff (4:40–5:40).** Select one exception, assign a session-only owner, and package its evidence.
 7. **Prove trust (5:40–7:00).** Inject an invalid latitude, show the export block, and separate technical PASS from business UAT sign-off.
 """

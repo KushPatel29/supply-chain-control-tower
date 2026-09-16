@@ -92,13 +92,13 @@ def build_pack(evidence, manifest, **overrides):
     )
 
 
-def test_warehouse_summary_reconciles_and_pins_ontario_dc3(
+def test_warehouse_summary_reconciles_and_pins_the_biggest_gap(
     warehouse_summary, evidence
 ):
-    assert len(warehouse_summary) == evidence["warehouses"].warehouse_id.nunique() == 8
+    assert len(warehouse_summary) == evidence["warehouses"].warehouse_id.nunique() == 10
     assert warehouse_summary.warehouse_id.is_unique
     assert set(warehouse_summary.warehouse_id) == set(evidence["warehouses"].warehouse_id)
-    assert warehouse_summary.positions.sum() == len(evidence["inventory_position"]) == 478
+    assert warehouse_summary.positions.sum() == len(evidence["inventory_position"]) == 637
     assert warehouse_summary.gap_value.sum() == pytest.approx(
         evidence["inventory_position"].gap_value.sum(), abs=0.01
     )
@@ -106,18 +106,22 @@ def test_warehouse_summary_reconciles_and_pins_ontario_dc3(
         evidence["inventory_position"].on_hand_value.sum(), abs=0.01
     )
 
-    ontario = warehouse_summary.set_index("warehouse_name").loc["Ontario DC 3"]
-    assert ontario.warehouse_id == 3
-    assert ontario.positions == 60
-    assert ontario.gap_positions == 39
-    assert ontario.gap_position_share == pytest.approx(0.6500)
-    assert ontario.gap_value == pytest.approx(368_150.93)
-    assert ontario.not_covering_lead == 17
-    assert ontario.lead_cover_failure_share == pytest.approx(0.2833)
-    assert ontario.excess_positions == 3
-    assert ontario.excess_value == pytest.approx(60_817.50)
-    assert ontario.on_hand_value == pytest.approx(1_349_709.24)
-    assert ontario.gap_value_rank == 1
+    # The DC carrying the most gap value, found by rank rather than by name: a
+    # name pins the test to one network drawing, and "where the shortfall is"
+    # is the row the page leads with anyway.
+    worst = warehouse_summary[warehouse_summary.gap_value_rank == 1].iloc[0]
+    assert worst.warehouse_name == "BC Interior Cross-Dock 4"
+    assert worst.warehouse_id == 4
+    assert worst.positions == 95
+    assert worst.gap_positions == 46
+    assert worst.gap_position_share == pytest.approx(0.4842, abs=5e-4)
+    assert worst.gap_value == pytest.approx(163_945.93)
+    assert worst.not_covering_lead == 4
+    assert worst.lead_cover_failure_share == pytest.approx(0.0421, abs=5e-4)
+    assert worst.excess_positions == 20
+    assert worst.excess_value == pytest.approx(109_441.17)
+    assert worst.on_hand_value == pytest.approx(1_077_962.15)
+    assert worst.gap_value_rank == 1
 
 
 @pytest.mark.parametrize(
@@ -149,12 +153,12 @@ def test_warehouse_summary_fails_closed_on_key_reconciliation_errors(
 
 def test_country_portfolio_has_one_reconciled_row_per_governed_origin(portfolio, evidence):
     governed = set(evidence["suppliers"].country.dropna().astype(str))
-    assert len(portfolio) == len(governed) == 9
+    assert len(portfolio) == len(governed) == 11
     assert portfolio.country.is_unique
     assert set(portfolio.country) == governed
     assert portfolio.network_cogs_share.sum() == pytest.approx(1.0, abs=0.0001)
-    assert portfolio.award_weighted_cogs.sum() == pytest.approx(43_394_724.94, abs=0.01)
-    assert portfolio.exposure_rank.tolist() == list(range(1, 10))
+    assert portfolio.award_weighted_cogs.sum() == pytest.approx(68_806_122.38, abs=0.01)
+    assert portfolio.exposure_rank.tolist() == list(range(1, 12))
     assert portfolio.minimum_alternate_score.eq(0).all()
     assert portfolio.recovery_window_days.eq(30).all()
 
@@ -163,16 +167,16 @@ def test_country_portfolio_has_one_reconciled_row_per_governed_origin(portfolio,
     ("country", "expected"),
     [
         (
+            "USA",
+            (88, 20_459_914.90, 0.2974, 30, 58, 39, 20.4, 41, "SKU-1113", 1),
+        ),
+        (
+            "Turkiye",
+            (25, 10_485_778.04, 0.1524, 5, 20, 16, 18.8, 48, "SKU-1060", 2),
+        ),
+        (
             "Mexico",
-            (36, 11_821_992.49, 0.2724, 13, 23, 7, 31.7, 44, "SKU-1018", 1),
-        ),
-        (
-            "Brazil",
-            (23, 8_797_316.53, 0.2027, 4, 19, 16, 16.8, 34, "SKU-1011", 2),
-        ),
-        (
-            "Spain",
-            (19, 6_236_499.23, 0.1437, 2, 17, 15, 16.6, 34, "SKU-1038", 3),
+            (52, 9_642_277.99, 0.1401, 22, 30, 24, 15.0, 38, "SKU-1009", 3),
         ),
     ],
 )
@@ -311,7 +315,7 @@ def test_evidence_zip_is_exact_parseable_safe_deterministic_and_handoff_ready(
         "status": "Needs validation",
         "target_review": "2026-09-20",
         "session_note": "Confirm certification and available capacity.",
-        "selected_sku": "SKU-1018",
+        "selected_sku": "SKU-1088",
     }
     first = build_pack(evidence, manifest, **handoff)
     second = build_pack(evidence, manifest, **handoff)
@@ -341,9 +345,9 @@ def test_evidence_zip_is_exact_parseable_safe_deterministic_and_handoff_ready(
         brief = archive.read("decision-brief.md").decode("utf-8")
         assumptions = archive.read("README-assumptions.md").decode("utf-8")
 
-    assert len(register) == 36
+    assert len(register) == 52
     assert register.product_id.is_unique
-    assert len(action_register) == 36
+    assert len(action_register) == 52
     assert action_register.sku.is_unique
     assert len(playbook) == 1
     assert playbook.iloc[0].incident_type == "Supplier outage"
@@ -356,12 +360,12 @@ def test_evidence_zip_is_exact_parseable_safe_deterministic_and_handoff_ready(
     assert archived_manifest.path.tolist() == manifest.path.tolist()
     assert archived_manifest.sha256.tolist() == manifest.sha256.tolist()
     assert routes["type"] == "FeatureCollection"
-    assert len(routes["features"]) == 4
+    assert len(routes["features"]) == 3
     assert {
         feature["properties"]["supplier_country"] for feature in routes["features"]
     } == {"Mexico"}
     assert "Municipal systems interview handoff" in brief
-    assert "SKU-1018" in brief
+    assert "SKU-1088" in brief
     assert "Needs validation" in brief
     assert "2026-09-20" in brief
     assert "Confirm certification and available capacity." in brief

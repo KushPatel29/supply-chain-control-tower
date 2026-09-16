@@ -44,8 +44,14 @@ def test_quarantined_rows_never_reach_silver_or_gold(tmp_path):
 
 
 def test_quarantine_flood_halts_publish(tmp_path):
-    """>2% toxic rows means the source system is broken: halt, don't publish."""
-    rc = main(["--lake-dir", str(tmp_path), "--inject-bad-rows", "900"])
+    """>2% toxic rows means the source system is broken: halt, don't publish.
+
+    The count is a share of the order book rather than a literal. A fixed 900 rows
+    was 4.5% of the seed it was written against and 1.4% of the one after it, so
+    the flood quietly stopped being a flood and the test passed by not testing.
+    """
+    orders = len(pd.read_csv(ROOT / "data" / "bronze" / "fact_orders.csv"))
+    rc = main(["--lake-dir", str(tmp_path), "--inject-bad-rows", str(int(orders * 0.035))])
     assert rc == 2
     assert not (tmp_path / "gold" / "_PUBLISHED").exists()
 

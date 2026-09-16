@@ -265,21 +265,28 @@ def test_lots_really_leave_before_the_last_complete_snapshot(fact):
     )
 
 
-def test_the_trailing_snapshots_really_are_thin(fact):
-    """The data half of the rule above, so the threshold keeps a reason."""
+def test_the_trailing_snapshots_are_whole_weeks(fact):
+    """The data half of the rule above, so the threshold keeps a reason.
+
+    This used to assert the opposite. The old seed stopped producing lots a month
+    before it stopped shipping orders, so the closing weeks were stubs and
+    [Inventory Snapshot Date] existed to step back past them. The retail rebuild
+    receives stock across the whole window, so the rule's job changed from
+    working around a truncated seed to guarding against one: the latest snapshot
+    is now a complete week, and the measure resolves to it.
+    """
     lots = fact.groupby("date_key").size().sort_index()
     typical = lots.median()
-    assert (lots.iloc[-3:] < 0.75 * typical).all(), (
+    assert (lots.iloc[-3:] >= 0.75 * typical).all(), (
         f"the last three snapshots carry {list(lots.iloc[-3:])} lots against a "
-        f"median of {typical}; if they are no longer thin, the complete-snapshot "
-        "rule in [Inventory Snapshot Date] no longer has a job to do"
+        f"median of {typical}; a thin closing week means every as-of inventory "
+        "figure under-reports the business"
     )
-    # The first week is a ramp-up and also falls short; the rule only needs the
-    # LATEST complete snapshot, which is the fourth from the end.
+    # The rule selects the LATEST complete snapshot, which is now the last one.
     complete = lots[lots >= 0.75 * typical]
-    assert complete.index.max() == lots.index[-4], (
-        f"the latest complete snapshot is {complete.index.max()}, not the fourth "
-        f"from the end ({lots.index[-4]})"
+    assert complete.index.max() == lots.index[-1], (
+        f"the latest complete snapshot is {complete.index.max()}, not the last "
+        f"one ({lots.index[-1]})"
     )
 
 

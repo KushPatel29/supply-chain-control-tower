@@ -134,17 +134,17 @@ def test_headline_figures_are_what_the_readme_claims(built):
     """Hand-checked against the seeded data. If the generator changes, these
     fail loudly rather than the README quietly becoming fiction."""
     s = built[0]
-    assert s["orders"] == 20000
-    assert s["skus"] == 60
-    assert s["countries"] == 9
-    assert s["single_source_skus"] == 3
-    assert s["otif_rate"] == pytest.approx(0.8042, abs=5e-4)
-    assert s["on_time_rate"] == pytest.approx(0.8993, abs=5e-4)
-    assert s["in_full_rate"] == pytest.approx(0.8932, abs=5e-4)
-    assert s["largest_origin"] == "Mexico"
-    assert s["largest_origin_share"] == pytest.approx(0.272, abs=2e-3)
-    assert s["largest_origin_stranded_skus"] == 13
-    assert s["country_hhi"] == pytest.approx(1620, abs=5)
+    assert s["orders"] == 64967
+    assert s["skus"] == 150
+    assert s["countries"] == 11
+    assert s["single_source_skus"] == 25
+    assert s["otif_rate"] == pytest.approx(0.9039, abs=5e-4)
+    assert s["on_time_rate"] == pytest.approx(0.9541, abs=5e-4)
+    assert s["in_full_rate"] == pytest.approx(0.9475, abs=5e-4)
+    assert s["largest_origin"] == "USA"
+    assert s["largest_origin_share"] == pytest.approx(0.2974, abs=2e-3)
+    assert s["largest_origin_stranded_skus"] == 30
+    assert s["country_hhi"] == pytest.approx(1693, abs=5)
 
 
 def test_short_shipping_is_the_bigger_service_failure(built):

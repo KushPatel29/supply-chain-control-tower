@@ -1,16 +1,25 @@
 supplier_id,supplier_name,region,country,sourcing_bloc,supplier_tier,is_qualified_alternate
-1,Blair PLC,Alberta,USA,North America,Tier 3,0
-2,Dudley Group,Quebec,Spain,Europe,Tier 3,0
-3,Arnold Ltd,BC Interior,Poland,Europe,Tier 1,1
-4,"Mcclure, Ward and Lee",BC Interior,Brazil,South America,Tier 3,0
-5,Williams and Sons,Alberta,Mexico,North America,Tier 2,1
-6,Galloway-Wyatt,BC Interior,Mexico,North America,Tier 2,1
-7,James Group,BC Lower Mainland,Vietnam,Asia Pacific,Tier 1,1
-8,"Flowers, Martin and Kelly",Quebec,Thailand,Asia Pacific,Tier 1,1
-9,"Adams, Zuniga and Wong",Ontario,Thailand,Asia Pacific,Tier 3,0
-10,"Reid, Ferguson and Sanchez",BC Interior,India,Asia Pacific,Tier 3,0
-11,Gray-Mayo,BC Lower Mainland,Mexico,North America,Tier 2,1
-12,"Watts, Robinson and Nguyen",Ontario,Brazil,South America,Tier 2,1
-13,Perez Inc,Quebec,Canada,North America,Tier 2,1
-14,Morales-Jones,Ontario,Mexico,North America,Tier 3,0
-15,"Walter, Edwards and Rios",BC Lower Mainland,Spain,Europe,Tier 1,1
+1,Harborview Industries,Quebec,Mexico,North America,Tier 2,1
+2,Kingsford Manufacturing,BC Lower Mainland,China,Asia Pacific,Tier 1,1
+3,Thornbury Home Goods,BC Interior,USA,North America,Tier 3,0
+4,Ridgemont Supply Co,Quebec,USA,North America,Tier 2,1
+5,Blackpine Supply Co,Ontario,Spain,Europe,Tier 3,0
+6,Copper Creek Supply Co,BC Lower Mainland,Canada,North America,Tier 2,1
+7,Northwind Distribution,BC Interior,Poland,Europe,Tier 3,0
+8,Crestline Industries,Quebec,New Zealand,Asia Pacific,Tier 2,1
+9,Silverbrook Foods,Alberta,USA,North America,Tier 1,1
+10,Redstone Brands,BC Interior,Turkiye,Europe,Tier 3,0
+11,Elkhorn Foods,Alberta,Canada,North America,Tier 2,1
+12,Ironvale Consumer Products,Ontario,USA,North America,Tier 2,1
+13,Sandhill Industries,Alberta,Mexico,North America,Tier 2,1
+14,Grayrock Supply Co,BC Interior,Poland,Europe,Tier 1,1
+15,Larkspur Partners,BC Lower Mainland,Thailand,Asia Pacific,Tier 3,0
+16,Fairmont Home Goods,BC Interior,Poland,Europe,Tier 2,1
+17,Maplewood Global,BC Interior,Mexico,North America,Tier 2,1
+18,Brightwater Manufacturing,Alberta,Turkiye,Europe,Tier 2,1
+19,Windrow Brands,BC Lower Mainland,Turkiye,Europe,Tier 1,1
+20,Bayfield Global,Quebec,Turkiye,Europe,Tier 3,0
+21,Cascadia Home Goods,BC Interior,Brazil,South America,Tier 3,0
+22,Whitecourt Supply Co,BC Lower Mainland,Vietnam,Asia Pacific,Tier 1,1
+23,Alderwood Manufacturing,BC Interior,USA,North America,Tier 3,0
+24,Stonebridge Consumer Products,BC Lower Mainland,Canada,North America,Tier 3,0

@@ -1,25 +1,35 @@
 product_id,sku,category,incumbent,incumbent_score,alternate,alternate_score,score_gap,spend_at_risk,price_known,unit_price_delta,price_impact
-18,SKU-1018,Seafood,Williams and Sons,41.5,Gray-Mayo,59.2,17.7,5993721.52,1,-3.47,-614897.36
-12,SKU-1012,Deli,Blair PLC,56.1,Galloway-Wyatt,67.1,11.0,5485284.03,1,-1.03,-160338.6
-56,SKU-1056,Deli,"Watts, Robinson and Nguyen",55.0,Perez Inc,65.9,10.9,4927401.0,1,4.01,641841.81
-46,SKU-1046,Frozen,"Watts, Robinson and Nguyen",55.0,Galloway-Wyatt,67.1,12.1,2238674.03,1,3.34,405173.8
-19,SKU-1019,Fresh Meat,"Mcclure, Ward and Lee",53.4,Galloway-Wyatt,67.1,13.7,1863641.76,1,1.18,189279.38
-25,SKU-1025,Frozen,"Walter, Edwards and Rios",51.5,Galloway-Wyatt,67.1,15.6,1415601.95,1,-2.93,-122288.22
-23,SKU-1023,Seafood,"Flowers, Martin and Kelly",52.8,Galloway-Wyatt,67.1,14.3,1348631.2,1,2.44,209659.89
-54,SKU-1054,Frozen,"Walter, Edwards and Rios",51.5,Perez Inc,65.9,14.4,1142199.19,1,-1.68,-53110.21
-5,SKU-1005,Fresh Meat,Dudley Group,38.0,"Watts, Robinson and Nguyen",55.0,17.0,1012127.85,1,-2.71,-160461.73
-9,SKU-1009,Fresh Meat,Williams and Sons,41.5,"Flowers, Martin and Kelly",52.8,11.3,559337.3,0,,
-30,SKU-1030,Fresh Meat,Blair PLC,56.1,Arnold Ltd,67.7,11.6,549751.98,1,-2.4,-103149.96
-40,SKU-1040,Fresh Meat,"Flowers, Martin and Kelly",52.8,Galloway-Wyatt,67.1,14.3,425345.68,1,3.06,43910.92
-3,SKU-1003,Deli,"Walter, Edwards and Rios",51.5,Perez Inc,65.9,14.4,383036.2,0,,
-20,SKU-1020,Frozen,Dudley Group,38.0,Galloway-Wyatt,67.1,29.1,198960.83,1,-1.0,-10605.85
-35,SKU-1035,Frozen,"Watts, Robinson and Nguyen",55.0,Perez Inc,65.9,10.9,184486.55,1,4.02,39475.16
-45,SKU-1045,Frozen,"Mcclure, Ward and Lee",53.4,Arnold Ltd,67.7,14.3,151573.36,1,-1.86,-9151.7
-44,SKU-1044,Seafood,"Mcclure, Ward and Lee",53.4,Perez Inc,65.9,12.5,145502.01,1,2.38,27418.44
-17,SKU-1017,Seafood,"Mcclure, Ward and Lee",53.4,Perez Inc,65.9,12.5,140577.54,1,6.04,35423.22
-2,SKU-1002,Deli,Dudley Group,38.0,"Walter, Edwards and Rios",51.5,13.5,125770.0,1,0.51,14539.15
-6,SKU-1006,Deli,"Watts, Robinson and Nguyen",55.0,Perez Inc,65.9,10.9,110697.69,1,5.74,33311.37
-50,SKU-1050,Seafood,"Walter, Edwards and Rios",51.5,Arnold Ltd,67.7,16.2,86987.41,1,-3.02,-12018.48
-24,SKU-1024,Fresh Meat,Dudley Group,38.0,Gray-Mayo,59.2,21.2,64506.79,1,-0.64,-2580.64
-55,SKU-1055,Deli,"Flowers, Martin and Kelly",52.8,Galloway-Wyatt,67.1,14.3,53373.51,1,0.18,4096.89
-37,SKU-1037,Deli,Williams and Sons,41.5,Arnold Ltd,67.7,26.2,25973.8,1,-0.4,-1954.07
+5,SKU-1005,Electronics,Kingsford Manufacturing,43.7,Silverbrook Foods,78.8,35.1,3680924.58,1,37.54,941242.36
+85,SKU-1085,Electronics,Bayfield Global,73.1,Ironvale Consumer Products,91.9,18.8,2068878.26,1,40.08,431377.93
+66,SKU-1066,Electronics,Thornbury Home Goods,82.8,Ironvale Consumer Products,91.9,9.1,1255090.0,1,-2.74,-100918.5
+145,SKU-1145,Grocery,Ridgemont Supply Co,43.3,Elkhorn Foods,85.4,42.1,848908.91,1,1.11,88309.49
+114,SKU-1114,Electronics,Redstone Brands,52.6,Windrow Brands,69.8,17.2,500151.91,1,-3.45,-13875.82
+143,SKU-1143,Meat & Seafood,Stonebridge Consumer Products,75.8,Ironvale Consumer Products,91.9,16.1,391377.83,1,-0.41,-9469.02
+117,SKU-1117,Home & Kitchen,Grayrock Supply Co,41.6,Ironvale Consumer Products,91.9,50.3,326079.84,1,1.82,49208.35
+124,SKU-1124,Home & Kitchen,Cascadia Home Goods,39.7,Ironvale Consumer Products,91.9,52.2,300359.66,1,2.57,51274.59
+139,SKU-1139,Grocery,Redstone Brands,52.6,Ironvale Consumer Products,91.9,39.3,300105.74,1,0.38,24118.8
+97,SKU-1097,Toys & Seasonal,Cascadia Home Goods,39.7,Elkhorn Foods,85.4,45.7,258447.95,1,3.32,72809.78
+36,SKU-1036,Household Essentials,Brightwater Manufacturing,64.7,Silverbrook Foods,78.8,14.1,240093.32,1,3.0,50310.19
+149,SKU-1149,Meat & Seafood,Harborview Industries,51.1,Silverbrook Foods,78.8,27.7,238541.23,1,2.1,31380.08
+103,SKU-1103,Household Essentials,Crestline Industries,31.6,Ironvale Consumer Products,91.9,60.3,233697.46,0,,
+18,SKU-1018,Grocery,Silverbrook Foods,78.8,Fairmont Home Goods,93.5,14.7,230322.56,1,-1.31,-35699.75
+51,SKU-1051,Fresh & Produce,Stonebridge Consumer Products,75.8,Ironvale Consumer Products,91.9,16.1,174162.83,1,0.07,1177.18
+83,SKU-1083,Apparel,Kingsford Manufacturing,43.7,Elkhorn Foods,85.4,41.7,142480.07,0,,
+15,SKU-1015,Apparel,Northwind Distribution,52.2,Elkhorn Foods,85.4,33.2,132415.0,1,0.61,16801.32
+39,SKU-1039,Dairy & Frozen,Alderwood Manufacturing,72.1,Elkhorn Foods,85.4,13.3,131434.52,1,-0.38,-9392.61
+61,SKU-1061,Meat & Seafood,Ridgemont Supply Co,43.3,Ironvale Consumer Products,91.9,48.6,124696.77,1,-0.63,-5396.71
+147,SKU-1147,Health & Wellness,Sandhill Industries,40.3,Maplewood Global,52.8,12.5,124422.1,1,-1.68,-10425.78
+132,SKU-1132,Grocery,Elkhorn Foods,85.4,Fairmont Home Goods,93.5,8.1,99790.0,1,-0.95,-21364.95
+34,SKU-1034,Health & Wellness,Sandhill Industries,40.3,Ironvale Consumer Products,91.9,51.6,97570.57,1,-0.43,-3141.0
+102,SKU-1102,Household Essentials,Whitecourt Supply Co,35.5,Copper Creek Supply Co,83.5,48.0,96566.55,1,3.07,34387.92
+75,SKU-1075,Dairy & Frozen,Alderwood Manufacturing,72.1,Copper Creek Supply Co,83.5,11.4,91468.25,1,-0.3,-2948.62
+109,SKU-1109,Dairy & Frozen,Harborview Industries,51.1,Copper Creek Supply Co,83.5,32.4,84389.99,1,0.06,2431.22
+73,SKU-1073,Fresh & Produce,Ridgemont Supply Co,43.3,Elkhorn Foods,85.4,42.1,79818.95,1,0.25,2949.41
+87,SKU-1087,Grocery,Blackpine Supply Co,47.9,Silverbrook Foods,78.8,30.9,76899.28,0,,
+72,SKU-1072,Dairy & Frozen,Sandhill Industries,40.3,Elkhorn Foods,85.4,45.1,61224.48,1,0.4,4281.63
+141,SKU-1141,Meat & Seafood,Maplewood Global,52.8,Silverbrook Foods,78.8,26.0,55150.02,1,1.34,8816.88
+70,SKU-1070,Dairy & Frozen,Sandhill Industries,40.3,Silverbrook Foods,78.8,38.5,40852.98,1,0.41,2258.82
+106,SKU-1106,Fresh & Produce,Maplewood Global,52.8,Silverbrook Foods,78.8,26.0,38851.72,1,0.16,1102.9
+20,SKU-1020,Fresh & Produce,Thornbury Home Goods,82.8,Ironvale Consumer Products,91.9,9.1,37170.62,1,-0.32,-1580.24
+74,SKU-1074,Dairy & Frozen,Harborview Industries,51.1,Elkhorn Foods,85.4,34.3,20514.48,1,0.05,189.92
+27,SKU-1027,Grocery,Crestline Industries,31.6,Grayrock Supply Co,41.6,10.0,14404.42,1,-0.15,-1759.03

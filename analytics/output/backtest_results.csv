@@ -1,65 +1,161 @@
 category,fold,model,train_days,wape,mape
-Deli,1,seasonal_naive,69,0.2196,0.2681
-Deli,1,moving_avg_28d,69,0.1764,0.2191
-Deli,1,holt_winters,69,0.1993,0.2466
-Deli,1,gradient_boosted,69,0.1802,0.2253
-Deli,2,seasonal_naive,97,0.2627,0.2968
-Deli,2,moving_avg_28d,97,0.1609,0.1934
-Deli,2,holt_winters,97,0.1984,0.2367
-Deli,2,gradient_boosted,97,0.1633,0.1981
-Deli,3,seasonal_naive,125,0.2867,0.281
-Deli,3,moving_avg_28d,125,0.1804,0.179
-Deli,3,holt_winters,125,0.1957,0.1958
-Deli,3,gradient_boosted,125,0.1866,0.1839
-Deli,4,seasonal_naive,153,0.2353,0.2518
-Deli,4,moving_avg_28d,153,0.2161,0.2471
-Deli,4,holt_winters,153,0.2192,0.2517
-Deli,4,gradient_boosted,153,0.2405,0.2693
-Fresh Meat,1,seasonal_naive,69,0.2389,0.2518
-Fresh Meat,1,moving_avg_28d,69,0.1473,0.1515
-Fresh Meat,1,holt_winters,69,0.1635,0.1731
-Fresh Meat,1,gradient_boosted,69,0.1503,0.1494
-Fresh Meat,2,seasonal_naive,97,0.2616,0.2817
-Fresh Meat,2,moving_avg_28d,97,0.1977,0.2151
-Fresh Meat,2,holt_winters,97,0.1963,0.2136
-Fresh Meat,2,gradient_boosted,97,0.2037,0.2241
-Fresh Meat,3,seasonal_naive,125,0.2252,0.2381
-Fresh Meat,3,moving_avg_28d,125,0.1668,0.1812
-Fresh Meat,3,holt_winters,125,0.1664,0.1818
-Fresh Meat,3,gradient_boosted,125,0.1565,0.1709
-Fresh Meat,4,seasonal_naive,153,0.2544,0.2649
-Fresh Meat,4,moving_avg_28d,153,0.1784,0.1955
-Fresh Meat,4,holt_winters,153,0.1918,0.2095
-Fresh Meat,4,gradient_boosted,153,0.2186,0.2428
-Frozen,1,seasonal_naive,69,0.1965,0.1754
-Frozen,1,moving_avg_28d,69,0.1792,0.1604
-Frozen,1,holt_winters,69,0.196,0.1707
-Frozen,1,gradient_boosted,69,0.18,0.1603
-Frozen,2,seasonal_naive,97,0.2565,0.2811
-Frozen,2,moving_avg_28d,97,0.2236,0.261
-Frozen,2,holt_winters,97,0.2273,0.2554
-Frozen,2,gradient_boosted,97,0.2221,0.254
-Frozen,3,seasonal_naive,125,0.1955,0.216
-Frozen,3,moving_avg_28d,125,0.1491,0.1704
-Frozen,3,holt_winters,125,0.1845,0.217
-Frozen,3,gradient_boosted,125,0.1819,0.1978
-Frozen,4,seasonal_naive,153,0.2017,0.2239
-Frozen,4,moving_avg_28d,153,0.1955,0.2266
-Frozen,4,holt_winters,153,0.1945,0.2292
-Frozen,4,gradient_boosted,153,0.1981,0.2257
-Seafood,1,seasonal_naive,69,0.2616,0.2973
-Seafood,1,moving_avg_28d,69,0.2185,0.2631
-Seafood,1,holt_winters,69,0.2245,0.278
-Seafood,1,gradient_boosted,69,0.2239,0.247
-Seafood,2,seasonal_naive,97,0.2559,0.2867
-Seafood,2,moving_avg_28d,97,0.195,0.204
-Seafood,2,holt_winters,97,0.1988,0.2181
-Seafood,2,gradient_boosted,97,0.2237,0.2393
-Seafood,3,seasonal_naive,125,0.2495,0.2665
-Seafood,3,moving_avg_28d,125,0.1851,0.1994
-Seafood,3,holt_winters,125,0.2295,0.2522
-Seafood,3,gradient_boosted,125,0.1822,0.1907
-Seafood,4,seasonal_naive,153,0.2925,0.2732
-Seafood,4,moving_avg_28d,153,0.1938,0.1846
-Seafood,4,holt_winters,153,0.1693,0.1673
-Seafood,4,gradient_boosted,153,0.2186,0.2112
+Apparel,1,seasonal_naive,608,0.6019,0.8022
+Apparel,1,moving_avg_28d,608,0.5266,1.0864
+Apparel,1,holt_winters,608,0.5281,1.0085
+Apparel,1,gradient_boosted,608,0.5148,1.223
+Apparel,2,seasonal_naive,636,0.8685,1.9341
+Apparel,2,moving_avg_28d,636,0.6065,1.8465
+Apparel,2,holt_winters,636,0.6163,1.9886
+Apparel,2,gradient_boosted,636,0.533,1.7479
+Apparel,3,seasonal_naive,664,0.8646,1.4663
+Apparel,3,moving_avg_28d,664,0.5961,1.1708
+Apparel,3,holt_winters,664,0.5845,1.1026
+Apparel,3,gradient_boosted,664,0.6224,0.8544
+Apparel,4,seasonal_naive,692,0.7961,1.2639
+Apparel,4,moving_avg_28d,692,0.6163,1.3213
+Apparel,4,holt_winters,692,0.5775,1.1895
+Apparel,4,gradient_boosted,692,0.5981,1.2498
+Dairy & Frozen,1,seasonal_naive,614,0.3987,0.5182
+Dairy & Frozen,1,moving_avg_28d,614,0.3192,0.4931
+Dairy & Frozen,1,holt_winters,614,0.2918,0.4372
+Dairy & Frozen,1,gradient_boosted,614,0.3537,0.5101
+Dairy & Frozen,2,seasonal_naive,642,0.5226,1.0995
+Dairy & Frozen,2,moving_avg_28d,642,0.4083,0.9123
+Dairy & Frozen,2,holt_winters,642,0.4189,1.0092
+Dairy & Frozen,2,gradient_boosted,642,0.48,1.0583
+Dairy & Frozen,3,seasonal_naive,670,0.5141,0.5736
+Dairy & Frozen,3,moving_avg_28d,670,0.3276,0.3642
+Dairy & Frozen,3,holt_winters,670,0.3295,0.3717
+Dairy & Frozen,3,gradient_boosted,670,0.3297,0.3793
+Dairy & Frozen,4,seasonal_naive,698,0.4969,0.5894
+Dairy & Frozen,4,moving_avg_28d,698,0.4938,0.569
+Dairy & Frozen,4,holt_winters,698,0.4982,0.5828
+Dairy & Frozen,4,gradient_boosted,698,0.5871,0.782
+Electronics,1,seasonal_naive,607,0.893,2.4554
+Electronics,1,moving_avg_28d,607,0.8111,4.466
+Electronics,1,holt_winters,607,0.7658,4.0084
+Electronics,1,gradient_boosted,607,0.8336,4.4606
+Electronics,2,seasonal_naive,635,0.8868,1.3011
+Electronics,2,moving_avg_28d,635,0.6263,0.7082
+Electronics,2,holt_winters,635,0.6255,0.7268
+Electronics,2,gradient_boosted,635,0.7481,1.1205
+Electronics,3,seasonal_naive,663,0.7666,1.653
+Electronics,3,moving_avg_28d,663,0.4746,0.9603
+Electronics,3,holt_winters,663,0.4739,1.0443
+Electronics,3,gradient_boosted,663,0.5376,0.8912
+Electronics,4,seasonal_naive,691,0.821,1.9678
+Electronics,4,moving_avg_28d,691,0.5117,3.226
+Electronics,4,holt_winters,691,0.5389,3.378
+Electronics,4,gradient_boosted,691,0.4927,3.6701
+Fresh & Produce,1,seasonal_naive,617,0.6705,0.7658
+Fresh & Produce,1,moving_avg_28d,617,0.442,0.6849
+Fresh & Produce,1,holt_winters,617,0.3866,0.5435
+Fresh & Produce,1,gradient_boosted,617,0.4757,0.7299
+Fresh & Produce,2,seasonal_naive,645,0.5216,0.6275
+Fresh & Produce,2,moving_avg_28d,645,0.3067,0.2765
+Fresh & Produce,2,holt_winters,645,0.3,0.2772
+Fresh & Produce,2,gradient_boosted,645,0.3627,0.4356
+Fresh & Produce,3,seasonal_naive,673,0.5404,1.219
+Fresh & Produce,3,moving_avg_28d,673,0.352,0.7666
+Fresh & Produce,3,holt_winters,673,0.3513,0.7091
+Fresh & Produce,3,gradient_boosted,673,0.3867,0.8202
+Fresh & Produce,4,seasonal_naive,701,0.5307,0.6786
+Fresh & Produce,4,moving_avg_28d,701,0.3952,0.6203
+Fresh & Produce,4,holt_winters,701,0.3944,0.654
+Fresh & Produce,4,gradient_boosted,701,0.3827,0.6429
+Grocery,1,seasonal_naive,612,0.3514,0.3762
+Grocery,1,moving_avg_28d,612,0.267,0.2942
+Grocery,1,holt_winters,612,0.27,0.2953
+Grocery,1,gradient_boosted,612,0.3033,0.3406
+Grocery,2,seasonal_naive,640,0.4101,0.6442
+Grocery,2,moving_avg_28d,640,0.3808,0.6263
+Grocery,2,holt_winters,640,0.3784,0.6057
+Grocery,2,gradient_boosted,640,0.4202,0.6815
+Grocery,3,seasonal_naive,668,0.4456,0.6445
+Grocery,3,moving_avg_28d,668,0.339,0.5639
+Grocery,3,holt_winters,668,0.3425,0.5736
+Grocery,3,gradient_boosted,668,0.3395,0.5768
+Grocery,4,seasonal_naive,696,0.4998,0.754
+Grocery,4,moving_avg_28d,696,0.3665,0.4985
+Grocery,4,holt_winters,696,0.3613,0.5042
+Grocery,4,gradient_boosted,696,0.3558,0.4797
+Health & Wellness,1,seasonal_naive,596,0.4505,0.4402
+Health & Wellness,1,moving_avg_28d,596,0.4305,0.5846
+Health & Wellness,1,holt_winters,596,0.3574,0.4268
+Health & Wellness,1,gradient_boosted,596,0.4038,0.4478
+Health & Wellness,2,seasonal_naive,624,0.6318,1.2151
+Health & Wellness,2,moving_avg_28d,624,0.5845,1.1049
+Health & Wellness,2,holt_winters,624,0.66,1.251
+Health & Wellness,2,gradient_boosted,624,0.4803,0.9227
+Health & Wellness,3,seasonal_naive,652,0.5314,0.6797
+Health & Wellness,3,moving_avg_28d,652,0.4828,0.7144
+Health & Wellness,3,holt_winters,652,0.4831,0.6833
+Health & Wellness,3,gradient_boosted,652,0.6021,0.9388
+Health & Wellness,4,seasonal_naive,680,0.7273,0.9458
+Health & Wellness,4,moving_avg_28d,680,0.4689,0.7204
+Health & Wellness,4,holt_winters,680,0.4892,0.7794
+Health & Wellness,4,gradient_boosted,680,0.5075,0.8453
+Home & Kitchen,1,seasonal_naive,607,0.5943,0.6911
+Home & Kitchen,1,moving_avg_28d,607,0.3629,0.5131
+Home & Kitchen,1,holt_winters,607,0.3765,0.4792
+Home & Kitchen,1,gradient_boosted,607,0.4848,0.755
+Home & Kitchen,2,seasonal_naive,635,0.6584,1.4852
+Home & Kitchen,2,moving_avg_28d,635,0.5868,1.1536
+Home & Kitchen,2,holt_winters,635,0.5912,1.1517
+Home & Kitchen,2,gradient_boosted,635,0.599,1.078
+Home & Kitchen,3,seasonal_naive,663,0.7408,1.3231
+Home & Kitchen,3,moving_avg_28d,663,0.3822,0.7393
+Home & Kitchen,3,holt_winters,663,0.3706,0.7332
+Home & Kitchen,3,gradient_boosted,663,0.4677,0.8689
+Home & Kitchen,4,seasonal_naive,691,1.0031,1.6741
+Home & Kitchen,4,moving_avg_28d,691,0.5348,1.0789
+Home & Kitchen,4,holt_winters,691,0.5655,1.1173
+Home & Kitchen,4,gradient_boosted,691,0.507,0.9506
+Household Essentials,1,seasonal_naive,610,0.4877,0.8898
+Household Essentials,1,moving_avg_28d,610,0.4331,0.9264
+Household Essentials,1,holt_winters,610,0.4404,0.9249
+Household Essentials,1,gradient_boosted,610,0.4173,0.8325
+Household Essentials,2,seasonal_naive,638,0.464,0.7363
+Household Essentials,2,moving_avg_28d,638,0.3695,0.7638
+Household Essentials,2,holt_winters,638,0.3815,0.8409
+Household Essentials,2,gradient_boosted,638,0.3713,0.8377
+Household Essentials,3,seasonal_naive,666,0.472,0.5819
+Household Essentials,3,moving_avg_28d,666,0.3879,0.6207
+Household Essentials,3,holt_winters,666,0.409,0.677
+Household Essentials,3,gradient_boosted,666,0.3822,0.548
+Household Essentials,4,seasonal_naive,694,0.5735,0.7146
+Household Essentials,4,moving_avg_28d,694,0.4373,0.8373
+Household Essentials,4,holt_winters,694,0.4387,0.8313
+Household Essentials,4,gradient_boosted,694,0.4578,0.802
+Meat & Seafood,1,seasonal_naive,616,0.4923,0.54
+Meat & Seafood,1,moving_avg_28d,616,0.4171,0.5605
+Meat & Seafood,1,holt_winters,616,0.4262,0.504
+Meat & Seafood,1,gradient_boosted,616,0.5086,0.6527
+Meat & Seafood,2,seasonal_naive,644,0.4914,0.6358
+Meat & Seafood,2,moving_avg_28d,644,0.4728,0.6703
+Meat & Seafood,2,holt_winters,644,0.464,0.634
+Meat & Seafood,2,gradient_boosted,644,0.5429,0.8373
+Meat & Seafood,3,seasonal_naive,672,0.579,0.6704
+Meat & Seafood,3,moving_avg_28d,672,0.3977,0.5718
+Meat & Seafood,3,holt_winters,672,0.3713,0.4994
+Meat & Seafood,3,gradient_boosted,672,0.4633,0.5638
+Meat & Seafood,4,seasonal_naive,700,0.4621,0.5864
+Meat & Seafood,4,moving_avg_28d,700,0.402,0.6148
+Meat & Seafood,4,holt_winters,700,0.431,0.6761
+Meat & Seafood,4,gradient_boosted,700,0.4319,0.7419
+Toys & Seasonal,1,seasonal_naive,609,1.9189,5.1437
+Toys & Seasonal,1,moving_avg_28d,609,0.8448,1.7155
+Toys & Seasonal,1,holt_winters,609,1.0512,2.6787
+Toys & Seasonal,1,gradient_boosted,609,0.9851,2.0618
+Toys & Seasonal,2,seasonal_naive,637,0.6051,0.6518
+Toys & Seasonal,2,moving_avg_28d,637,0.5956,0.8085
+Toys & Seasonal,2,holt_winters,637,0.5717,0.9803
+Toys & Seasonal,2,gradient_boosted,637,0.5662,0.8887
+Toys & Seasonal,3,seasonal_naive,665,1.1019,3.1694
+Toys & Seasonal,3,moving_avg_28d,665,0.6701,1.3694
+Toys & Seasonal,3,holt_winters,665,0.6489,1.6872
+Toys & Seasonal,3,gradient_boosted,665,0.7054,1.6175
+Toys & Seasonal,4,seasonal_naive,693,0.7005,0.7253
+Toys & Seasonal,4,moving_avg_28d,693,0.639,0.8232
+Toys & Seasonal,4,holt_winters,693,0.6635,0.9871
+Toys & Seasonal,4,gradient_boosted,693,0.7346,1.4127

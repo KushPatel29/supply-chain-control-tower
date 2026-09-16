@@ -1,61 +1,151 @@
-product_id,sku,product_name,category,subcategory,shelf_life_days,unit_of_measure,unit_cost,unit_price
-1,SKU-1001,Fresh Fish Purpose,Seafood,Fresh Fish,9,EA,29.95,39.64
-2,SKU-1002,Prepared Salads Brother,Deli,Prepared Salads,9,EA,4.68,6.5
-3,SKU-1003,Sliced Meats Ago,Deli,Sliced Meats,4,CASE,29.57,41.55
-4,SKU-1004,Frozen Poultry Site,Frozen,Frozen Poultry,250,KG,13.91,18.17
-5,SKU-1005,Lamb Face,Fresh Meat,Lamb,5,EA,17.49,20.83
-6,SKU-1006,Cheese Election,Deli,Cheese,9,KG,25.69,32.67
-7,SKU-1007,Fresh Fish Dog,Seafood,Fresh Fish,5,CASE,28.01,36.08
-8,SKU-1008,Frozen Poultry Chair,Frozen,Frozen Poultry,149,CASE,23.62,30.06
-9,SKU-1009,Pork Since,Fresh Meat,Pork,6,KG,11.54,15.51
-10,SKU-1010,Frozen Prepared Blue,Frozen,Frozen Prepared,124,CASE,36.6,45.46
-11,SKU-1011,Cheese Require,Deli,Cheese,8,EA,23.0,28.16
-12,SKU-1012,Cheese Sit,Deli,Cheese,6,CASE,37.73,52.62
-13,SKU-1013,Smoked Seafood Wait,Seafood,Smoked Seafood,8,KG,9.85,11.73
-14,SKU-1014,Frozen Poultry Offer,Frozen,Frozen Poultry,171,KG,22.74,30.04
-15,SKU-1015,Frozen Poultry Begin,Frozen,Frozen Poultry,130,KG,13.61,16.6
-16,SKU-1016,Fresh Fish Performance,Seafood,Fresh Fish,3,EA,9.95,11.75
-17,SKU-1017,Fresh Fish Knowledge,Seafood,Fresh Fish,5,CASE,32.13,42.59
-18,SKU-1018,Shellfish Almost,Seafood,Shellfish,3,CASE,36.81,50.95
-19,SKU-1019,Poultry All,Fresh Meat,Poultry,9,EA,14.16,17.81
-20,SKU-1020,Frozen Seafood Better,Frozen,Frozen Seafood,124,CASE,20.21,24.43
-21,SKU-1021,Fresh Fish Discover,Seafood,Fresh Fish,7,EA,23.55,32.15
-22,SKU-1022,Fresh Fish Early,Seafood,Fresh Fish,9,KG,18.53,21.98
-23,SKU-1023,Smoked Seafood Mouth,Seafood,Smoked Seafood,9,CASE,20.33,26.74
-24,SKU-1024,Lamb Play,Fresh Meat,Lamb,9,KG,17.89,24.35
-25,SKU-1025,Frozen Prepared Agreement,Frozen,Frozen Prepared,175,CASE,35.52,47.24
-26,SKU-1026,Beef Option,Fresh Meat,Beef,8,CASE,19.62,24.18
-27,SKU-1027,Prepared Salads Decide,Deli,Prepared Salads,4,CASE,7.08,8.96
-28,SKU-1028,Beef Sense,Fresh Meat,Beef,3,KG,26.79,31.62
-29,SKU-1029,Lamb Rate,Fresh Meat,Lamb,9,CASE,8.67,11.34
-30,SKU-1030,Beef Science,Fresh Meat,Beef,5,EA,12.6,15.61
-31,SKU-1031,Sliced Meats Offer,Deli,Sliced Meats,6,CASE,16.14,22.81
-32,SKU-1032,Shellfish Kind,Seafood,Shellfish,5,KG,13.78,17.2
-33,SKU-1033,Fresh Fish Discussion,Seafood,Fresh Fish,4,KG,21.35,25.46
-34,SKU-1034,Frozen Poultry List,Frozen,Frozen Poultry,218,CASE,11.48,13.95
-35,SKU-1035,Frozen Seafood Perform,Frozen,Frozen Seafood,249,EA,24.73,29.66
-36,SKU-1036,Lamb Fall,Fresh Meat,Lamb,8,CASE,16.29,21.69
-37,SKU-1037,Prepared Salads Table,Deli,Prepared Salads,9,EA,5.89,8.13
-38,SKU-1038,Sliced Meats True,Deli,Sliced Meats,5,EA,24.66,33.11
-39,SKU-1039,Prepared Salads According,Deli,Prepared Salads,9,KG,10.99,14.67
-40,SKU-1040,Poultry Song,Fresh Meat,Poultry,9,KG,37.63,45.65
-41,SKU-1041,Pork Sure,Fresh Meat,Pork,9,EA,22.8,30.71
-42,SKU-1042,Frozen Seafood Collection,Frozen,Frozen Seafood,201,CASE,23.32,30.48
-43,SKU-1043,Poultry Save,Fresh Meat,Poultry,8,EA,36.15,50.47
-44,SKU-1044,Fresh Fish Knowledge,Seafood,Fresh Fish,3,EA,15.6,21.13
-45,SKU-1045,Frozen Seafood Grow,Frozen,Frozen Seafood,209,KG,35.79,49.54
-46,SKU-1046,Frozen Seafood Fall,Frozen,Frozen Seafood,193,CASE,25.24,29.84
-47,SKU-1047,Lamb Clearly,Fresh Meat,Lamb,3,CASE,2.69,3.28
-48,SKU-1048,Cheese Dinner,Deli,Cheese,5,KG,26.95,33.25
-49,SKU-1049,Frozen Poultry Source,Frozen,Frozen Poultry,231,EA,14.7,19.98
-50,SKU-1050,Fresh Fish Great,Seafood,Fresh Fish,3,CASE,22.85,29.75
-51,SKU-1051,Shellfish Blue,Seafood,Shellfish,8,EA,24.62,34.84
-52,SKU-1052,Prepared Salads Best,Deli,Prepared Salads,5,EA,32.31,42.02
-53,SKU-1053,Frozen Poultry Husband,Frozen,Frozen Poultry,150,KG,21.22,27.95
-54,SKU-1054,Frozen Poultry Bill,Frozen,Frozen Poultry,261,KG,37.77,53.22
-55,SKU-1055,Prepared Salads Her,Deli,Prepared Salads,6,KG,3.08,4.32
-56,SKU-1056,Sliced Meats Throw,Deli,Sliced Meats,9,EA,38.64,53.51
-57,SKU-1057,Beef Guy,Fresh Meat,Beef,9,CASE,12.57,16.3
-58,SKU-1058,Pork Pm,Fresh Meat,Pork,9,CASE,34.16,47.93
-59,SKU-1059,Frozen Seafood Everything,Frozen,Frozen Seafood,121,EA,27.67,35.03
-60,SKU-1060,Shellfish Surface,Seafood,Shellfish,4,KG,14.6,20.2
+product_id,sku,product_name,category,subcategory,shelf_life_days,unit_of_measure,unit_cost,unit_price,brand_tier,pack_size,sold_by_weight,temperature_class,sell_through,popularity
+1,SKU-1001,Premium Label Citrus Single,Fresh & Produce,Citrus,8,CASE,2.6,3.19,Premium Label,Single,0,Chilled,0.869,1.4622
+2,SKU-1002,Everyday Basics First Aid Travel Size,Health & Wellness,First Aid,785,EA,4.2,5.8,Everyday Basics,Travel Size,0,Ambient,0.992,0.2389
+3,SKU-1003,Everyday Basics Dish Soap Single,Household Essentials,Dish Soap,724,EA,4.65,6.07,Everyday Basics,Single,0,Ambient,1.0,0.3777
+4,SKU-1004,Exclusive Brand Bath Towel Set Single,Home & Kitchen,Bath Towel Set,1084,EA,13.77,21.29,Exclusive Brand,Single,0,Ambient,0.923,0.8626
+5,SKU-1005,Exclusive Brand Smart Watch Family Size,Electronics,Smart Watch,900,EA,195.33,218.04,Exclusive Brand,Family Size,0,Ambient,0.948,1.8354
+6,SKU-1006,Everyday Basics Pain Relief Family Size,Health & Wellness,Pain Relief,646,CASE,20.93,31.19,Everyday Basics,Family Size,0,Ambient,1.0,2.5921
+7,SKU-1007,Exclusive Brand Coffee Multipack,Grocery,Coffee,466,EA,9.57,11.83,Exclusive Brand,Multipack,0,Ambient,0.987,1.9152
+8,SKU-1008,National Brand Air Freshener Family Size,Household Essentials,Air Freshener,1054,EA,12.74,17.35,National Brand,Family Size,0,Ambient,1.0,0.4956
+9,SKU-1009,National Brand Air Fryer Club Pack,Home & Kitchen,Air Fryer,956,CASE,64.36,97.27,National Brand,Club Pack,0,Ambient,0.947,1.805
+10,SKU-1010,Exclusive Brand Streaming Stick Value Bundle,Electronics,Streaming Stick,1007,EA,329.58,360.03,Exclusive Brand,Value Bundle,0,Ambient,0.93,0.5189
+11,SKU-1011,Everyday Basics Food Storage Single,Household Essentials,Food Storage,823,EA,4.03,5.19,Everyday Basics,Single,0,Ambient,0.987,5.8136
+12,SKU-1012,Northgate Value Baby Formula Single,Grocery,Baby Formula,422,EA,2.4,2.81,Northgate Value,Single,0,Ambient,0.96,2.8611
+13,SKU-1013,Northgate Select Shredded Cheese Travel Size,Dairy & Frozen,Shredded Cheese,89,EA,1.48,1.83,Northgate Select,Travel Size,0,Frozen,0.961,3.2676
+14,SKU-1014,Everyday Basics Bananas 2-Pack,Fresh & Produce,Bananas,12,KG,2.83,3.89,Everyday Basics,2-Pack,1,Chilled,0.866,0.4031
+15,SKU-1015,National Brand Winter Jacket Travel Size,Apparel,Winter Jacket,1014,EA,5.32,9.15,National Brand,Travel Size,0,Ambient,0.805,0.6917
+16,SKU-1016,National Brand Potatoes Single,Fresh & Produce,Potatoes,7,KG,1.8,2.51,National Brand,Single,1,Chilled,0.878,0.3399
+17,SKU-1017,Premium Label Kids Hoodie Multipack,Apparel,Kids Hoodie,1009,EA,33.26,55.85,Premium Label,Multipack,0,Ambient,0.799,0.7492
+18,SKU-1018,National Brand Bottled Water Family Size,Grocery,Bottled Water,237,EA,8.37,10.24,National Brand,Family Size,0,Ambient,0.981,2.6051
+19,SKU-1019,Everyday Basics Ribeye Steak Multipack,Meat & Seafood,Ribeye Steak,8,KG,16.14,21.28,Everyday Basics,Multipack,1,Chilled,0.913,4.878
+20,SKU-1020,Northgate Select Berries Value Bundle,Fresh & Produce,Berries,7,EA,7.56,10.23,Northgate Select,Value Bundle,0,Chilled,0.876,0.2529
+21,SKU-1021,Exclusive Brand Bacon Family Size,Meat & Seafood,Bacon,9,EA,12.85,17.33,Exclusive Brand,Family Size,0,Chilled,0.88,0.5846
+22,SKU-1022,Premium Label Apples Travel Size,Fresh & Produce,Apples,12,KG,1.47,1.94,Premium Label,Travel Size,1,Chilled,0.901,1.3515
+23,SKU-1023,Premium Label Soda 12pk Family Size,Grocery,Soda 12pk,346,EA,7.82,9.23,Premium Label,Family Size,0,Ambient,1.0,0.3537
+24,SKU-1024,Exclusive Brand Bath Tissue Club Pack,Household Essentials,Bath Tissue,566,EA,19.21,25.11,Exclusive Brand,Club Pack,0,Ambient,0.996,0.2214
+25,SKU-1025,Northgate Value Shredded Cheese Multipack,Dairy & Frozen,Shredded Cheese,104,EA,6.93,8.82,Northgate Value,Multipack,0,Frozen,0.933,0.371
+26,SKU-1026,Northgate Select Cold & Flu Travel Size,Health & Wellness,Cold & Flu,500,EA,4.44,6.49,Northgate Select,Travel Size,0,Ambient,0.979,1.1152
+27,SKU-1027,Northgate Value Baking Mix Travel Size,Grocery,Baking Mix,466,CASE,1.17,1.41,Northgate Value,Travel Size,0,Ambient,0.984,1.3266
+28,SKU-1028,Premium Label Cold & Flu Value Bundle,Health & Wellness,Cold & Flu,789,EA,31.51,46.78,Premium Label,Value Bundle,0,Ambient,1.0,9.0402
+29,SKU-1029,Northgate Select Bacon Family Size,Meat & Seafood,Bacon,15,KG,16.35,21.86,Northgate Select,Family Size,1,Chilled,0.895,2.6902
+30,SKU-1030,National Brand Work Boot Family Size,Apparel,Work Boot,947,EA,22.41,40.19,National Brand,Family Size,0,Ambient,0.822,0.5567
+31,SKU-1031,Exclusive Brand Frozen Pizza Multipack,Dairy & Frozen,Frozen Pizza,76,EA,8.2,11.04,Exclusive Brand,Multipack,0,Frozen,0.931,0.4144
+32,SKU-1032,Northgate Value Allergy Relief Multipack,Health & Wellness,Allergy Relief,548,CASE,15.44,20.25,Northgate Value,Multipack,0,Ambient,0.959,1.6197
+33,SKU-1033,Premium Label Tomatoes Value Bundle,Fresh & Produce,Tomatoes,12,KG,9.71,13.93,Premium Label,Value Bundle,1,Chilled,0.846,0.7578
+34,SKU-1034,National Brand Razors 2-Pack,Health & Wellness,Razors,464,EA,14.4,20.84,National Brand,2-Pack,0,Ambient,0.998,1.0184
+35,SKU-1035,National Brand Rice Single,Grocery,Rice,375,EA,3.27,3.95,National Brand,Single,0,Ambient,1.0,1.3489
+36,SKU-1036,National Brand Trash Bags Value Bundle,Household Essentials,Trash Bags,701,EA,17.05,20.91,National Brand,Value Bundle,0,Ambient,0.972,0.5869
+37,SKU-1037,Northgate Select Toothpaste Single,Health & Wellness,Toothpaste,578,EA,9.15,13.11,Northgate Select,Single,0,Ambient,0.964,5.1615
+38,SKU-1038,Northgate Select Action Figure Value Bundle,Toys & Seasonal,Action Figure,578,EA,41.59,60.67,Northgate Select,Value Bundle,0,Ambient,0.781,0.8681
+39,SKU-1039,Everyday Basics Butter 2-Pack,Dairy & Frozen,Butter,25,EA,5.1,6.25,Everyday Basics,2-Pack,0,Frozen,0.936,2.6665
+40,SKU-1040,Everyday Basics Bath Tissue Family Size,Household Essentials,Bath Tissue,556,EA,8.94,11.92,Everyday Basics,Family Size,0,Ambient,0.971,0.4313
+41,SKU-1041,National Brand Coffee Multipack,Grocery,Coffee,216,CASE,8.86,10.86,National Brand,Multipack,0,Ambient,1.0,0.9764
+42,SKU-1042,Northgate Select Shredded Cheese Single,Dairy & Frozen,Shredded Cheese,79,EA,4.12,5.26,Northgate Select,Single,0,Frozen,0.958,0.1501
+43,SKU-1043,Premium Label Salmon Fillet Multipack,Meat & Seafood,Salmon Fillet,10,KG,20.64,27.86,Premium Label,Multipack,1,Chilled,0.904,1.3995
+44,SKU-1044,Northgate Value Pork Chops Travel Size,Meat & Seafood,Pork Chops,16,KG,2.32,3.07,Northgate Value,Travel Size,1,Chilled,0.93,0.7263
+45,SKU-1045,Exclusive Brand Portable Speaker 2-Pack,Electronics,Portable Speaker,1083,EA,195.49,219.89,Exclusive Brand,2-Pack,0,Ambient,0.94,1.341
+46,SKU-1046,National Brand Toothpaste Multipack,Health & Wellness,Toothpaste,524,EA,19.48,27.73,National Brand,Multipack,0,Ambient,1.0,1.3067
+47,SKU-1047,National Brand Laundry Detergent 2-Pack,Household Essentials,Laundry Detergent,928,EA,10.31,14.29,National Brand,2-Pack,0,Ambient,1.0,0.1281
+48,SKU-1048,Northgate Value Apples Single,Fresh & Produce,Apples,7,EA,1.59,2.25,Northgate Value,Single,0,Chilled,0.911,1.1056
+49,SKU-1049,Everyday Basics Winter Jacket 2-Pack,Apparel,Winter Jacket,911,CASE,15.64,26.92,Everyday Basics,2-Pack,0,Ambient,0.853,1.3565
+50,SKU-1050,Everyday Basics Canned Soup Multipack,Grocery,Canned Soup,444,CASE,6.36,7.87,Everyday Basics,Multipack,0,Ambient,1.0,0.3406
+51,SKU-1051,Premium Label Potatoes Club Pack,Fresh & Produce,Potatoes,9,KG,10.36,14.82,Premium Label,Club Pack,1,Chilled,0.887,0.8011
+52,SKU-1052,National Brand Chicken Breast Multipack,Meat & Seafood,Chicken Breast,7,KG,15.85,22.61,National Brand,Multipack,1,Chilled,0.946,1.8244
+53,SKU-1053,National Brand Breakfast Cereal Club Pack,Grocery,Breakfast Cereal,511,EA,13.32,16.49,National Brand,Club Pack,0,Ambient,1.0,4.8393
+54,SKU-1054,Northgate Value Cooking Oil 2-Pack,Grocery,Cooking Oil,220,EA,4.67,5.97,Northgate Value,2-Pack,0,Ambient,0.989,1.3506
+55,SKU-1055,Northgate Select Work Boot Single,Apparel,Work Boot,909,CASE,11.43,19.15,Northgate Select,Single,0,Ambient,0.856,0.1837
+56,SKU-1056,Northgate Select Trash Bags Family Size,Household Essentials,Trash Bags,591,CASE,16.2,20.14,Northgate Select,Family Size,0,Ambient,1.0,0.3765
+57,SKU-1057,Northgate Value Frozen Vegetables Multipack,Dairy & Frozen,Frozen Vegetables,16,EA,5.44,7.54,Northgate Value,Multipack,0,Frozen,0.972,0.8463
+58,SKU-1058,National Brand Frozen Entree 2-Pack,Dairy & Frozen,Frozen Entree,26,CASE,4.77,5.83,National Brand,2-Pack,0,Frozen,0.965,0.1577
+59,SKU-1059,Northgate Select Shredded Cheese Value Bundle,Dairy & Frozen,Shredded Cheese,91,CASE,13.24,16.88,Northgate Select,Value Bundle,0,Frozen,0.937,5.8174
+60,SKU-1060,Northgate Select Cold & Flu 2-Pack,Health & Wellness,Cold & Flu,483,EA,18.1,25.74,Northgate Select,2-Pack,0,Ambient,0.981,2.9162
+61,SKU-1061,Northgate Value Bacon Multipack,Meat & Seafood,Bacon,5,KG,14.42,20.2,Northgate Value,Multipack,1,Chilled,0.88,2.3079
+62,SKU-1062,Northgate Value Cooking Oil Multipack,Grocery,Cooking Oil,491,CASE,8.16,10.53,Northgate Value,Multipack,0,Ambient,1.0,2.1027
+63,SKU-1063,National Brand Soda 12pk 2-Pack,Grocery,Soda 12pk,523,EA,6.78,9.2,National Brand,2-Pack,0,Ambient,0.981,0.5798
+64,SKU-1064,Everyday Basics Potatoes Family Size,Fresh & Produce,Potatoes,5,KG,4.11,5.81,Everyday Basics,Family Size,1,Chilled,0.899,0.3871
+65,SKU-1065,Northgate Value Bacon Value Bundle,Meat & Seafood,Bacon,10,KG,14.95,18.87,Northgate Value,Value Bundle,1,Chilled,0.935,3.6987
+66,SKU-1066,Northgate Value Game Console Travel Size,Electronics,Game Console,981,CASE,33.53,38.33,Northgate Value,Travel Size,0,Ambient,0.919,1.6282
+67,SKU-1067,National Brand Coffee Travel Size,Grocery,Coffee,345,EA,1.52,1.89,National Brand,Travel Size,0,Ambient,0.989,2.4214
+68,SKU-1068,Northgate Value Rice Multipack,Grocery,Rice,165,EA,6.79,8.93,Northgate Value,Multipack,0,Ambient,1.0,1.1523
+69,SKU-1069,Northgate Value Activewear Legging Value Bundle,Apparel,Activewear Legging,1029,EA,21.85,37.41,Northgate Value,Value Bundle,0,Ambient,0.826,0.7605
+70,SKU-1070,Everyday Basics Frozen Pizza Value Bundle,Dairy & Frozen,Frozen Pizza,120,EA,8.15,10.81,Everyday Basics,Value Bundle,0,Frozen,0.959,0.1229
+71,SKU-1071,Exclusive Brand Air Fryer Multipack,Home & Kitchen,Air Fryer,1042,EA,36.13,59.02,Exclusive Brand,Multipack,0,Ambient,0.942,0.1848
+72,SKU-1072,Northgate Value Butter Value Bundle,Dairy & Frozen,Butter,88,EA,5.97,7.31,Northgate Value,Value Bundle,0,Frozen,0.944,1.3623
+73,SKU-1073,Northgate Select Citrus Multipack,Fresh & Produce,Citrus,9,KG,6.99,8.65,Northgate Select,Multipack,1,Chilled,0.894,0.2791
+74,SKU-1074,Everyday Basics Frozen Pizza Family Size,Dairy & Frozen,Frozen Pizza,14,EA,5.66,7.12,Everyday Basics,Family Size,0,Frozen,0.952,0.7881
+75,SKU-1075,Everyday Basics Whole Milk Value Bundle,Dairy & Frozen,Whole Milk,95,EA,9.02,11.77,Everyday Basics,Value Bundle,0,Frozen,0.945,1.2647
+76,SKU-1076,Northgate Select Board Game Value Bundle,Toys & Seasonal,Board Game,807,CASE,33.37,51.61,Northgate Select,Value Bundle,0,Ambient,0.799,0.3251
+77,SKU-1077,Northgate Value Baby Formula Club Pack,Grocery,Baby Formula,485,CASE,10.72,13.07,Northgate Value,Club Pack,0,Ambient,0.963,2.4059
+78,SKU-1078,Northgate Value Ground Beef 2-Pack,Meat & Seafood,Ground Beef,5,KG,9.55,12.8,Northgate Value,2-Pack,1,Chilled,0.94,1.3606
+79,SKU-1079,Northgate Select Surface Cleaner Travel Size,Household Essentials,Surface Cleaner,652,EA,2.96,4.01,Northgate Select,Travel Size,0,Ambient,0.988,0.779
+80,SKU-1080,Northgate Value Bacon Value Bundle,Meat & Seafood,Bacon,12,KG,14.84,18.45,Northgate Value,Value Bundle,1,Chilled,0.916,1.4132
+81,SKU-1081,Everyday Basics Pasta Club Pack,Grocery,Pasta,148,EA,11.41,14.67,Everyday Basics,Club Pack,0,Ambient,0.979,0.289
+82,SKU-1082,Exclusive Brand Deli Turkey Value Bundle,Meat & Seafood,Deli Turkey,5,KG,18.63,24.06,Exclusive Brand,Value Bundle,1,Chilled,0.956,3.021
+83,SKU-1083,Premium Label Baby Onesie Single,Apparel,Baby Onesie,1009,EA,13.67,23.64,Premium Label,Single,0,Ambient,0.839,0.6497
+84,SKU-1084,Premium Label Bath Tissue Multipack,Household Essentials,Bath Tissue,632,EA,17.51,22.76,Premium Label,Multipack,0,Ambient,1.0,0.2747
+85,SKU-1085,Premium Label Wireless Router Family Size,Electronics,Wireless Router,983,EA,244.32,275.34,Premium Label,Family Size,0,Ambient,0.944,1.0804
+86,SKU-1086,National Brand Board Game Club Pack,Toys & Seasonal,Board Game,670,EA,48.57,77.6,National Brand,Club Pack,0,Ambient,0.809,1.0504
+87,SKU-1087,Northgate Value Soda 12pk Family Size,Grocery,Soda 12pk,178,EA,6.1,6.95,Northgate Value,Family Size,0,Ambient,0.999,1.5123
+88,SKU-1088,Everyday Basics Streaming Stick Value Bundle,Electronics,Streaming Stick,1022,CASE,228.77,264.35,Everyday Basics,Value Bundle,0,Ambient,0.944,1.3297
+89,SKU-1089,Exclusive Brand Salmon Fillet Value Bundle,Meat & Seafood,Salmon Fillet,12,KG,19.65,26.36,Exclusive Brand,Value Bundle,1,Chilled,0.91,2.1462
+90,SKU-1090,Premium Label Bath Towel Set Club Pack,Home & Kitchen,Bath Towel Set,952,CASE,86.48,142.51,Premium Label,Club Pack,0,Ambient,0.949,0.4349
+91,SKU-1091,Northgate Value String Lights 2-Pack,Toys & Seasonal,String Lights,803,EA,14.18,22.09,Northgate Value,2-Pack,0,Ambient,0.795,2.0325
+92,SKU-1092,Northgate Value Ice Cream Multipack,Dairy & Frozen,Ice Cream,18,EA,5.95,7.68,Northgate Value,Multipack,0,Frozen,0.968,1.4667
+93,SKU-1093,National Brand Apples Club Pack,Fresh & Produce,Apples,3,KG,7.55,10.66,National Brand,Club Pack,1,Chilled,0.899,0.7712
+94,SKU-1094,Exclusive Brand Deli Turkey Travel Size,Meat & Seafood,Deli Turkey,4,EA,3.61,4.88,Exclusive Brand,Travel Size,0,Chilled,0.946,0.8631
+95,SKU-1095,Northgate Value Cookware Set Value Bundle,Home & Kitchen,Cookware Set,1035,EA,35.39,55.06,Northgate Value,Value Bundle,0,Ambient,0.926,0.5113
+96,SKU-1096,Premium Label Bluetooth Headphones Multipack,Electronics,Bluetooth Headphones,999,EA,249.23,292.01,Premium Label,Multipack,0,Ambient,0.933,3.0213
+97,SKU-1097,Northgate Value Cooler 2-Pack,Toys & Seasonal,Cooler,682,EA,14.73,21.86,Northgate Value,2-Pack,0,Ambient,0.791,1.1077
+98,SKU-1098,Northgate Select Soda 12pk Family Size,Grocery,Soda 12pk,263,EA,9.61,11.38,Northgate Select,Family Size,0,Ambient,0.976,0.3132
+99,SKU-1099,National Brand Condiments 2-Pack,Grocery,Condiments,299,EA,5.36,6.64,National Brand,2-Pack,0,Ambient,0.989,0.3473
+100,SKU-1100,Northgate Value Cooking Oil Family Size,Grocery,Cooking Oil,428,EA,6.11,7.03,Northgate Value,Family Size,0,Ambient,0.982,1.5287
+101,SKU-1101,Northgate Select Laundry Detergent Family Size,Household Essentials,Laundry Detergent,705,EA,13.25,17.46,Northgate Select,Family Size,0,Ambient,0.993,0.8738
+102,SKU-1102,National Brand Laundry Detergent Family Size,Household Essentials,Laundry Detergent,709,EA,11.37,13.89,National Brand,Family Size,0,Ambient,0.999,0.6921
+103,SKU-1103,Northgate Select Dish Soap Family Size,Household Essentials,Dish Soap,601,EA,11.03,14.98,Northgate Select,Family Size,0,Ambient,0.968,0.8387
+104,SKU-1104,National Brand Condiments Family Size,Grocery,Condiments,139,CASE,8.12,10.2,National Brand,Family Size,0,Ambient,0.992,0.3026
+105,SKU-1105,Northgate Value Eggs Multipack,Dairy & Frozen,Eggs,62,EA,6.43,7.78,Northgate Value,Multipack,0,Frozen,0.968,0.7159
+106,SKU-1106,National Brand Salad Greens Value Bundle,Fresh & Produce,Salad Greens,5,EA,6.28,8.51,National Brand,Value Bundle,0,Chilled,0.915,0.672
+107,SKU-1107,Northgate Select Cooking Oil Value Bundle,Grocery,Cooking Oil,153,EA,10.63,13.02,Northgate Select,Value Bundle,0,Ambient,0.981,1.6714
+108,SKU-1108,Premium Label Area Rug Travel Size,Home & Kitchen,Area Rug,1001,EA,9.69,15.39,Premium Label,Travel Size,0,Ambient,0.941,0.7351
+109,SKU-1109,Premium Label Frozen Vegetables Travel Size,Dairy & Frozen,Frozen Vegetables,34,EA,2.16,2.7,Premium Label,Travel Size,0,Frozen,0.964,6.2878
+110,SKU-1110,Premium Label Coffee Maker Club Pack,Home & Kitchen,Coffee Maker,1046,CASE,76.86,116.46,Premium Label,Club Pack,0,Ambient,0.913,0.5209
+111,SKU-1111,Everyday Basics Air Freshener 2-Pack,Household Essentials,Air Freshener,823,CASE,7.72,10.19,Everyday Basics,2-Pack,0,Ambient,0.97,0.7127
+112,SKU-1112,Exclusive Brand String Lights Club Pack,Toys & Seasonal,String Lights,811,EA,49.17,73.11,Exclusive Brand,Club Pack,0,Ambient,0.797,0.2016
+113,SKU-1113,Premium Label Portable Speaker Family Size,Electronics,Portable Speaker,1056,EA,284.53,314.7,Premium Label,Family Size,0,Ambient,0.95,0.9357
+114,SKU-1114,Everyday Basics Streaming Stick 2-Pack,Electronics,Streaming Stick,1015,EA,153.22,162.82,Everyday Basics,2-Pack,0,Ambient,0.916,0.5344
+115,SKU-1115,Northgate Select Rotisserie Chicken Multipack,Meat & Seafood,Rotisserie Chicken,15,KG,16.65,20.98,Northgate Select,Multipack,1,Chilled,0.911,3.3448
+116,SKU-1116,Northgate Select Shampoo Single,Health & Wellness,Shampoo,510,CASE,6.75,8.88,Northgate Select,Single,0,Ambient,1.0,1.9012
+117,SKU-1117,Exclusive Brand Cookware Set Single,Home & Kitchen,Cookware Set,970,EA,13.95,23.28,Exclusive Brand,Single,0,Ambient,0.951,0.8047
+118,SKU-1118,National Brand Salad Greens Single,Fresh & Produce,Salad Greens,11,KG,2.23,3.33,National Brand,Single,1,Chilled,0.886,2.8013
+119,SKU-1119,Exclusive Brand Paper Towels Travel Size,Household Essentials,Paper Towels,938,EA,2.42,2.85,Exclusive Brand,Travel Size,0,Ambient,0.983,1.7305
+120,SKU-1120,National Brand Breakfast Cereal Family Size,Grocery,Breakfast Cereal,323,EA,7.95,10.3,National Brand,Family Size,0,Ambient,0.971,0.3701
+121,SKU-1121,National Brand Beach Set Club Pack,Toys & Seasonal,Beach Set,971,EA,47.57,74.9,National Brand,Club Pack,0,Ambient,0.785,0.5381
+122,SKU-1122,Northgate Select Trash Bags Family Size,Household Essentials,Trash Bags,575,EA,11.69,15.01,Northgate Select,Family Size,0,Ambient,1.0,2.978
+123,SKU-1123,Everyday Basics Tablet 2-Pack,Electronics,Tablet,1063,EA,142.53,165.28,Everyday Basics,2-Pack,0,Ambient,0.95,0.8517
+124,SKU-1124,Northgate Value Bath Towel Set 2-Pack,Home & Kitchen,Bath Towel Set,1016,CASE,19.22,27.77,Northgate Value,2-Pack,0,Ambient,0.934,1.7417
+125,SKU-1125,Everyday Basics Vitamins Club Pack,Health & Wellness,Vitamins,424,EA,30.8,41.98,Everyday Basics,Club Pack,0,Ambient,0.991,1.2734
+126,SKU-1126,Exclusive Brand Bananas 2-Pack,Fresh & Produce,Bananas,3,KG,3.29,4.69,Exclusive Brand,2-Pack,1,Chilled,0.878,1.2975
+127,SKU-1127,Northgate Select Chicken Breast 2-Pack,Meat & Seafood,Chicken Breast,15,EA,11.6,15.42,Northgate Select,2-Pack,0,Chilled,0.88,2.3596
+128,SKU-1128,Premium Label Bottled Water 2-Pack,Grocery,Bottled Water,196,EA,7.18,8.64,Premium Label,2-Pack,0,Ambient,0.991,1.4798
+129,SKU-1129,Everyday Basics Frozen Vegetables Travel Size,Dairy & Frozen,Frozen Vegetables,89,EA,1.22,1.66,Everyday Basics,Travel Size,0,Frozen,0.948,4.9504
+130,SKU-1130,Premium Label Onions Family Size,Fresh & Produce,Onions,7,KG,6.7,8.64,Premium Label,Family Size,1,Chilled,0.875,0.2457
+131,SKU-1131,Premium Label Mens Tee Value Bundle,Apparel,Mens Tee,1039,CASE,35.46,63.44,Premium Label,Value Bundle,0,Ambient,0.821,0.5059
+132,SKU-1132,Northgate Value Coffee Family Size,Grocery,Coffee,524,EA,4.24,5.52,Northgate Value,Family Size,0,Ambient,1.0,0.5601
+133,SKU-1133,National Brand Onions Value Bundle,Fresh & Produce,Onions,11,KG,6.65,8.88,National Brand,Value Bundle,1,Chilled,0.894,1.1056
+134,SKU-1134,Exclusive Brand Baking Mix Club Pack,Grocery,Baking Mix,172,EA,14.06,16.7,Exclusive Brand,Club Pack,0,Ambient,0.981,1.4036
+135,SKU-1135,Northgate Select Bananas Travel Size,Fresh & Produce,Bananas,10,KG,1.14,1.47,Northgate Select,Travel Size,1,Chilled,0.878,0.1062
+136,SKU-1136,Northgate Value Cooking Oil Value Bundle,Grocery,Cooking Oil,123,EA,6.92,8.68,Northgate Value,Value Bundle,0,Ambient,1.0,1.5395
+137,SKU-1137,National Brand Frozen Vegetables Travel Size,Dairy & Frozen,Frozen Vegetables,113,EA,1.53,1.96,National Brand,Travel Size,0,Frozen,0.941,2.188
+138,SKU-1138,Premium Label Frozen Pizza Travel Size,Dairy & Frozen,Frozen Pizza,15,CASE,2.01,2.68,Premium Label,Travel Size,0,Frozen,0.94,0.6223
+139,SKU-1139,Everyday Basics Bottled Water 2-Pack,Grocery,Bottled Water,364,CASE,5.37,6.72,Everyday Basics,2-Pack,0,Ambient,0.97,4.6235
+140,SKU-1140,Exclusive Brand Shampoo Multipack,Health & Wellness,Shampoo,468,EA,24.79,35.35,Exclusive Brand,Multipack,0,Ambient,0.977,1.4431
+141,SKU-1141,Everyday Basics Rotisserie Chicken 2-Pack,Meat & Seafood,Rotisserie Chicken,4,KG,9.54,11.72,Everyday Basics,2-Pack,1,Chilled,0.942,2.1311
+142,SKU-1142,National Brand Frozen Vegetables Family Size,Dairy & Frozen,Frozen Vegetables,48,EA,8.51,10.65,National Brand,Family Size,0,Frozen,0.982,0.53
+143,SKU-1143,Premium Label Ribeye Steak Family Size,Meat & Seafood,Ribeye Steak,14,KG,17.85,22.61,Premium Label,Family Size,1,Chilled,0.878,3.2825
+144,SKU-1144,Northgate Select Greek Yogurt Single,Dairy & Frozen,Greek Yogurt,32,CASE,3.33,4.4,Northgate Select,Single,0,Frozen,0.994,1.5908
+145,SKU-1145,Everyday Basics Bottled Water Club Pack,Grocery,Bottled Water,535,EA,11.23,13.82,Everyday Basics,Club Pack,0,Ambient,0.985,8.9999
+146,SKU-1146,Exclusive Brand Potatoes Family Size,Fresh & Produce,Potatoes,4,KG,5.63,8.09,Exclusive Brand,Family Size,1,Chilled,0.872,0.5097
+147,SKU-1147,National Brand Razors Family Size,Health & Wellness,Razors,777,EA,20.3,28.62,National Brand,Family Size,0,Ambient,0.97,0.9229
+148,SKU-1148,Northgate Value Pasta Value Bundle,Grocery,Pasta,307,EA,7.5,9.62,Northgate Value,Value Bundle,0,Ambient,0.96,0.6668
+149,SKU-1149,Premium Label Shrimp Multipack,Meat & Seafood,Shrimp,5,KG,18.56,23.62,Premium Label,Multipack,1,Chilled,0.944,0.303
+150,SKU-1150,Northgate Select Eggs Single,Dairy & Frozen,Eggs,19,EA,3.01,3.51,Northgate Select,Single,0,Frozen,0.968,3.9829

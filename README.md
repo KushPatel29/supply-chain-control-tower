@@ -8,24 +8,31 @@
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
 ![Streamlit](https://img.shields.io/badge/Streamlit-decision%20assurance-FF4B4B?logo=streamlit&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-815%20collected-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-816%20collected-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 **▶ Live decision studio: [kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/)**
 
-In specialty food distribution, every pallet is a countdown timer. A case of
-striploin with 90 days of shelf life is inventory; the same case with 3 days
-left is a problem, and next week it's a write-off. I spent years building
-analytics for exactly this business, and this repo is that work rebuilt in
-the open — Microsoft Fabric medallion pipeline, star-schema semantic model,
-a Power BI control tower with row-level security — on synthetic data,
-because the original belongs to a former employer.
+A retail distribution network runs two inventory disciplines at once. Half the
+catalogue has a clock on it — a case of salmon with twelve days of life is stock
+on Monday and a write-off by the weekend — and half of it does not: an air fryer
+keeps until somebody buys it, and its risk is markdown rather than expiry. The
+same ten distribution centres, the same lanes and the same vendors have to serve
+both.
+
+**Northgate Retail Canada** is the synthetic chain this control tower watches: 90
+stores across five regions, 150 SKUs in ten merchandising departments, 24 vendors
+at home and offshore, two years of history. I spent years building analytics for
+exactly this kind of network, and this repo is that work rebuilt in the open —
+Microsoft Fabric medallion pipeline, star-schema semantic model, a Power BI
+control tower with row-level security — on synthetic data, because the original
+belongs to a former employer.
 
 One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs a 704-test suite. The
+builds, exercises the model-promotion policy, and runs an 816-test suite. The
 green badge above covers the failure paths too.
 
 ## Business process improvement case
@@ -106,15 +113,15 @@ and `python gis/render_network_map.py`.
 
 ## The problem, in one walk through the warehouse
 
-Picture the Monday questions at a perishables distributor. Ops wants to
-know what expires this week and in which DC. Sales wants to know whether we
-shipped Friday's orders complete and on time, because the OTIF penalty
-clause in the grocery contract says 95% or we pay. Finance wants margin by
-category and doesn't care about the first two questions until suddenly,
-during an expiry write-off, they care very much.
+Picture the Monday questions at a retail distribution centre. Replenishment wants
+to know what expires this week and in which DC. Store operations wants to know
+whether Friday's replenishment shipped complete and on time, because a store that
+opens with a hole on the shelf loses the sale whatever the reason. Finance wants
+margin by department and doesn't care about the first two questions until
+suddenly, during a shrink write-off, they care very much.
 
-A stock report answers none of this. "Units on hand" treats the 3-day
-striploin and the 90-day striploin as the same number. So the pipeline here
+A stock report answers none of this. "Units on hand" treats the three-day
+berries and the three-year kettle as the same number. So the pipeline here
 treats urgency as data: every inventory row carries a `days_until_expiry`
 and a FEFO risk band (**Critical ≤ 2 days, Warning ≤ 5**), computed once in
 the Silver layer and inherited by everything downstream — no analyst
@@ -180,11 +187,11 @@ happens when a lane closes:
 
 ![Global Sourcing Risk](powerbi/screenshots/02-global-sourcing-risk.png)
 
-**Supplier Performance** — the inbound half of the chain: 3,106 purchase
+**Supplier Performance** — the inbound half of the chain: 11,604 purchase
 order lines scored on delivery, quality, cost and responsiveness, each against a
 published target rather than against the rest of the panel. The contractual
 tier is carried beside the measured band and is never an input to the score,
-which is what makes the 9 disagreements a finding instead
+which is what makes the 18 disagreements a finding instead
 of a restatement:
 
 ![Supplier Performance](powerbi/screenshots/03-supplier-performance.png)
@@ -236,10 +243,11 @@ measure: every supplier had the same 1.9-day inbound lead, the same shelf life
 at receipt and an identical unit cost, so a scorecard built on it would have
 ranked noise and presented it as procurement advice.
 
-So `fact_purchase_orders` was added — 3,106 PO lines across
-15 suppliers and 60 SKUs,
-$82,012,265 of inbound spend, from its own RNG so every existing
-fact stays byte-identical. Each supplier carries latent behaviour it is then
+So `fact_purchase_orders` was added — 11,604 PO lines across
+24 suppliers and 150 SKUs,
+$87,585,755 of inbound spend, sized from the demand the stores
+actually pulled and drawn from its own generator, so every existing fact stays
+byte-identical. Each supplier carries latent behaviour it is then
 measured on, and that behaviour is deliberately **not** aligned with its
 contractual tier.
 
@@ -249,9 +257,9 @@ problem from one that is dear and reliable:
 
 | | measured | scored against |
 |---|---|---|
-| **Delivery** | OTIF 73.6% (on time 90.1%, in full 81.9%) | 95% target, 70% floor |
-| **Quality** | 0.66% of units rejected — $567,497 of stock condemned at the gate | 0.5% target, 5% floor |
-| **Cost** | $835,240 **under** contract in aggregate (−1.01%) — but 7 suppliers invoice above theirs, together $1,445,839 | 2% under contract, 5% over |
+| **Delivery** | OTIF 77.8% (on time 88.8%, in full 87.5%) | 95% target, 70% floor |
+| **Quality** | 0.38% of units rejected — $315,977 of stock condemned at the gate | 0.5% target, 5% floor |
+| **Cost** | $1,178,067 **over** contract in aggregate (+1.36%) — 17 suppliers invoice above theirs, together $1,663,893 | 2% under contract, 5% over |
 | **Responsiveness** | lead-time standard deviation | 2 days target, 12 floor |
 
 **Scored against published anchors, not against each other.** Min-max scaling
@@ -259,7 +267,7 @@ is the usual choice and it is wrong here for a specific reason: it guarantees
 somebody scores 100 and somebody scores 0, so a panel where every supplier is
 failing looks exactly like one where every supplier is excellent. On this panel
 nobody reaches the delivery target and the scale says so — the best composite
-is 67.7 — and the anchors are constants at the top of the
+is 93.5 — and the anchors are constants at the top of the
 file, meant to be argued with.
 
 **In full is measured on the accepted quantity.** A pallet that arrives
@@ -272,48 +280,48 @@ disagreeing with the people receiving the goods.
 `dim_supplier` carries a contractual `supplier_tier`, and nothing in the
 scoring reads it — a test shuffles the column and requires that not one score
 moves. It is compared to the measured band only at the end, and
-**9 of 15 suppliers sit in a different
+**18 of 24 suppliers sit in a different
 band than their contract calls them**, covering
-$51,078,133 of spend.
-3 are inverted outright: Adams, Zuniga and Wong, Flowers, Martin and Kelly, Walter, Edwards and Rios.
-Dudley Group scores 38.0 on OTIF of
-63.1% and is the first review to book.
+$70,273,085 of spend.
+6 are inverted outright: Thornbury Home Goods, Larkspur Partners, Stonebridge Consumer Products, Kingsford Manufacturing, Grayrock Supply Co, Whitecourt Supply Co.
+Crestline Industries scores 31.6 on OTIF of
+62.6% and is the first review to book.
 
 ### Where the award does not match the performance
 
-24 SKUs have a qualified alternate scoring 8+ points
-above the incumbent primary, covering $28,633,163 of annual
+34 SKUs have a qualified alternate scoring 8+ points
+above the incumbent primary, covering $12,597,263 of annual
 spend. Moving all of it would raise the purchase price by
-$393,573 — 11 of
+$1,598,457 — 12 of
 those SKUs are *cheaper* at the better supplier, so those are free, and the
 rest are a decision with a price on it rather than an instruction. Presenting
 only the savings would be advocacy dressed as analysis.
 
-A further 2
-($942,374) have a qualified alternate that has
+A further 3
+($453,077) have a qualified alternate that has
 never actually been ordered from for that SKU. There is no price to compare, so
 those columns are blank and the blank is excluded from the headline rather than
 summed in as a NaN — and a live second source nobody uses is itself worth a
 buyer's attention.
 
-The Pareto on why receipts were rejected puts 34% of
-the money on "Temperature excursion in transit", ranked on value rather than on
+The Pareto on why receipts were rejected puts 24% of
+the money on "Short shelf life on arrival", ranked on value rather than on
 frequency: the reason that happens most often is rarely the one that costs
 most.
 
 ## Nobody has ever priced the service level
 
-Every one of the 478 SKU × warehouse positions is planned at a
+Every one of the 637 SKU × warehouse positions is planned at a
 flat 95% cycle service level. That is the default
 in every planning package on the market, it was set once at implementation, and
-it costs $7,260,291 in safety stock.
+it costs $5,619,058 in safety stock.
 
 [`analytics/service_economics.py`](analytics/service_economics.py) asks three
 questions about it.
 
 **1. What does a point of service actually cost?** The exchange curve is
-steeply concave: the next point costs $467,224 from
-here, and going from 95% to 99% costs $3,007,163. Quoting a
+steeply concave: the next point costs $361,605 from
+here, and going from 95% to 99% costs $2,327,376. Quoting a
 service target without that curve beside it is quoting a price with no idea
 what is being bought.
 
@@ -324,36 +332,36 @@ which quietly makes the whole answer a function of two numbers somebody
 guessed.
 
 **2. Is the same money buying the most service it could?** Four allocations of
-the identical $7,260,291:
+the identical $5,619,058:
 
 | policy | fill rate (units) | fill rate (revenue) |
 |---|---|---|
-| flat 95%, in force | 98.64% | 98.64% |
-| ABC ladder 98% / 95% / 90% | 98.07% | 98.60% |
-| allocated for units | **99.31%** | — |
-| allocated for revenue | — | **99.24%** |
+| flat 95%, in force | 98.25% | 97.58% |
+| ABC ladder 98% / 95% / 90% | 96.53% | 97.60% |
+| allocated for units | **99.50%** | — |
+| allocated for revenue | — | **98.65%** |
 
 The textbook ABC ladder is the standard fix, and on this network it **loses**
-0.57 points of unit fill for the same
+1.72 points of unit fill for the same
 money. That is not a defect in the ladder: it protects revenue, and revenue is
 not what a fill rate on units measures — the same ladder moves revenue fill
-only -0.04 points. A flat service level is
+only +0.02 points. A flat service level is
 wrong; so is reaching for the standard fix without first saying which of the
 two things you are buying.
 
 Allocating by marginal return — equalising the fill rate bought by the next
 dollar across every position, which the module solves with a Lagrange
-multiplier and a bisection — reaches 99.31%
-(+0.67 pts) for exactly what is being spent
+multiplier and a bisection — reaches 99.50%
+(+1.25 pts) for exactly what is being spent
 today. At a *uniform* service level the two objectives agree to
-0.001 of a point,
+0.665 of a point,
 which is precisely why a flat policy survives so long: it is never obviously
 wrong under either. They only come apart once the money starts being allocated.
 
 **3. Or take it as cash instead.** Holding the unit fill rate exactly where it
-is needs $6,021,226, releasing
-$1,239,065 of working capital
-(17.1%) at identical service.
+is needs $4,101,180, releasing
+$1,517,878 of working capital
+(27.0%) at identical service.
 
 Safety stock is recomputed here from King's formula rather than read off the
 planning view's own `safety_stock_target`, and a test asserts the two agree on
@@ -367,7 +375,7 @@ The order and inventory facts describe one country's distribution network.
 They cannot answer the questions a multinational control tower exists to
 answer: how concentrated is the supply base, which SKUs have nowhere else to
 go, and how long a switch takes when a lane closes. So the model gained an
-approved vendor list — 155 awards across 60 SKUs and 15 suppliers in 9
+approved vendor list — 346 awards across 150 SKUs and 24 vendors in 11
 countries — and [`analytics/supply_risk.py`](analytics/supply_risk.py) reads
 it.
 
@@ -385,12 +393,12 @@ them still holds.
 
 | | |
 |---|---|
-| Single-source SKUs | **3 of 60**, carrying **6.3% of COGS** |
-| Award concentration | median HHI **5,679** per SKU — most SKUs lean hard on one supplier |
-| Origin concentration | HHI **1,620** across 9 countries |
-| Largest origin | **Mexico, 27.2% of COGS** across 36 SKUs |
-| If Mexico's lanes close | **13 SKUs** have no qualified alternate; the rest wait **31.7 days** |
-| Offshore trade-off | 57.5% of COGS at **35.3 days** and price index 0.818, against **14.5 days** at 0.916 nearshore |
+| Single-source SKUs | **25 of 150**, carrying **15.9% of COGS** |
+| Award concentration | median HHI **5,904** per SKU — most SKUs lean hard on one vendor |
+| Origin concentration | HHI **1,693** across 11 countries |
+| Largest origin | **USA, 29.7% of COGS** across 88 SKUs |
+| If the USA lanes close | **30 SKUs** have no qualified alternate; the rest wait **20.4 days** |
+| Offshore trade-off | 43.0% of COGS at **37.5 days** and price index 0.802, against **12.2 days** at 0.956 nearshore |
 
 The disruption scenario counts a *qualified* alternate only. An unqualified
 supplier needs a requalification programme before it can absorb volume, so
@@ -399,9 +407,9 @@ precisely the situation it exists for.
 
 **And a finding about the service metric itself.** OTIF is an AND of two
 independent failures, and reporting only the product hides which one to fix.
-Split apart, on-time is **89.9%** and in-full is **89.3%** — but the failures
-barely overlap: 1,781 orders were late only, **1,902 were short only**, and just
-234 were both. Short-shipping, not lateness, is the bigger driver of an 80.4%
+Split apart, on-time is **95.4%** and in-full is **94.7%** — but the failures
+barely overlap: 2,829 orders were late only, **3,259 were short only**, and just
+153 were both. Short-shipping, not lateness, is the bigger driver of a 90.4%
 OTIF. That is a different corrective action, a different owner, and it is
 invisible until you decompose it. It is asserted as a test, so if the data ever
 makes lateness the bigger driver the claim fails instead of ageing into a lie.
@@ -435,13 +443,13 @@ matches the full formula **and does not match** the demand-only one, because a
 
 | | |
 |---|---|
-| Positions under policy | **267 of 478**, **$2,271,670** to close (**$1,684,061** on A-class) |
-| Cover vs its own lead | **127 positions** cannot outlast their own replenishment lead |
-| Idle working capital | **$545,732** sitting above 1.5x reorder point, on 47 positions |
-| Coverable by transfer | **33 SKUs**, **$438,318** — **19%** of the gap needs no purchase order |
-| Over 13 weeks | the gap grew **+17.4%** while stock on hand moved **−2.3%** |
-| ...offshore lanes | gap **+22.9%**, stock **−4.2%** |
-| ...nearshore lanes | gap **−42.2%**, stock **+23.2%** |
+| Positions under policy | **224 of 637**, **$808,365** to close (**$625,818** on A-class) |
+| Cover vs its own lead | **18 positions** cannot outlast their own replenishment lead |
+| Idle working capital | **$442,308** sitting above 1.5x reorder point, on 142 positions |
+| Coverable by transfer | **69 SKUs**, **$96,330** — **12%** of the gap needs no purchase order |
+| Over 13 weeks | the gap grew **+15.2%** while stock on hand moved **−0.4%** |
+| ...offshore lanes | gap **+47.8%**, stock **−5.6%** |
+| ...nearshore lanes | gap **−50.3%**, stock **+22.1%** |
 
 That last pair is the finding, and a national total would have buried it. The
 network is not running out of stock; it is rotating stock out of the lanes that
@@ -653,7 +661,7 @@ git):
   `dim_warehouse[region] IN CALCULATETABLE(VALUES(security_mapping[region]),
   security_mapping[upn] = USERPRINCIPALNAME())` — means a manager mapped to
   two regions sees both, and onboarding someone is one row. Verified live by
-  DAX impersonation: the mapped principal sees exactly 4 of 8 DCs.
+  DAX impersonation: the mapped principal sees exactly 3 of 10 DCs.
 - **Field Ops — object-level security.** For this role `dim_supplier`
   doesn't filter to nothing; it *ceases to exist* (`metadataPermission:
   none` — queries can't even resolve the table name). Supplier commercial
@@ -751,14 +759,16 @@ runner does. The Power BI build steps are in
 > six secrets away from firing; [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 > is the arming guide. Everything else in this repo, you can run today.
 
-## It's not really about food
+## It's not really about groceries
 
-FEFO is just "inventory with a clock," which is most inventory:
+FEFO is just "inventory with a clock," which is most inventory — and half this
+catalogue proves the point from the other side, because general merchandise has
+no clock and still has to be planned in the same network:
 
 | Industry | What "lot + expiry" becomes | What OTIF becomes |
 |---|---|---|
 | Pharma / medical devices | Batch + expiration, FDA lot traceability | Order fill compliance |
-| Retail / e-commerce | Seasonal SKU + markdown date | Promised-delivery-date hit rate |
+| Grocery / fresh | Lot + expiry, FEFO pick | Store replenishment fill |
 | Manufacturing | Production batch + warranty window | On-time production order completion |
 | Chemicals | Batch + stability/retest date | Delivery reliability |
 | Logistics / 3PL | Shipment + SLA deadline | SLA attainment |

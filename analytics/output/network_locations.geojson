@@ -7,16 +7,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 1,
-        "name": "Blair PLC",
-        "country": "USA",
+        "name": "Harborview Industries",
+        "country": "Mexico",
         "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -87.6298,
-          41.8781
+          -100.5508,
+          25.3354
         ]
       }
     },
@@ -26,16 +26,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 2,
-        "name": "Dudley Group",
-        "country": "Spain",
-        "region": "Europe",
+        "name": "Kingsford Manufacturing",
+        "country": "China",
+        "region": "Asia Pacific",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.3763,
-          39.4699
+          121.6025,
+          31.6769
         ]
       }
     },
@@ -45,16 +45,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 3,
-        "name": "Arnold Ltd",
-        "country": "Poland",
-        "region": "Europe",
+        "name": "Thornbury Home Goods",
+        "country": "USA",
+        "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          21.0122,
-          52.2297
+          -87.3951,
+          42.1728
         ]
       }
     },
@@ -64,16 +64,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 4,
-        "name": "Mcclure, Ward and Lee",
-        "country": "Brazil",
-        "region": "South America",
+        "name": "Ridgemont Supply Co",
+        "country": "USA",
+        "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -46.6333,
-          -23.5505
+          -87.9245,
+          42.2046
         ]
       }
     },
@@ -83,16 +83,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 5,
-        "name": "Williams and Sons",
-        "country": "Mexico",
-        "region": "North America",
+        "name": "Blackpine Supply Co",
+        "country": "Spain",
+        "region": "Europe",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -100.3161,
-          25.6866
+          -0.3957,
+          39.867
         ]
       }
     },
@@ -102,16 +102,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 6,
-        "name": "Galloway-Wyatt",
-        "country": "Mexico",
+        "name": "Copper Creek Supply Co",
+        "country": "Canada",
         "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -99.1332,
-          19.4326
+          -73.2232,
+          45.2248
         ]
       }
     },
@@ -121,16 +121,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 7,
-        "name": "James Group",
-        "country": "Vietnam",
-        "region": "Asia Pacific",
+        "name": "Northwind Distribution",
+        "country": "Poland",
+        "region": "Europe",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          106.6297,
-          10.8231
+          20.7069,
+          51.995
         ]
       }
     },
@@ -140,16 +140,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 8,
-        "name": "Flowers, Martin and Kelly",
-        "country": "Thailand",
+        "name": "Crestline Industries",
+        "country": "New Zealand",
         "region": "Asia Pacific",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          100.5018,
-          13.7563
+          175.1815,
+          -36.8644
         ]
       }
     },
@@ -159,16 +159,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 9,
-        "name": "Adams, Zuniga and Wong",
-        "country": "Thailand",
-        "region": "Asia Pacific",
+        "name": "Silverbrook Foods",
+        "country": "USA",
+        "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          100.9847,
-          13.0827
+          -87.381,
+          41.5552
         ]
       }
     },
@@ -178,16 +178,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 10,
-        "name": "Reid, Ferguson and Sanchez",
-        "country": "India",
-        "region": "Asia Pacific",
+        "name": "Redstone Brands",
+        "country": "Turkiye",
+        "region": "Europe",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          72.8777,
-          19.076
+          28.8637,
+          41.077
         ]
       }
     },
@@ -197,16 +197,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 11,
-        "name": "Gray-Mayo",
-        "country": "Mexico",
+        "name": "Elkhorn Foods",
+        "country": "Canada",
         "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -103.3496,
-          20.6597
+          -73.2302,
+          45.419
         ]
       }
     },
@@ -216,16 +216,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 12,
-        "name": "Watts, Robinson and Nguyen",
-        "country": "Brazil",
-        "region": "South America",
+        "name": "Ironvale Consumer Products",
+        "country": "USA",
+        "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -46.3289,
-          -23.9608
+          -88.0551,
+          41.6999
         ]
       }
     },
@@ -235,16 +235,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 13,
-        "name": "Perez Inc",
-        "country": "Canada",
+        "name": "Sandhill Industries",
+        "country": "Mexico",
         "region": "North America",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -73.5673,
-          45.5019
+          -100.6885,
+          26.1084
         ]
       }
     },
@@ -254,16 +254,16 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 14,
-        "name": "Morales-Jones",
-        "country": "Mexico",
-        "region": "North America",
+        "name": "Grayrock Supply Co",
+        "country": "Poland",
+        "region": "Europe",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.0382,
-          32.5149
+          21.1057,
+          52.3232
         ]
       }
     },
@@ -273,16 +273,187 @@
       "properties": {
         "entity_type": "supplier",
         "entity_id": 15,
-        "name": "Walter, Edwards and Rios",
-        "country": "Spain",
+        "name": "Larkspur Partners",
+        "country": "Thailand",
+        "region": "Asia Pacific",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.2636,
+          13.6804
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-16",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 16,
+        "name": "Fairmont Home Goods",
+        "country": "Poland",
         "region": "Europe",
         "location_basis": "synthetic_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          2.1734,
-          41.3851
+          21.0387,
+          51.8009
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-17",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 17,
+        "name": "Maplewood Global",
+        "country": "Mexico",
+        "region": "North America",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -100.4414,
+          25.339
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-18",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 18,
+        "name": "Brightwater Manufacturing",
+        "country": "Turkiye",
+        "region": "Europe",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.2837,
+          40.8158
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-19",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 19,
+        "name": "Windrow Brands",
+        "country": "Turkiye",
+        "region": "Europe",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.2908,
+          40.777
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-20",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 20,
+        "name": "Bayfield Global",
+        "country": "Turkiye",
+        "region": "Europe",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0296,
+          41.3064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-21",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 21,
+        "name": "Cascadia Home Goods",
+        "country": "Brazil",
+        "region": "South America",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.3068,
+          -23.764
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-22",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 22,
+        "name": "Whitecourt Supply Co",
+        "country": "Vietnam",
+        "region": "Asia Pacific",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.2326,
+          10.8072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-23",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 23,
+        "name": "Alderwood Manufacturing",
+        "country": "USA",
+        "region": "North America",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.5857,
+          41.7493
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "supplier-24",
+      "properties": {
+        "entity_type": "supplier",
+        "entity_id": 24,
+        "name": "Stonebridge Consumer Products",
+        "country": "Canada",
+        "region": "North America",
+        "location_basis": "synthetic_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.2585,
+          45.5425
         ]
       }
     },
@@ -292,16 +463,16 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 1,
-        "name": "Ontario DC 1",
+        "name": "BC Lower Mainland Cross-Dock 1",
         "country": "Canada",
-        "region": "Ontario",
-        "location_basis": "synthetic_reference_point"
+        "region": "BC Lower Mainland",
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -79.3832,
-          43.6532
+          -123.1207,
+          49.2827
         ]
       }
     },
@@ -311,16 +482,16 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 2,
-        "name": "Alberta DC 2",
+        "name": "BC Lower Mainland Ambient DC 2",
         "country": "Canada",
-        "region": "Alberta",
-        "location_basis": "synthetic_reference_point"
+        "region": "BC Lower Mainland",
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -114.0719,
-          51.0447
+          -122.849,
+          49.1913
         ]
       }
     },
@@ -330,16 +501,16 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 3,
-        "name": "Ontario DC 3",
+        "name": "BC Lower Mainland Cold Chain DC 3",
         "country": "Canada",
-        "region": "Ontario",
-        "location_basis": "synthetic_reference_point"
+        "region": "BC Lower Mainland",
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -75.6972,
-          45.4215
+          -122.9805,
+          49.2488
         ]
       }
     },
@@ -349,10 +520,10 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 4,
-        "name": "BC Interior DC 4",
+        "name": "BC Interior Cross-Dock 4",
         "country": "Canada",
         "region": "BC Interior",
-        "location_basis": "synthetic_reference_point"
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
@@ -368,16 +539,16 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 5,
-        "name": "BC Interior DC 5",
+        "name": "Alberta Cross-Dock 5",
         "country": "Canada",
-        "region": "BC Interior",
-        "location_basis": "synthetic_reference_point"
+        "region": "Alberta",
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -120.3273,
-          50.6745
+          -114.0719,
+          51.0447
         ]
       }
     },
@@ -387,10 +558,10 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 6,
-        "name": "Alberta DC 6",
+        "name": "Alberta Ambient DC 6",
         "country": "Canada",
         "region": "Alberta",
-        "location_basis": "synthetic_reference_point"
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
@@ -406,16 +577,16 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 7,
-        "name": "BC Lower Mainland DC 7",
+        "name": "Ontario Cross-Dock 7",
         "country": "Canada",
-        "region": "BC Lower Mainland",
-        "location_basis": "synthetic_reference_point"
+        "region": "Ontario",
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -123.1207,
-          49.2827
+          -79.3832,
+          43.6532
         ]
       }
     },
@@ -425,16 +596,54 @@
       "properties": {
         "entity_type": "warehouse",
         "entity_id": 8,
-        "name": "BC Interior DC 8",
+        "name": "Ontario Ambient DC 8",
         "country": "Canada",
-        "region": "BC Interior",
-        "location_basis": "synthetic_reference_point"
+        "region": "Ontario",
+        "location_basis": "dimension_city_reference_point"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.7497,
-          53.9171
+          -75.6972,
+          45.4215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "warehouse-9",
+      "properties": {
+        "entity_type": "warehouse",
+        "entity_id": 9,
+        "name": "Ontario Cold Chain DC 9",
+        "country": "Canada",
+        "region": "Ontario",
+        "location_basis": "dimension_city_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.8711,
+          43.2557
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "warehouse-10",
+      "properties": {
+        "entity_type": "warehouse",
+        "entity_id": 10,
+        "name": "Quebec Cross-Dock 10",
+        "country": "Canada",
+        "region": "Quebec",
+        "location_basis": "dimension_city_reference_point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5673,
+          45.5019
         ]
       }
     }

@@ -65,8 +65,8 @@ def test_committed_evidence_loads_and_reconciles_one_to_one(evidence):
     suppliers = locations[locations.entity_type.eq("supplier")]
 
     supplier_ids = set(suppliers.entity_id.astype(int))
-    assert len(locations) == 23
-    assert len(routes) == len(enriched) == len(supplier_ids) == 15
+    assert len(locations) == 34
+    assert len(routes) == len(enriched) == len(supplier_ids) == 24
     assert set(routes.supplier_id.astype(int)) == supplier_ids
     assert set(enriched.supplier_id.astype(int)) == supplier_ids
     assert enriched.supplier_id.is_unique
@@ -87,12 +87,12 @@ def test_mexico_baseline_matches_the_published_decision_evidence(evidence):
     stranded = response[response.decision_status.eq("No qualified alternate")]
     recoverable = response[response.decision_status.ne("No qualified alternate")]
 
-    assert exposure.exposed_share == pytest.approx(0.2724)
-    assert exposure.exposed_cogs == pytest.approx(11_821_992.49)
-    assert len(response) == int(exposure.skus_supplied) == 36
-    assert len(stranded) == int(exposure.stranded_skus) == 13
-    assert len(recoverable) == 23
-    assert int(recoverable.within_recovery_window.sum()) == 7
+    assert exposure.exposed_share == pytest.approx(0.1401)
+    assert exposure.exposed_cogs == pytest.approx(9_642_277.99)
+    assert len(response) == int(exposure.skus_supplied) == 52
+    assert len(stranded) == int(exposure.stranded_skus) == 22
+    assert len(recoverable) == 30
+    assert int(recoverable.within_recovery_window.sum()) == 24
     assert response.product_id.is_unique
     assert response.country_award_share.between(0, 1).all()
 
@@ -106,19 +106,22 @@ def test_policy_thresholds_make_eligibility_stricter_not_looser(evidence):
     stricter_stranded = stricter.decision_status.eq("No qualified alternate").sum()
     eligible = stricter[stricter.decision_status.ne("No qualified alternate")]
 
-    assert baseline_stranded == 13
-    assert stricter_stranded == 25
+    assert baseline_stranded == 22
+    assert stricter_stranded == 28
     assert stricter_stranded >= baseline_stranded
     assert eligible.alternate_score.ge(60).all()
-    assert int(stricter.within_recovery_window.sum()) == 4
-    assert int(longer_window.within_recovery_window.sum()) == 11
+    assert int(stricter.within_recovery_window.sum()) == 21
+    assert int(longer_window.within_recovery_window.sum()) == 24
 
 
 def test_node_outage_reroutes_only_the_impacted_suppliers(evidence):
     locations = evidence["locations"]
     routes = evidence["routes"]
     warehouses = locations[locations.entity_type.eq("warehouse")]
-    offline_id = int(warehouses.loc[warehouses.name.eq("Ontario DC 1"), "entity_id"].iloc[0])
+    # The busiest routed node rather than a named one: a name pins the test to a
+    # network that has since been redrawn, and "the node most suppliers land on"
+    # is the scenario worth running anyway.
+    offline_id = int(routes.warehouse_id.value_counts().index[0])
     scenario = reroute_network(locations, routes, [offline_id])
 
     expected_impacted = set(
@@ -129,10 +132,10 @@ def test_node_outage_reroutes_only_the_impacted_suppliers(evidence):
 
     assert len(scenario) == len(routes)
     assert set(impacted.supplier_id) == expected_impacted
-    assert len(impacted) == 6
+    assert len(impacted) == 12
     assert impacted.scenario_warehouse_id.ne(offline_id).all()
     assert impacted.extra_distance_km.gt(0).all()
-    assert impacted.extra_distance_km.sum() == pytest.approx(1_155.6)
+    assert impacted.extra_distance_km.sum() == pytest.approx(1_581.8, abs=0.1)
     assert unaffected.scenario_warehouse_id.eq(unaffected.baseline_warehouse_id).all()
     assert unaffected.extra_distance_km.eq(0).all()
 
@@ -222,7 +225,7 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
 
     assert not app.exception
     assert [title.value for title in app.title] == [
-        "Mexico disruption leaves 13 SKUs without a qualified alternate."
+        "Mexico disruption leaves 22 SKUs without a qualified alternate."
     ]
     workspace = app.get("button_group")[0]
     assert workspace.value == "Executive brief"
@@ -236,15 +239,15 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
         "Case study",
     ]
     metrics = {metric.label: metric.value for metric in app.metric}
-    assert metrics["Award-weighted COGS exposure"] == "$11.82M"
-    assert metrics["Affected SKUs"] == "36"
-    assert metrics["No eligible alternate"] == "13"
+    assert metrics["Award-weighted COGS exposure"] == "$9.64M"
+    assert metrics["Affected SKUs"] == "52"
+    assert metrics["No eligible alternate"] == "22"
 
     workspace.set_value("Incident command").run(timeout=30)
     assert not app.exception
     command_metrics = {metric.label: metric.value for metric in app.metric}
     assert command_metrics["Incident"] == "INC-MEXICOSU-SO-001"
-    assert command_metrics["P0 validation queue"] == "13"
+    assert command_metrics["P0 validation queue"] == "22"
     assert command_metrics["Action SLA"] == "240 min"
     assert command_metrics["Recovery target"] == "24 hr"
     download_labels = [button.label for button in app.get("download_button")]
@@ -254,16 +257,16 @@ def test_streamlit_app_runs_without_exceptions_and_shows_the_core_workflow():
     assert not app.exception
     assert app.selectbox[0].value == "Mexico"
     origin_metrics = {metric.label: metric.value for metric in app.metric}
-    assert origin_metrics["No eligible external alternate"] == "13"
+    assert origin_metrics["No eligible external alternate"] == "22"
 
     app.slider[0].set_value(60).run(timeout=30)
     stricter_metrics = {metric.label: metric.value for metric in app.metric}
-    assert stricter_metrics["No eligible external alternate"] == "25"
-    assert stricter_metrics["Eligible alternate lead time fits window"] == "4 / 11"
+    assert stricter_metrics["No eligible external alternate"] == "28"
+    assert stricter_metrics["Eligible alternate lead time fits window"] == "21 / 24"
 
     app.get("button_group")[0].set_value("Node outage").run(timeout=30)
     node_metrics = {metric.label: metric.value for metric in app.metric}
-    assert node_metrics["Impacted supplier screens"] == "6"
+    assert node_metrics["Impacted supplier screens"] == "12"
 
     app.get("button_group")[0].set_value("Assurance").run(timeout=30)
     tab_labels = [tab.label for tab in app.tabs]

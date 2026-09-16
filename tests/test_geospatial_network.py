@@ -22,7 +22,7 @@ def built():
 def test_gis_reference_matches_both_governed_dimensions():
     locations = gis.load_locations()
     gis.validate_against_master(locations)
-    assert len(locations) == 23
+    assert len(locations) == 34
 
 
 def test_every_coordinate_is_valid_wgs84():
@@ -40,9 +40,9 @@ def test_point_layer_is_rfc7946_geojson():
 
 def test_each_supplier_has_one_screening_route():
     _, _, routes, summary = built()
-    assert len(routes["features"]) == 15
-    assert len(summary) == 15
-    assert len({row["supplier_id"] for row in summary}) == 15
+    assert len(routes["features"]) == 24
+    assert len(summary) == 24
+    assert len({row["supplier_id"] for row in summary}) == 24
 
 
 def test_route_endpoint_is_really_the_nearest_warehouse():

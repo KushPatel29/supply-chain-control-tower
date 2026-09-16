@@ -59,7 +59,11 @@ def test_the_four_scored_dimensions_are_quoted_as_published(scorecard, prose):
                          f"in full {s['in_full_rate']:.1%})")
     assert quoted(prose, f"{s['reject_rate']:.2%} of units rejected")
     assert quoted(prose, f"${s['cost_of_poor_quality']:,.0f} of stock condemned")
-    assert quoted(prose, f"${abs(s['ppv_dollars']):,.0f} **under** contract")
+    # Which way the variance runs is a fact about the data, not a constant: when
+    # vendors invoice above contract in aggregate, a README that still says "under"
+    # is wrong in the direction that matters to a buyer.
+    direction = "over" if s["ppv_dollars"] > 0 else "under"
+    assert quoted(prose, f"${abs(s['ppv_dollars']):,.0f} **{direction}** contract")
     assert quoted(prose, f"{s['overbilled_suppliers']} suppliers invoice above theirs, "
                          f"together ${s['overbilled_dollars']:,.0f}")
 

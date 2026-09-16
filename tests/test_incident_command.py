@@ -113,12 +113,12 @@ def test_action_register_routes_every_affected_sku_once(mexico_response):
     actions = incident_action_register(
         mexico_response, "Supplier outage", "Mexico supplier-origin disruption"
     )
-    assert len(actions) == len(mexico_response) == 36
+    assert len(actions) == len(mexico_response) == 52
     assert actions.sku.is_unique
-    assert actions.priority.value_counts().to_dict() == {"P2": 7, "P1": 16, "P0": 13}
-    assert actions.iloc[:13].priority.eq("P0").all()
+    assert actions.priority.value_counts().to_dict() == {"P0": 22, "P1": 6, "P2": 24}
+    assert actions.iloc[:22].priority.eq("P0").all()
     assert actions.status.eq("REQUIRES VALIDATION").all()
-    assert actions.award_weighted_cogs.sum() == pytest.approx(11_821_992.49)
+    assert actions.award_weighted_cogs.sum() == pytest.approx(9_642_277.97, abs=0.1)
     assert actions.closure_evidence.str.len().gt(20).all()
 
 
@@ -140,8 +140,8 @@ def test_decision_journal_preserves_options_authority_and_outcome_boundary(mexic
     assert len(journal) == 1
     record = journal.iloc[0]
     assert record.decision_status == "RECOMMENDATION — NOT APPROVED"
-    assert "13 P0 exceptions" in record.decision_basis
-    assert "$11,821,992.48" in record.decision_basis
+    assert "22 P0 exceptions" in record.decision_basis
+    assert "$9,642,277.97" in record.decision_basis
     assert "Automatic supplier switch" in record.rejected_options
     assert "NOT MEASURED" in record.actual_outcome
     assert "Procurement" in record.required_approvers

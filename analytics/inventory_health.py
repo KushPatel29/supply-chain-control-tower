@@ -80,7 +80,13 @@ def abc_classes(orders: pd.DataFrame) -> pd.Series:
     """Pareto on revenue: A to 80%, B to 95%, C the tail."""
     rev = (orders.qty_shipped * orders.unit_price).groupby(orders.product_id).sum()
     rev = rev.sort_values(ascending=False)
-    return pd.cut(rev.cumsum() / rev.sum(), [0, 0.8, 0.95, 1.0],
+    # Clip the cumulative share: summing 150 floats lands the last SKU at
+    # 1.0000000000000004, outside the final bin, and pd.cut returns NaN for it. The
+    # NaN then flows into the service ladder as a NaN service level and the whole
+    # policy comparison comes back empty - a one-ulp arithmetic artefact that
+    # presents as a missing business answer.
+    share = (rev.cumsum() / rev.sum()).clip(upper=1.0)
+    return pd.cut(share, [0, 0.8, 0.95, 1.0],
                   labels=["A", "B", "C"]).rename("abc_class")
 
 

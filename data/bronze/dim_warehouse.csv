@@ -1,9 +1,11 @@
-warehouse_id,warehouse_name,region,city
-1,Ontario DC 1,Ontario,Wilkersonmouth
-2,Alberta DC 2,Alberta,West Donald
-3,Ontario DC 3,Ontario,Juliechester
-4,BC Interior DC 4,BC Interior,Coxberg
-5,BC Interior DC 5,BC Interior,Daviston
-6,Alberta DC 6,Alberta,East Courtneychester
-7,BC Lower Mainland DC 7,BC Lower Mainland,South Patrickmouth
-8,BC Interior DC 8,BC Interior,Tashatown
+warehouse_id,warehouse_name,region,city,dc_type,handles,serves_region
+1,BC Lower Mainland Cross-Dock 1,BC Lower Mainland,Vancouver,Cross-Dock,Ambient|Chilled|Frozen,BC Lower Mainland
+2,BC Lower Mainland Ambient DC 2,BC Lower Mainland,Surrey,Ambient DC,Ambient,BC Lower Mainland
+3,BC Lower Mainland Cold Chain DC 3,BC Lower Mainland,Burnaby,Cold Chain DC,Chilled|Frozen,BC Lower Mainland
+4,BC Interior Cross-Dock 4,BC Interior,Kelowna,Cross-Dock,Ambient|Chilled|Frozen,BC Interior
+5,Alberta Cross-Dock 5,Alberta,Calgary,Cross-Dock,Ambient|Chilled|Frozen,Alberta
+6,Alberta Ambient DC 6,Alberta,Edmonton,Ambient DC,Ambient,Alberta
+7,Ontario Cross-Dock 7,Ontario,Toronto,Cross-Dock,Ambient|Chilled|Frozen,Ontario
+8,Ontario Ambient DC 8,Ontario,Ottawa,Ambient DC,Ambient,Ontario
+9,Ontario Cold Chain DC 9,Ontario,Hamilton,Cold Chain DC,Chilled|Frozen,Ontario
+10,Quebec Cross-Dock 10,Quebec,Montreal,Cross-Dock,Ambient|Chilled|Frozen,Quebec

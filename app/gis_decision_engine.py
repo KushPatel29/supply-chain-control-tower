@@ -348,8 +348,15 @@ def governance_checks(
             nearest_matches = False
             break
 
+    # The control is "every governed entity has exactly one reference point", not
+    # "there are 23 points". A literal here passes for one network and blocks the
+    # next one, which is how a governance gate stops governing and starts
+    # objecting to the business having grown.
+    expected_points = len(supplier_ids | set()) + len(warehouse_ids | set())
     checks = [
-        ("Reference-point inventory", len(locations) == 23, f"{len(locations)} points; expected 23"),
+        ("Reference-point inventory", len(locations) == expected_points,
+         f"{len(locations)} points for {len(warehouse_ids)} distribution centres "
+         f"and {len(supplier_ids)} vendors"),
         ("WGS 84 coordinate bounds", bool(coordinates_valid), "longitude ±180; latitude ±90"),
         ("Stable business keys", bool(unique_keys), "entity type + entity ID is unique"),
         ("Supplier route coverage", route_supplier_ids == supplier_ids, f"{len(route_supplier_ids)} of {len(supplier_ids)} suppliers"),

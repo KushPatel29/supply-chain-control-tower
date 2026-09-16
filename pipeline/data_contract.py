@@ -3,7 +3,7 @@ Data contract enforcement — the boundary between "their system" and ours.
 
 In a multi-team company the data platform doesn't control the source
 systems: an ERP upgrade can rename a column on a Tuesday and say nothing.
-The contract (contracts/bronze_v1.json) is the version-controlled agreement
+The contract (contracts/bronze_v2.json) is the version-controlled agreement
 about what the sources deliver, checked BEFORE anything is written to
 Bronze, with the two semantics that matter:
 
@@ -23,7 +23,10 @@ from pathlib import Path
 
 import pandas as pd
 
-CONTRACT_FILE = Path(__file__).resolve().parent.parent / "contracts" / "bronze_v1.json"
+# v2 added the merchandising attributes the retail source system now delivers;
+# v1 is kept in contracts/ as the superseded agreement rather than deleted,
+# because a contract history is the point of versioning one.
+CONTRACT_FILE = Path(__file__).resolve().parent.parent / "contracts" / "bronze_v2.json"
 
 # pandas dtype kinds acceptable for each contracted logical type
 _ACCEPTABLE_KINDS = {

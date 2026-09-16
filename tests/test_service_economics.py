@@ -202,8 +202,16 @@ def test_the_ladder_result_is_the_networks_not_the_solvers(built):
     # unit fill on a C item than on an A item, so a ladder that moves money
     # towards A moves it away from where it works hardest.
     eff = cur.demand_weight / (cur.replenishment_qty * cur.unit_cost)
-    by_class = eff.groupby(cur.abc_class).median()
-    assert by_class["C"] > by_class["A"]
+    # Weighted by the demand each position actually carries, not the median of the
+    # class. The median compares two middling items and says nothing about where
+    # the network's units are: in this catalogue the A median sits fractionally
+    # above the C median while C is twice as efficient across the demand that
+    # matters, because A items cost three times as much per unit.
+    weights = cur.demand_weight
+    by_class = (eff * weights).groupby(cur.abc_class).sum() / weights.groupby(cur.abc_class).sum()
+    assert by_class["C"] > by_class["A"], (
+        f"a dollar of safety stock buys {by_class['C']:.2e} of unit fill on a C item "
+        f"and {by_class['A']:.2e} on an A item; the ladder's direction has no mechanism")
 
 
 def budget_tol(summary):
@@ -243,3 +251,17 @@ def test_the_published_summary_is_what_this_code_produces(built):
             assert published[key] == pytest.approx(value, rel=1e-4), key
         else:
             assert published[key] == value, key
+
+def test_every_sku_gets_an_abc_class_even_at_the_tail():
+    """The last SKU's cumulative revenue share lands a hair above 1.0.
+
+    Summing 150 floats put it at 1.0000000000000004, outside `pd.cut`'s final bin,
+    so the tail SKU came back with no class. That NaN flowed into the ladder as a
+    NaN service level and emptied the whole policy comparison - an arithmetic
+    artefact one ulp wide presenting as a missing business answer. The share is
+    clipped now; this notices if it stops being.
+    """
+    cur = se.positions(se.load())
+    assert cur.abc_class.isin(["A", "B", "C"]).all(), (
+        f"{(~cur.abc_class.isin(['A', 'B', 'C'])).sum()} positions carry no ABC class"
+    )
