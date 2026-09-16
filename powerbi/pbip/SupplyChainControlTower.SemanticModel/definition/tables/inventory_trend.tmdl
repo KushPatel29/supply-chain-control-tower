@@ -10,6 +10,8 @@ table inventory_trend
 		summarizeBy: none
 		sourceColumn: week_start
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	column week_label
 		dataType: string
 		lineageTag: e1f2ecc8-c087-54b5-9fde-259ed9cfcd89
@@ -89,3 +91,4 @@ table inventory_trend
 				    Typed = Table.TransformColumnTypes(Promoted, {{"week_start", type date}, {"lane", type text}, {"week_index", Int64.Type}, {"week_label", type text}, {"positions", Int64.Type}, {"gap_value", type number}, {"excess_value", type number}, {"on_hand_value", type number}, {"below_reorder_point", Int64.Type}, {"not_covering_lead", Int64.Type}, {"below_reorder_share", type number}})
 				in
 				    Typed
+

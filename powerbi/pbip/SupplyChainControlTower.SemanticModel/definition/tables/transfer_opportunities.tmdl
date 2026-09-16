@@ -66,3 +66,4 @@ table transfer_opportunities
 				    Typed = Table.TransformColumnTypes(Promoted, {{"product_id", Int64.Type}, {"sku", type text}, {"category", type text}, {"short_units", type number}, {"spare_units", type number}, {"unit_cost", type number}, {"transferable_units", type number}, {"transferable_value", type number}})
 				in
 				    Typed
+

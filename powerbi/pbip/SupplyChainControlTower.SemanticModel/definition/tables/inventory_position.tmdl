@@ -9,6 +9,8 @@ table inventory_position
 		summarizeBy: none
 		sourceColumn: week_start
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	column sku
 		dataType: string
 		lineageTag: a9c1a9f6-27eb-54db-9fd4-a3a707744dc3
@@ -146,3 +148,4 @@ table inventory_position
 				    Typed = Table.TransformColumnTypes(Promoted, {{"week_start", type date}, {"sku", type text}, {"category", type text}, {"warehouse_name", type text}, {"region", type text}, {"abc_class", type text}, {"lane", type text}, {"on_hand_units", Int64.Type}, {"on_order_units", Int64.Type}, {"position_units", Int64.Type}, {"reorder_point", Int64.Type}, {"safety_stock_target", Int64.Type}, {"lead_days", Int64.Type}, {"cover_days", type number}, {"covers_lead_time", Int64.Type}, {"gap_units", Int64.Type}, {"gap_value", type number}, {"excess_units", Int64.Type}, {"excess_value", type number}, {"on_hand_value", type number}})
 				in
 				    Typed
+

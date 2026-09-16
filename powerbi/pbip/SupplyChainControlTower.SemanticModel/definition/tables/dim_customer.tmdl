@@ -26,13 +26,30 @@ table dim_customer
 		summarizeBy: none
 		sourceColumn: region
 
+	column city
+		dataType: string
+		lineageTag: d4447a6d-a74e-4719-ae58-80b6fb0589e3
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column opened_year
+		dataType: int64
+		formatString: 0
+		lineageTag: e8bfeb51-b8fe-4ea1-8dd9-cc60a4d53cc7
+		summarizeBy: none
+		sourceColumn: opened_year
+
+		annotation SummarizationSetBy = Automatic
+
 	partition dim_customer = m
 		mode: import
 		source =
 				let
 				    Source = Csv.Document(File.Contents(DataPath & "\dim_customer.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"customer_id", Int64.Type}, {"customer_name", type text}, {"channel", type text}, {"region", type text}})
+				    Typed = Table.TransformColumnTypes(Promoted, {{"customer_id", Int64.Type}, {"customer_name", type text}, {"channel", type text}, {"region", type text}, {"city", type text}, {"opened_year", Int64.Type}})
 				in
 				    Typed
 

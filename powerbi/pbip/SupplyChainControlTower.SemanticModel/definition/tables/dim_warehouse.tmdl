@@ -26,13 +26,37 @@ table dim_warehouse
 		summarizeBy: none
 		sourceColumn: city
 
+	column dc_type
+		dataType: string
+		lineageTag: f3f6b4df-b0d5-4dc6-a8fa-aed807bed329
+		summarizeBy: none
+		sourceColumn: dc_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column handles
+		dataType: string
+		lineageTag: fec969af-f17f-412c-ab13-7d2b333ae8bf
+		summarizeBy: none
+		sourceColumn: handles
+
+		annotation SummarizationSetBy = Automatic
+
+	column serves_region
+		dataType: string
+		lineageTag: 433ec23a-0377-4340-b315-2571ca7d8e18
+		summarizeBy: none
+		sourceColumn: serves_region
+
+		annotation SummarizationSetBy = Automatic
+
 	partition dim_warehouse = m
 		mode: import
 		source =
 				let
 				    Source = Csv.Document(File.Contents(DataPath & "\dim_warehouse.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"warehouse_id", Int64.Type}, {"warehouse_name", type text}, {"region", type text}, {"city", type text}})
+				    Typed = Table.TransformColumnTypes(Promoted, {{"warehouse_id", Int64.Type}, {"warehouse_name", type text}, {"region", type text}, {"city", type text}, {"dc_type", type text}, {"handles", type text}, {"serves_region", type text}})
 				in
 				    Typed
 

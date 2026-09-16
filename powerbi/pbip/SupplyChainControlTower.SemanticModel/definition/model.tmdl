@@ -7,7 +7,7 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["dim_product", "dim_supplier", "dim_warehouse", "dim_customer", "dim_lot", "dim_date", "fact_orders", "fact_inventory", "_Measures", "security_mapping", "award_shift_candidates", "country_exposure", "fact_sourcing", "inventory_position", "inventory_trend", "perfect_order", "perfect_order_failures", "reject_reasons", "service_exchange_curve", "service_headline", "service_policy_by_class", "service_policy_options", "supplier_headline", "supplier_scorecard", "transfer_opportunities", "DataPath"]
+annotation PBI_QueryOrder = ["dim_product","dim_supplier","dim_warehouse","dim_customer","dim_lot","dim_date","fact_orders","fact_inventory","_Measures","security_mapping","award_shift_candidates","country_exposure","fact_sourcing","inventory_position","inventory_trend","perfect_order","perfect_order_failures","reject_reasons","service_exchange_curve","service_headline","service_policy_by_class","service_policy_options","supplier_headline","supplier_scorecard","transfer_opportunities","DataPath","AnalyticsPath"]
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
@@ -24,39 +24,26 @@ ref table fact_inventory
 ref table _Measures
 ref table security_mapping
 ref table 'Time Intelligence'
+ref table fact_sourcing
+ref table country_exposure
+ref table perfect_order
+ref table perfect_order_failures
+ref table inventory_position
+ref table transfer_opportunities
+ref table inventory_trend
+ref table supplier_scorecard
+ref table award_shift_candidates
+ref table reject_reasons
+ref table service_exchange_curve
+ref table service_policy_options
+ref table service_policy_by_class
+ref table supplier_headline
+ref table service_headline
+ref table 'Expiry Window'
 
 ref role 'Sales - BC Lower Mainland'
 ref role 'Regional Manager'
 ref role 'Field Ops'
 
-ref table fact_sourcing
-
-ref table country_exposure
-
-ref table perfect_order
-
-ref table perfect_order_failures
-
-ref table inventory_position
-
-ref table transfer_opportunities
-
-ref table inventory_trend
-
-ref table supplier_scorecard
-
-ref table award_shift_candidates
-
-ref table reject_reasons
-
-ref table service_exchange_curve
-
-ref table service_policy_options
-
-ref table service_policy_by_class
-
-ref table supplier_headline
-
-ref table service_headline
-ref table 'Expiry Window'
+ref cultureInfo en-US
 

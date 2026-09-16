@@ -93,3 +93,4 @@ table award_shift_candidates
 				    Typed = Table.TransformColumnTypes(Promoted, {{"product_id", Int64.Type}, {"sku", type text}, {"category", type text}, {"incumbent", type text}, {"incumbent_score", type number}, {"alternate", type text}, {"alternate_score", type number}, {"score_gap", type number}, {"spend_at_risk", type number}, {"price_known", Int64.Type}, {"unit_price_delta", type number}, {"price_impact", type number}})
 				in
 				    Typed
+

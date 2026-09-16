@@ -80,8 +80,28 @@ table dim_date
 		mode: import
 		source =
 				let
-				    StartDate = #date(2025, 1, 1),
-				    EndDate = #date(2025, 6, 30),
+				    // The calendar is derived from the facts, never typed in. A hard-coded
+				    // window survives exactly until the data moves: this table was pinned to
+				    // Jan-Jun 2025, the seed was rebuilt across two years, and every order
+				    // landed outside the calendar in a (Blank) bucket that still totalled
+				    // correctly - a chart that was wrong in the only way a total cannot show.
+				    Load = (name as text) as table =>
+				        Table.PromoteHeaders(
+				            Csv.Document(File.Contents(DataPath & "\" & name),
+				                [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				            [PromoteAllScalars = true]),
+				    DatesIn = (name as text, columns as list) as list =>
+				        let
+				            Source = Load(name),
+				            Values = List.Combine(List.Transform(columns, each Table.Column(Source, _)))
+				        in
+				            List.RemoveNulls(List.Transform(Values, each try Date.From(_) otherwise null)),
+				    Observed = List.Combine({
+				        DatesIn("fact_orders.csv", {"order_date", "promised_date", "shipped_date"}),
+				        DatesIn("fact_purchase_orders.csv", {"order_date", "received_date"}),
+				        DatesIn("fact_inventory_snapshot.csv", {"snapshot_date"})}),
+				    StartDate = Date.StartOfMonth(List.Min(Observed)),
+				    EndDate = Date.EndOfMonth(List.Max(Observed)),
 				    Dates = List.Dates(StartDate, Duration.Days(EndDate - StartDate) + 1, #duration(1, 0, 0, 0)),
 				    AsTable = Table.FromList(Dates, Splitter.SplitByNothing(), {"full_date"}),
 				    Typed = Table.TransformColumnTypes(AsTable, {{"full_date", type date}}),

@@ -45,3 +45,4 @@ table service_policy_options
 				    Typed = Table.TransformColumnTypes(Promoted, {{"policy", type text}, {"safety_stock_value", type number}, {"fill_units", type number}, {"fill_revenue", type number}, {"mean_service_level", type number}})
 				in
 				    Typed
+

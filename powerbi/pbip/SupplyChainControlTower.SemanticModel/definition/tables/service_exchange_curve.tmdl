@@ -53,3 +53,4 @@ table service_exchange_curve
 				    Typed = Table.TransformColumnTypes(Promoted, {{"service_level", type number}, {"z", type number}, {"safety_stock_value", type number}, {"vs_current_value", type number}, {"fill_units", type number}, {"fill_revenue", type number}})
 				in
 				    Typed
+

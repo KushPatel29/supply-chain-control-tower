@@ -2,19 +2,19 @@
 table country_exposure
 	lineageTag: 9c26154f-5c5a-59f3-89af-a74998b54656
 
-	column 'Origin'
+	column Origin
 		dataType: string
 		lineageTag: 2c0b2bba-e804-5ce4-b28b-d2ae92f32c38
 		summarizeBy: none
 		sourceColumn: country
 
-	column 'Bloc'
+	column Bloc
 		dataType: string
 		lineageTag: a4e5ab36-1b98-548d-8ffd-d83719827960
 		summarizeBy: none
 		sourceColumn: bloc
 
-	column 'Suppliers'
+	column Suppliers
 		dataType: int64
 		formatString: 0
 		lineageTag: e642d662-9f6e-512d-b0e9-83bf02e4ef66
@@ -72,3 +72,4 @@ table country_exposure
 				    Typed = Table.TransformColumnTypes(Promoted, {{"country", type text}, {"bloc", type text}, {"suppliers", Int64.Type}, {"skus_supplied", Int64.Type}, {"exposed_cogs", type number}, {"exposed_share", type number}, {"stranded_skus", Int64.Type}, {"stranded_cogs", type number}, {"mean_switch_lead_days", type number}})
 				in
 				    Typed
+

@@ -52,3 +52,4 @@ table reject_reasons
 				    Typed = Table.TransformColumnTypes(Promoted, {{"reject_reason", type text}, {"lines", Int64.Type}, {"units", Int64.Type}, {"value", type number}, {"share_of_value", type number}, {"cumulative_share", type number}})
 				in
 				    Typed
+

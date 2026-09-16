@@ -112,6 +112,30 @@ table fact_orders
 		summarizeBy: sum
 		sourceColumn: gross_margin
 
+	column department
+		dataType: string
+		lineageTag: 0335e389-673b-4bc2-af25-e4e790613e18
+		summarizeBy: none
+		sourceColumn: department
+
+		annotation SummarizationSetBy = Automatic
+
+	column carrier_lane
+		dataType: string
+		lineageTag: 98825a59-aa03-4d15-b7b4-22b857b74940
+		summarizeBy: none
+		sourceColumn: carrier_lane
+
+		annotation SummarizationSetBy = Automatic
+
+	column fulfilled_from
+		dataType: string
+		lineageTag: 06f10079-0433-4c60-bb97-33692fd3436e
+		summarizeBy: none
+		sourceColumn: fulfilled_from
+
+		annotation SummarizationSetBy = Automatic
+
 	partition fact_orders = m
 		mode: import
 		source =
@@ -126,7 +150,7 @@ table fact_orders
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    // Silver rule: drop the source's price copies and re-resolve from governed dim_product
 				    RemovedSourcePrices = Table.RemoveColumns(Promoted, {"unit_price", "unit_cost"}),
-				    Typed = Table.TransformColumnTypes(RemovedSourcePrices, {{"order_id", Int64.Type}, {"order_date", type date}, {"customer_id", Int64.Type}, {"product_id", Int64.Type}, {"lot_id", Int64.Type}, {"warehouse_id", Int64.Type}, {"qty_ordered", type number}, {"qty_shipped", type number}, {"promised_date", type date}, {"shipped_date", type date}}),
+				    Typed = Table.TransformColumnTypes(RemovedSourcePrices, {{"order_id", Int64.Type}, {"order_date", type date}, {"customer_id", Int64.Type}, {"product_id", Int64.Type}, {"lot_id", Int64.Type}, {"warehouse_id", Int64.Type}, {"qty_ordered", type number}, {"qty_shipped", type number}, {"promised_date", type date}, {"shipped_date", type date}, {"department", type text}, {"carrier_lane", type text}, {"fulfilled_from", type text}}),
 				    MergedProduct = Table.NestedJoin(Typed, {"product_id"}, ProductEcon, {"product_id"}, "product", JoinKind.Inner),
 				    ExpandedProduct = Table.ExpandTableColumn(MergedProduct, "product", {"unit_cost", "unit_price"}, {"unit_cost", "unit_price"}),
 				    AddedFillRate = Table.AddColumn(ExpandedProduct, "fill_rate", each Number.Round([qty_shipped] / [qty_ordered], 4), type number),

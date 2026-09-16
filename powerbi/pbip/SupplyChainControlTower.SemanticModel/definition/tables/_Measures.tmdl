@@ -209,8 +209,8 @@ table _Measures
 			VAR vWarning = COALESCE([Warning Expiry Value], 0)
 			RETURN
 			    "Critical " & FORMAT(vCritical / 1000, "\$#,0") & "K · Warning " & FORMAT(vWarning / 1000, "\$#,0") & "K · all channels"
-		lineageTag: 7d3b1c96-84af-5e20-b1c7-45f9e0a83d62
 		displayFolder: Verdict
+		lineageTag: 7d3b1c96-84af-5e20-b1c7-45f9e0a83d62
 
 	measure 'Inventory Risk Reference' = "Critical " & FORMAT(COALESCE([Critical Expiry Value], 0), "\$#,0") & "   Warning " & FORMAT(COALESCE([Warning Expiry Value], 0), "\$#,0")
 		displayFolder: Verdict
@@ -257,31 +257,43 @@ table _Measures
 		lineageTag: d253aa66-aa98-5831-a362-84d9d20e473d
 
 	/// Deterministic narrative. Smart Narrative would write this too, but a measure can be unit tested and cannot drift.
+	/// The ranking has to skip the relationship's blank member. dim_warehouse carries an unknown-member row that holds no orders, and BLANK sorts first in an ASC TOPN, so the earlier version named that row as the weakest lane and the sentence rendered as " is the weakest lane at ,". Regions are ranked on a materialised OTIF column with blanks dropped, ties broken by name so the answer is stable, and the clause is dropped altogether if a filter leaves no region standing.
 	measure 'Control Tower Insight' =
 			VAR vOtif = [OTIF %]
 			VAR vGap = vOtif - [OTIF Target]
-			VAR vWorstRegion =
-			    MAXX(TOPN(1, VALUES(dim_warehouse[region]), [OTIF %], ASC), dim_warehouse[region])
-			VAR vWorstOtif = CALCULATE([OTIF %], dim_warehouse[region] = vWorstRegion)
+			VAR vRegions =
+			    FILTER(
+			        ADDCOLUMNS(VALUES(dim_warehouse[region]), "@otif", [OTIF %]),
+			        NOT ISBLANK([@otif])
+			    )
+			VAR vWorst = TOPN(1, vRegions, [@otif], ASC, dim_warehouse[region], ASC)
+			VAR vWorstRegion = MAXX(vWorst, dim_warehouse[region])
+			VAR vWorstOtif = MINX(vWorst, [@otif])
+			VAR vLane =
+			    IF(
+			        ISBLANK(vWorstRegion),
+			        "",
+			        vWorstRegion & " is the weakest lane at " & FORMAT(vWorstOtif, "0.0%") & ", and "
+			    )
 			RETURN
 			    "OTIF " & FORMAT(vOtif, "0.0%") & " against a " & FORMAT([OTIF Target], "0.0%")
 			        & " target — " & IF(vGap >= 0, "on target", FORMAT(ABS(vGap) * 100, "0.0") & " pts short")
-			        & ". " & vWorstRegion & " is the weakest lane at " & FORMAT(vWorstOtif, "0.0%")
-			        & ", and " & FORMAT([% Inventory at Risk], "0.0%") & " of inventory value sits in the expiry window."
+			        & ". " & vLane
+			        & FORMAT([% Inventory at Risk], "0.0%") & " of inventory value sits in the expiry window."
 		displayFolder: Verdict
 		lineageTag: 0166a3cc-0c83-5c3b-9c28-73412f73c5f8
 
 	/// Rows on the approved vendor list: one per SKU-supplier award.
 	measure 'Approved Sources' = COUNTROWS(fact_sourcing)
 		formatString: #,0
-		lineageTag: 87882699-728c-5fde-acd3-d957b3a11e30
 		displayFolder: Sourcing
+		lineageTag: 87882699-728c-5fde-acd3-d957b3a11e30
 
 	/// SKUs with at least one approved source.
 	measure 'Sourced SKUs' = DISTINCTCOUNT(fact_sourcing[product_id])
 		formatString: #,0
-		lineageTag: 382d92e0-759c-50f2-b092-a76d93af5264
 		displayFolder: Sourcing
+		lineageTag: 382d92e0-759c-50f2-b092-a76d93af5264
 
 	/// SKUs with exactly one approved supplier. The number a supply chain director is asked for first, because it is the one with no plan B.
 	measure 'Single-Source SKUs' =
@@ -292,8 +304,8 @@ table _Measures
 			    )
 			)
 		formatString: #,0
-		lineageTag: 008f6d29-c15d-51ce-a7ab-c5912fabf92a
 		displayFolder: Sourcing
+		lineageTag: 008f6d29-c15d-51ce-a7ab-c5912fabf92a
 
 	/// Herfindahl index over award shares, averaged across SKUs. 10,000 is a single source; under 1,500 is a genuinely spread base.
 	measure 'Award HHI' =
@@ -302,32 +314,32 @@ table _Measures
 			    CALCULATE(SUMX(fact_sourcing, fact_sourcing[allocation_share] ^ 2)) * 10000
 			)
 		formatString: #,0
-		lineageTag: da694c1b-0bfb-59cc-abc1-556c53b5fea4
 		displayFolder: Sourcing
+		lineageTag: da694c1b-0bfb-59cc-abc1-556c53b5fea4
 
 	/// COGS awarded to the origins in scope.
 	measure 'Exposed COGS' = SUM(country_exposure[Exposed COGS])
 		formatString: \$#,0
-		lineageTag: fad1031c-f036-5ec5-9549-af0bf1e0e0a5
 		displayFolder: Sourcing
+		lineageTag: fad1031c-f036-5ec5-9549-af0bf1e0e0a5
 
 	/// SKUs left with no QUALIFIED alternate if the selected origin closes. An unqualified alternate needs a requalification programme first, so it does not count as cover.
 	measure 'Stranded SKUs' = SUM(country_exposure[Stranded SKUs])
 		formatString: #,0
-		lineageTag: 6946f535-5e6b-5bae-8157-e302ad4e11e3
 		displayFolder: Sourcing
+		lineageTag: 6946f535-5e6b-5bae-8157-e302ad4e11e3
 
 	/// Share of COGS sitting with the single biggest origin.
 	measure 'Largest Origin Share' = MAX(country_exposure[Share of COGS])
 		formatString: 0.0%
-		lineageTag: 16462c1c-2cfa-57db-bdcc-8c9f6bfdfe6a
 		displayFolder: Sourcing
+		lineageTag: 16462c1c-2cfa-57db-bdcc-8c9f6bfdfe6a
 
 	/// Concentration across origins. Above 2,500 is concentrated by the competition-authority convention this borrows.
 	measure 'Country HHI' = SUMX(ALL(country_exposure), country_exposure[Share of COGS] ^ 2) * 10000
 		formatString: #,0
-		lineageTag: 0dd234b4-7a1e-55b6-a397-21f3dfdaa3ea
 		displayFolder: Sourcing
+		lineageTag: 0dd234b4-7a1e-55b6-a397-21f3dfdaa3ea
 
 	/// Award-weighted contract lead time. Weighted, because a 40-day source holding 4% of a SKU is not a 40-day supply chain.
 	measure 'Contract Lead Days' =
@@ -336,14 +348,14 @@ table _Measures
 			    SUMX(fact_sourcing, fact_sourcing[allocation_share])
 			)
 		formatString: #,0.0
-		lineageTag: 1de0182b-4210-57d5-bcf8-ec7eaa5f4d5e
 		displayFolder: Sourcing
+		lineageTag: 1de0182b-4210-57d5-bcf8-ec7eaa5f4d5e
 
 	/// How long the surviving qualified alternates take to deliver, i.e. how long the gap lasts.
 	measure 'Switch Lead Days' = AVERAGE(country_exposure[Switch lead (days)])
 		formatString: #,0.0
-		lineageTag: 18d21e8f-10d1-5893-a329-8406828c2f07
 		displayFolder: Sourcing
+		lineageTag: 18d21e8f-10d1-5893-a329-8406828c2f07
 
 	/// Reddens the origin carrying the most COGS.
 	measure 'Country Exposure Colour' =
@@ -355,24 +367,23 @@ table _Measures
 			    )
 			RETURN
 			    IF(vHere = vExtreme, "#FF5C7A", "#454A82")
-		lineageTag: f3381362-7543-5be3-a079-2ac342049a73
 		displayFolder: Sourcing
-
+		lineageTag: f3381362-7543-5be3-a079-2ac342049a73
 
 	/// Card subtitle: a count of single-source SKUs needs its base.
 	measure 'Single-Source Reference' = "of " & FORMAT([Sourced SKUs], "#,0") & " SKUs   " & FORMAT([Approved Sources], "#,0") & " approved awards"
-		lineageTag: bc982568-8bf4-5aa0-86e0-5fb8156a1658
 		displayFolder: Sourcing
+		lineageTag: bc982568-8bf4-5aa0-86e0-5fb8156a1658
 
 	/// Card subtitle for country concentration.
 	measure 'Concentration Reference' = "Award HHI " & FORMAT([Award HHI], "#,0") & "   over " & FORMAT(DISTINCTCOUNT(country_exposure[Origin]), "0") & " origins"
-		lineageTag: b14aa173-ca23-5577-b137-8d15d7c4869c
 		displayFolder: Sourcing
+		lineageTag: b14aa173-ca23-5577-b137-8d15d7c4869c
 
 	/// Card subtitle for contract lead time.
 	measure 'Lead Time Reference' = "Switching adds " & FORMAT([Switch Lead Days], "#,0.0") & " days"
-		lineageTag: 3dae8d21-d59e-5ad6-9eaa-23c093d963c2
 		displayFolder: Sourcing
+		lineageTag: 3dae8d21-d59e-5ad6-9eaa-23c093d963c2
 
 	/// The sourcing headline as a deterministic sentence, so the page states its own conclusion rather than leaving it to be inferred.
 	measure 'Sourcing Insight' =
@@ -389,32 +400,32 @@ table _Measures
 			        & " of COGS: if that lane closed, " & FORMAT(vWorstStranded, "#,0")
 			        & " SKUs would have no qualified alternate and the rest would wait "
 			        & FORMAT(vWorstSwitch, "#,0.0") & " days for the next source."
-		lineageTag: 2b4f44ba-5db6-5882-9cc7-155977480966
 		displayFolder: Sourcing
+		lineageTag: 2b4f44ba-5db6-5882-9cc7-155977480966
 
 	/// The published OTIF, read from the same file the tests read.
 	measure 'Perfect Order Rate' = CALCULATE(MAX(perfect_order[Rate]), perfect_order[Measure] = "OTIF")
 		formatString: 0.0%
-		lineageTag: 12c923dc-77e7-532a-bf01-622480687e5a
 		displayFolder: Service
+		lineageTag: 12c923dc-77e7-532a-bf01-622480687e5a
 
 	/// The delivery half of OTIF.
 	measure 'On Time Rate' = CALCULATE(MAX(perfect_order[Rate]), perfect_order[Measure] = "On time")
 		formatString: 0.0%
-		lineageTag: 222e6c7a-343b-587d-a119-a7eebebe3604
 		displayFolder: Service
+		lineageTag: 222e6c7a-343b-587d-a119-a7eebebe3604
 
 	/// The quantity half of OTIF, at the 95% fill tolerance.
 	measure 'In Full Rate' = CALCULATE(MAX(perfect_order[Rate]), perfect_order[Measure] = "In full")
 		formatString: 0.0%
-		lineageTag: 9231e016-5429-5c72-a09c-9f9ab8556006
 		displayFolder: Service
+		lineageTag: 9231e016-5429-5c72-a09c-9f9ab8556006
 
 	/// Orders in the selected failure class.
 	measure 'Failure Orders' = SUM(perfect_order_failures[Orders])
 		formatString: #,0
-		lineageTag: 1280b77c-d4e8-5c6c-9a6d-48e48d984244
 		displayFolder: Service
+		lineageTag: 1280b77c-d4e8-5c6c-9a6d-48e48d984244
 
 	/// Reddens whichever failure mode is actually the biggest.
 	measure 'Failure Colour' =
@@ -426,92 +437,92 @@ table _Measures
 			    )
 			RETURN
 			    IF(vHere = vExtreme, "#FF5C7A", "#454A82")
-		lineageTag: 92be4fa6-7e81-5b14-9f12-551112b39b33
 		displayFolder: Service
+		lineageTag: 92be4fa6-7e81-5b14-9f12-551112b39b33
 
 	/// Value of stock physically in the network this week.
 	measure 'Stock On Hand' = SUM(inventory_position[on_hand_value])
 		formatString: \$#,0
-		lineageTag: 3195537e-f305-5a45-a446-d7017bab8421
 		displayFolder: Inventory
+		lineageTag: 3195537e-f305-5a45-a446-d7017bab8421
 
 	/// Cost of closing every position back to its reorder point. Shortfalls are summed, never netted against surpluses elsewhere - a surplus of SKU A in Calgary does not fill a hole in SKU B in Halifax.
 	measure 'Replenishment Gap' = SUM(inventory_position[gap_value])
 		formatString: \$#,0
-		lineageTag: efe586e3-b2a4-5ef5-8a4e-dc9e00233d37
 		displayFolder: Inventory
+		lineageTag: efe586e3-b2a4-5ef5-8a4e-dc9e00233d37
 
 	/// SKU x warehouse combinations in scope.
-	measure 'Positions' = COUNTROWS(inventory_position)
+	measure Positions = COUNTROWS(inventory_position)
 		formatString: #,0
-		lineageTag: 960987de-073b-535f-a414-3b5ac4e05659
 		displayFolder: Inventory
+		lineageTag: 960987de-073b-535f-a414-3b5ac4e05659
 
 	/// Positions whose on hand plus on order is under the reorder point.
 	measure 'Below Reorder Point' = CALCULATE([Positions], inventory_position[gap_units] > 0)
 		formatString: #,0
-		lineageTag: b1636bfb-8107-5e8d-bffd-86dc93dad1c1
 		displayFolder: Inventory
+		lineageTag: b1636bfb-8107-5e8d-bffd-86dc93dad1c1
 
 	/// Share of positions under policy.
 	measure 'Below Reorder Share' = DIVIDE([Below Reorder Point], [Positions])
 		formatString: 0.0%
-		lineageTag: 09642085-ee58-5790-81c3-e3498bd96288
 		displayFolder: Inventory
+		lineageTag: 09642085-ee58-5790-81c3-e3498bd96288
 
 	/// Days of demand the stock on hand covers.
 	measure 'Cover Days' = AVERAGE(inventory_position[cover_days])
 		formatString: #,0.0
-		lineageTag: 536e0991-145b-511d-bb0e-8ca1f01fc57c
 		displayFolder: Inventory
+		lineageTag: 536e0991-145b-511d-bb0e-8ca1f01fc57c
 
 	/// Replenishment lead time of the governing source.
 	measure 'Lead Days' = AVERAGE(inventory_position[lead_days])
 		formatString: #,0.0
-		lineageTag: 0169c8fb-11c2-57b7-82f4-79b208be72cf
 		displayFolder: Inventory
+		lineageTag: 0169c8fb-11c2-57b7-82f4-79b208be72cf
 
 	/// Positions whose cover is shorter than their OWN lead time. 20 days of cover is comfortable on a 6-day lane and a stockout on a 40-day one, so the comparison has to be per position rather than to an average.
 	measure 'Stockout Window' = CALCULATE([Positions], inventory_position[covers_lead_time] = 0)
 		formatString: #,0
-		lineageTag: 4d30abeb-6b53-5ad9-868c-709624ff847e
 		displayFolder: Inventory
+		lineageTag: 4d30abeb-6b53-5ad9-868c-709624ff847e
 
 	/// Working capital sitting above 1.5x the reorder point. Reported alongside the shortfall rather than netted against it - they are different SKUs in different places.
 	measure 'Excess Value' = SUM(inventory_position[excess_value])
 		formatString: \$#,0
-		lineageTag: 0513fc6f-ab98-5da6-b066-2a1862267273
 		displayFolder: Inventory
+		lineageTag: 0513fc6f-ab98-5da6-b066-2a1862267273
 
 	/// Part of the shortfall a stock transfer covers, needing no purchase order: short in one warehouse, long in another, same SKU.
 	measure 'Transfer Value' = SUM(transfer_opportunities[transferable_value])
 		formatString: \$#,0
-		lineageTag: 35a9f03c-a098-5690-8390-bb36028a8ca4
 		displayFolder: Inventory
+		lineageTag: 35a9f03c-a098-5690-8390-bb36028a8ca4
 
 	/// SKUs that are short somewhere and long somewhere else.
 	measure 'Transfer SKUs' = COUNTROWS(transfer_opportunities)
 		formatString: #,0
-		lineageTag: 125460c1-3795-527e-a5dc-cadf9197721c
 		displayFolder: Inventory
+		lineageTag: 125460c1-3795-527e-a5dc-cadf9197721c
 
 	/// How much of the whole gap is a move rather than a purchase.
 	measure 'Transfer Share' = DIVIDE([Transfer Value], CALCULATE([Replenishment Gap], ALL(inventory_position)))
 		formatString: 0.0%
-		lineageTag: 642cb466-7e98-5f52-bd65-7cfd95efacd0
 		displayFolder: Inventory
+		lineageTag: 642cb466-7e98-5f52-bd65-7cfd95efacd0
 
 	/// The replenishment gap week by week.
 	measure 'Gap Trend' = SUM(inventory_trend[gap_value])
 		formatString: \$#,0
-		lineageTag: 5dd13aed-d9fa-511f-a20b-67c755764747
 		displayFolder: Inventory
+		lineageTag: 5dd13aed-d9fa-511f-a20b-67c755764747
 
 	/// Stock on hand week by week.
 	measure 'Stock Trend' = SUM(inventory_trend[on_hand_value])
 		formatString: \$#,0
-		lineageTag: 634ca9ef-b4b8-5c16-a434-fd54ba783182
 		displayFolder: Inventory
+		lineageTag: 634ca9ef-b4b8-5c16-a434-fd54ba783182
 
 	/// Change in the replenishment gap across the weeks in view. First and last week are read from the selection, so a filtered page reports the drift over what is on screen rather than a hard-coded quarter.
 	measure 'Gap Drift' =
@@ -523,8 +534,8 @@ table _Measures
 			RETURN
 			    DIVIDE(vClosed - vOpened, vOpened)
 		formatString: +0.0%;-0.0%;0.0%
-		lineageTag: f9997ca4-ef38-5a3e-b79e-68b7c9940dbc
 		displayFolder: Inventory
+		lineageTag: f9997ca4-ef38-5a3e-b79e-68b7c9940dbc
 
 	/// Change in stock on hand over the same weeks. The pair is the finding: a gap that grows while the total barely moves is a network rotating stock into the wrong lanes, not one running out of it.
 	measure 'Stock Drift' =
@@ -536,8 +547,8 @@ table _Measures
 			RETURN
 			    DIVIDE(vClosed - vOpened, vOpened)
 		formatString: +0.0%;-0.0%;0.0%
-		lineageTag: 5dc49feb-7cb6-544f-bcea-fa22e19418cd
 		displayFolder: Inventory
+		lineageTag: 5dc49feb-7cb6-544f-bcea-fa22e19418cd
 
 	/// Reddens the warehouse carrying the largest shortfall.
 	measure 'Gap Colour' =
@@ -549,8 +560,8 @@ table _Measures
 			    )
 			RETURN
 			    IF(vHere = vExtreme, "#FF5C7A", "#454A82")
-		lineageTag: 99234783-737c-5363-818d-c20036b09321
 		displayFolder: Inventory
+		lineageTag: 99234783-737c-5363-818d-c20036b09321
 
 	/// Greens the biggest transfer. Unlike the other highlights on this report the largest bar here is the good news, because it is the part of the shortfall that costs nothing to fix.
 	measure 'Transfer Colour' =
@@ -562,8 +573,8 @@ table _Measures
 			    )
 			RETURN
 			    IF(vHere = vExtreme, "#3DD68C", "#454A82")
-		lineageTag: 781e7929-2d61-5c1f-839c-f3f22fe21645
 		displayFolder: Inventory
+		lineageTag: 781e7929-2d61-5c1f-839c-f3f22fe21645
 
 	/// Verdict on positions that cannot outlast their own lead time.
 	measure 'Stockout Status' =
@@ -575,8 +586,8 @@ table _Measures
 			        vShare <= 0.25, "Watch",
 			        "Off target"
 			    )
-		lineageTag: 57b7f19e-961b-5627-81e1-c0e18cb942e6
 		displayFolder: Inventory
+		lineageTag: 57b7f19e-961b-5627-81e1-c0e18cb942e6
 
 	/// Colour for the stockout-window verdict.
 	measure 'Stockout Colour' =
@@ -586,28 +597,28 @@ table _Measures
 			    "Watch", "#F5A524",
 			    "#FF5C7A"
 			)
-		lineageTag: bca799a6-aed6-592e-be5f-414aa497a628
 		displayFolder: Inventory
+		lineageTag: bca799a6-aed6-592e-be5f-414aa497a628
 
 	/// Card subtitle: a shortfall in dollars needs its count.
 	measure 'Gap Reference' = FORMAT([Below Reorder Point], "#,0") & " of " & FORMAT([Positions], "#,0") & " positions under policy"
-		lineageTag: f9a930ff-d5e2-5429-91c1-07db1f4251d9
 		displayFolder: Inventory
+		lineageTag: f9a930ff-d5e2-5429-91c1-07db1f4251d9
 
 	/// Card subtitle pairing the gap drift with the stock drift.
 	measure 'Drift Reference' = "stock on hand " & FORMAT([Stock Drift], "+0.0%;-0.0%;0.0%") & " over the same weeks"
-		lineageTag: ba70f1a8-bbd6-561c-a7fc-6e17ccafc614
 		displayFolder: Inventory
+		lineageTag: ba70f1a8-bbd6-561c-a7fc-6e17ccafc614
 
 	/// Card subtitle for the stockout-window card.
 	measure 'Stockout Reference' = FORMAT(DIVIDE([Stockout Window], [Positions]), "0.0%") & " of positions   " & [Stockout Status]
-		lineageTag: 6ee56625-4094-5beb-89c9-5aa8055f583a
 		displayFolder: Inventory
+		lineageTag: 6ee56625-4094-5beb-89c9-5aa8055f583a
 
 	/// Card subtitle for the transfer card.
 	measure 'Transfer Reference' = FORMAT([Transfer SKUs], "#,0") & " SKUs   " & FORMAT([Transfer Share], "0.0%") & " of the gap"
-		lineageTag: 66fba18b-e9f5-5665-b381-005db45cb750
 		displayFolder: Inventory
+		lineageTag: 66fba18b-e9f5-5665-b381-005db45cb750
 
 	/// The inventory headline as a deterministic sentence, so the page states its own conclusion rather than leaving it to be inferred.
 	measure 'Inventory Insight' =
@@ -636,74 +647,74 @@ table _Measures
 			        & ". The network is not running out of stock, it is holding it in the "
 			        & "lanes that need it least. " & FORMAT(vMove, "$#,0")
 			        & " of the gap is a transfer, not a purchase order."
-		lineageTag: 88ce45a9-cddb-5f0a-aa39-7f5f81fcbb81
 		displayFolder: Inventory
+		lineageTag: 88ce45a9-cddb-5f0a-aa39-7f5f81fcbb81
 
 	/// Purchase order lines in the measurement window.
 	measure 'PO Lines' = SUM(supplier_headline[po_lines])
 		formatString: #,0
-		lineageTag: fc78d33d-e12e-5243-85e7-55c49a0da005
 		displayFolder: Procurement
+		lineageTag: fc78d33d-e12e-5243-85e7-55c49a0da005
 
 	/// Total inbound spend the scorecard is weighted by.
 	measure 'Panel Spend' = SUM(supplier_headline[total_spend])
 		formatString: \$#,0
-		lineageTag: 48caa603-0811-50c9-95c0-60e2ae61e9a7
 		displayFolder: Procurement
+		lineageTag: 48caa603-0811-50c9-95c0-60e2ae61e9a7
 
 	/// On time, in full and fit for use across every line - one row, so it cannot be double-counted by a roll-up.
 	measure 'Panel OTIF' = SUM(supplier_headline[otif_rate])
 		formatString: 0.0%
-		lineageTag: 7db9dac8-c3bd-5308-bd21-3239c02d307e
 		displayFolder: Procurement
+		lineageTag: 7db9dac8-c3bd-5308-bd21-3239c02d307e
 
 	measure 'Panel Reject Rate' = SUM(supplier_headline[reject_rate])
 		formatString: 0.00%
-		lineageTag: 93c98a31-b409-506e-863a-c3e4c6b8b039
 		displayFolder: Procurement
+		lineageTag: 93c98a31-b409-506e-863a-c3e4c6b8b039
 
 	/// Money spent on stock condemned at the receiving gate.
 	measure 'Panel COPQ' = SUM(supplier_headline[cost_of_poor_quality])
 		formatString: \$#,0
-		lineageTag: 1ecd6348-0588-5c3f-80d3-baf0688ee944
 		displayFolder: Procurement
+		lineageTag: 1ecd6348-0588-5c3f-80d3-baf0688ee944
 
 	measure 'Panel PPV' = SUM(supplier_headline[ppv_dollars])
 		formatString: \$#,0
-		lineageTag: 40d3ed36-8870-582f-ae86-e16f6a0a508b
 		displayFolder: Procurement
+		lineageTag: 40d3ed36-8870-582f-ae86-e16f6a0a508b
 
 	/// The half of the price variance that runs against the buyer, kept separate from the half that runs for it - a net figure near zero hides both.
 	measure 'Overbilled Dollars' = SUM(supplier_headline[overbilled_dollars])
 		formatString: \$#,0
-		lineageTag: 63b7fe79-1736-5e61-8af0-a487bf9c5e18
 		displayFolder: Procurement
+		lineageTag: 63b7fe79-1736-5e61-8af0-a487bf9c5e18
 
 	measure 'Panel Mismatches' = SUM(supplier_headline[tier_mismatches])
 		formatString: #,0
-		lineageTag: b73be7ff-d11c-51ae-a0b2-29f4add8b15d
 		displayFolder: Procurement
+		lineageTag: b73be7ff-d11c-51ae-a0b2-29f4add8b15d
 
 	measure 'Panel Shift Spend' = SUM(supplier_headline[award_shift_spend])
 		formatString: \$#,0
-		lineageTag: 76d49c6d-7b49-503a-afe5-f77f68900038
 		displayFolder: Procurement
+		lineageTag: 76d49c6d-7b49-503a-afe5-f77f68900038
 
 	measure 'COPQ Reference' = FORMAT(SUM(supplier_headline[reject_rate]), "0.00%") & " of units rejected at receipt"
-		lineageTag: ea19123b-0e99-5289-a729-72795b83c49b
 		displayFolder: Procurement
+		lineageTag: ea19123b-0e99-5289-a729-72795b83c49b
 
 	measure 'PPV Reference' = FORMAT(SUM(supplier_headline[overbilled_suppliers]), "0") & " suppliers invoice above contract, together " & FORMAT(SUM(supplier_headline[overbilled_dollars]), "$#,0")
-		lineageTag: b6171efd-b303-522b-a03d-3c5e83797fdc
 		displayFolder: Procurement
+		lineageTag: b6171efd-b303-522b-a03d-3c5e83797fdc
 
 	measure 'Mismatch Reference' = FORMAT(SUM(supplier_headline[tier_mismatches]), "0") & " of " & FORMAT(SUM(supplier_headline[suppliers]), "0") & " suppliers, " & FORMAT(SUM(supplier_headline[spend_under_mismatched_tier]), "$#,0") & " of spend"
-		lineageTag: fea97fdb-da67-535b-be42-ff435467ed4b
 		displayFolder: Procurement
+		lineageTag: fea97fdb-da67-535b-be42-ff435467ed4b
 
 	measure 'Shift Reference' = FORMAT(SUM(supplier_headline[award_shift_skus]), "0") & " SKUs   price impact " & FORMAT(SUM(supplier_headline[award_shift_price_impact]), "$#,0")
-		lineageTag: c3d68ad0-c06c-5224-b223-7d0286a4cd2f
 		displayFolder: Procurement
+		lineageTag: c3d68ad0-c06c-5224-b223-7d0286a4cd2f
 
 	/// The procurement headline as a deterministic sentence, so the page states its own conclusion.
 	measure 'Supplier Insight' =
@@ -731,59 +742,59 @@ table _Measures
 			        & "changes the purchase price by " & FORMAT(vImpact, "+$#,0;-$#,0;$0")
 			        & ". " & vWorst & " scores " & FORMAT(vWorstScore, "0.0")
 			        & " and is the first review to book."
-		lineageTag: 68af2ac0-9679-5317-9bc6-983a4c501ff3
 		displayFolder: Procurement
+		lineageTag: 68af2ac0-9679-5317-9bc6-983a4c501ff3
 
 	/// What the flat 95% service level costs in safety stock across all 478 positions.
 	measure 'Policy Investment' = SUM(service_headline[safety_stock_value])
 		formatString: \$#,0
-		lineageTag: 661d2b4b-1f99-55ae-b9e0-aa8d66364b1a
 		displayFolder: Service Economics
+		lineageTag: 661d2b4b-1f99-55ae-b9e0-aa8d66364b1a
 
 	measure 'Policy Fill Now' = SUM(service_headline[fill_units_now])
 		formatString: 0.00%
-		lineageTag: d8c787f3-0952-5b1f-9aaa-7fa28277ca16
 		displayFolder: Service Economics
+		lineageTag: d8c787f3-0952-5b1f-9aaa-7fa28277ca16
 
 	/// The slope of the exchange curve where the policy actually sits - the number a service target ought to be argued with.
 	measure 'Cost of a Point' = SUM(service_headline[cost_of_one_more_point])
 		formatString: \$#,0
-		lineageTag: 41117e20-8738-59e7-bd2e-ab9007b47836
 		displayFolder: Service Economics
+		lineageTag: 41117e20-8738-59e7-bd2e-ab9007b47836
 
 	/// What a marginal-return allocation frees while holding today's fill rate exactly.
 	measure 'Capital Released' = SUM(service_headline[working_capital_released])
 		formatString: \$#,0
-		lineageTag: a7d4d82c-9b83-56b2-9b86-59fc15b14822
 		displayFolder: Service Economics
+		lineageTag: a7d4d82c-9b83-56b2-9b86-59fc15b14822
 
 	/// Points of unit fill the textbook ABC ladder gains or loses at constant spend. On this network it loses.
 	measure 'Ladder Delta' = SUM(service_headline[ladder_units_change_pts])
 		formatString: +0.00;-0.00;0.00
-		lineageTag: 01cd5162-aa07-57e2-9a40-912cc588646e
 		displayFolder: Service Economics
+		lineageTag: 01cd5162-aa07-57e2-9a40-912cc588646e
 
 	measure 'Optimal Delta' = SUM(service_headline[optimal_units_change_pts])
 		formatString: +0.00;-0.00;0.00
-		lineageTag: a07d695f-bf08-51e9-acd0-ec936129e51f
 		displayFolder: Service Economics
+		lineageTag: a07d695f-bf08-51e9-acd0-ec936129e51f
 
 	measure 'Investment Reference' = FORMAT(SUM(service_headline[positions]), "#,0") & " positions at a flat " & FORMAT(SUM(service_headline[current_service_level]), "0%") & " cycle service level"
-		lineageTag: 0626a7e6-b083-52f3-9dfa-3661ebc012ef
 		displayFolder: Service Economics
+		lineageTag: 0626a7e6-b083-52f3-9dfa-3661ebc012ef
 
 	measure 'Point Reference' = "95% to 99% costs " & FORMAT(SUM(service_headline[cost_of_99_vs_95]), "$#,0")
-		lineageTag: ab2a30c5-78ec-50f1-a3e3-813a731e18ca
 		displayFolder: Service Economics
+		lineageTag: ab2a30c5-78ec-50f1-a3e3-813a731e18ca
 
 	measure 'Released Reference' = FORMAT(SUM(service_headline[working_capital_released_pct]), "0.0%") & " of the safety stock, at identical fill"
-		lineageTag: bd86deb1-6805-594f-9958-8e9363918f8f
 		displayFolder: Service Economics
+		lineageTag: bd86deb1-6805-594f-9958-8e9363918f8f
 
 	/// The ladder's defence, on the card that indicts it: it is a revenue heuristic, and it gives up far less on revenue than on units.
 	measure 'Ladder Reference' = "revenue fill moves " & FORMAT(SUM(service_headline[ladder_revenue_change_pts]), "+0.00;-0.00;0.00") & " pts on the same change"
-		lineageTag: bbc361ba-7c7e-5420-8bfb-e5b8e4d05894
 		displayFolder: Service Economics
+		lineageTag: bbc361ba-7c7e-5420-8bfb-e5b8e4d05894
 
 	/// Green on the best allocation, red on anything that does worse than the policy already in force - which is where the ABC ladder lands.
 	measure 'Policy Highlight' =
@@ -802,8 +813,8 @@ table _Measures
 			        vHere < vFlat, "#FF5C7A",
 			        "#454A82"
 			    )
-		lineageTag: a299b931-7aec-5f38-9932-937f09dd5708
 		displayFolder: Service Economics
+		lineageTag: a299b931-7aec-5f38-9932-937f09dd5708
 
 	/// The service-policy headline as a deterministic sentence.
 	measure 'Service Insight' =
@@ -830,8 +841,8 @@ table _Measures
 			        & " points for the same money, or holds today's fill rate and releases "
 			        & FORMAT(vReleased, "$#,0") & " (" & FORMAT(vReleasedPct, "0.0%")
 			        & ") of working capital instead."
-		lineageTag: 1c5c8aac-78b9-5d18-bdf9-ff3bf0f51864
 		displayFolder: Service Economics
+		lineageTag: 1c5c8aac-78b9-5d18-bdf9-ff3bf0f51864
 
 	measure 'KPI SVG Total Revenue | Revenue Reference' =
 			VAR vValue = [Total Revenue]
@@ -850,9 +861,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: d741b278-2cfd-5def-8343-db2be6bf0de8
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Gross Margin % | Margin Reference' =
 			VAR vValue = [Gross Margin %]
@@ -872,9 +883,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 2976099e-fdb8-548e-9ed1-768c9db0965b
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG OTIF % | OTIF Reference | OTIF Colour' =
 			VAR vValue = [OTIF %]
@@ -894,9 +905,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: c3be52ab-7c2c-5b00-b99d-4d1f2adc87ff
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG % Inventory at Risk | Inventory Risk Reference (Exec)' =
 			VAR vValue = [% Inventory at Risk]
@@ -916,21 +927,21 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: e38d0f97-c868-58cb-a654-f277f2d74728
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Filter Button Label - Executive Overview' =
 			VAR vOn = INT(ISFILTERED('dim_customer'[channel])) + INT(ISFILTERED('dim_warehouse'[region]))
 			RETURN IF(vOn = 0, "Filters", "Filters · " & vOn)
-		lineageTag: 2a4eddfc-90aa-55dc-8df8-777ca787dc59
 		displayFolder: Report UI
+		lineageTag: 2a4eddfc-90aa-55dc-8df8-777ca787dc59
 
 	measure 'Filter Context - Executive Overview' =
 			VAR vText = IF(ISFILTERED('dim_customer'[channel]), CONCATENATEX(VALUES('dim_customer'[channel]), 'dim_customer'[channel], ", "), "all channel") & " · " & IF(ISFILTERED('dim_warehouse'[region]), CONCATENATEX(VALUES('dim_warehouse'[region]), 'dim_warehouse'[region], ", "), "all region")
 			RETURN IF(LEN(vText) > 72, LEFT(vText, 70) & "…", vText)
-		lineageTag: c778bb64-fb05-5628-91b8-e423473d32d1
 		displayFolder: Report UI
+		lineageTag: c778bb64-fb05-5628-91b8-e423473d32d1
 
 	measure 'Header SVG - Executive Overview' =
 			VAR vContext = "Page 1 of 8 · " & SUBSTITUTE(SUBSTITUTE([Filter Context - Executive Overview], "&", "&amp;"), "<", "&lt;")
@@ -941,9 +952,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: ac2248d7-b3f2-5b86-8cc8-44a063f33691
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Single-Source SKUs | Single-Source Reference' =
 			VAR vValue = [Single-Source SKUs]
@@ -962,9 +973,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 699c00c2-ff37-5813-9d96-8615750bc132
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Country HHI | Concentration Reference' =
 			VAR vValue = [Country HHI]
@@ -983,9 +994,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: a8dfa482-d9a1-5a17-a049-2b1acbeb9905
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Largest Origin Share' =
 			VAR vValue = [Largest Origin Share]
@@ -1005,9 +1016,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 255ffe64-563a-5069-a04d-087f1759e4a8
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Contract Lead Days | Lead Time Reference' =
 			VAR vValue = [Contract Lead Days]
@@ -1026,9 +1037,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: c9492d83-2495-5e7a-9dc3-a59c111c7d9b
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Header SVG - Global Sourcing Risk' =
 			VAR vContext = "Page 2 of 8"
@@ -1039,9 +1050,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 19482094-d03c-5557-be3f-034d7b6c9e34
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Panel OTIF | OTIF Reference' =
 			VAR vValue = [Panel OTIF]
@@ -1061,9 +1072,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: a912e457-e379-5f90-b143-d35ac7e6b156
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Panel COPQ | COPQ Reference' =
 			VAR vValue = [Panel COPQ]
@@ -1082,9 +1093,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 113abbb1-d624-50a3-83f8-a11b018dbb6e
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Overbilled Dollars | PPV Reference' =
 			VAR vValue = [Overbilled Dollars]
@@ -1103,9 +1114,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 04dfb738-41fb-5fe4-b246-3ce74df37714
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Panel Shift Spend | Shift Reference' =
 			VAR vValue = [Panel Shift Spend]
@@ -1124,9 +1135,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: c50bcef0-4e35-5de4-9887-9c40333484ba
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Header SVG - Supplier Performance' =
 			VAR vContext = "Page 3 of 8"
@@ -1137,9 +1148,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 92fc16e9-adf7-553e-8aad-3a54a30cb61b
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Replenishment Gap | Gap Reference' =
 			VAR vValue = [Replenishment Gap]
@@ -1158,9 +1169,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 00815909-9b2c-5bb5-b809-0ef76904f7f7
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Gap Drift | Drift Reference' =
 			VAR vValue = [Gap Drift]
@@ -1179,9 +1190,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: f6da7bb2-4767-5c63-b227-fb198ecf4f06
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Stockout Window | Stockout Reference | Stockout Colour' =
 			VAR vValue = [Stockout Window]
@@ -1200,9 +1211,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 95710cd1-69ae-5c95-aaee-09255eaa651b
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Transfer Value | Transfer Reference' =
 			VAR vValue = [Transfer Value]
@@ -1221,9 +1232,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 4e52a8c2-c21b-540e-9d84-f43ace87be8d
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Header SVG - Inventory & Network Health' =
 			VAR vContext = "Page 4 of 8"
@@ -1234,9 +1245,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: c4294715-174d-5ac6-8e4c-cf70b950adeb
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Policy Investment | Investment Reference' =
 			VAR vValue = [Policy Investment]
@@ -1255,9 +1266,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: e1d968bb-e6d4-5cec-b19b-e0bfe37acf51
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Cost of a Point | Point Reference' =
 			VAR vValue = [Cost of a Point]
@@ -1276,9 +1287,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 74a9a4f2-cb59-549e-a2b2-48a159752959
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Ladder Delta | Ladder Reference' =
 			VAR vValue = [Ladder Delta]
@@ -1297,9 +1308,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 5b7c3a71-0449-5528-91bd-84666064a211
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Capital Released | Released Reference' =
 			VAR vValue = [Capital Released]
@@ -1318,9 +1329,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: e859085b-9696-5e50-bc30-f15d1e527e0a
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Header SVG - Service Level Economics' =
 			VAR vContext = "Page 5 of 8"
@@ -1331,9 +1342,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 20c45b90-c3b7-5143-9561-3483b228e571
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG % Inventory at Risk | Inventory Risk Reference' =
 			VAR vValue = [% Inventory at Risk]
@@ -1353,9 +1364,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 754d6f4e-ceec-5390-a364-dbe43568da1f
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Header SVG - Inventory & Expiry Risk' =
 			VAR vContext = "Page 6 of 8 · expiry window " & [Expiry Window Label]
@@ -1366,9 +1377,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 7ec7517b-b4d1-551e-bcdf-c02b643d3701
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Avg Fill Rate' =
 			VAR vValue = [Avg Fill Rate]
@@ -1388,9 +1399,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 7bce72d8-d33e-583f-959b-c2e2de7ca7b0
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Total Orders' =
 			VAR vValue = [Total Orders]
@@ -1409,9 +1420,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 3374f0d3-f399-5420-85bd-e80e4eafa26d
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Qty Shipped' =
 			VAR vValue = [Qty Shipped]
@@ -1430,9 +1441,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: fc96363a-9b5a-5b97-9139-e3286d8585dc
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Header SVG - Fulfillment (OTIF)' =
 			VAR vContext = "Page 7 of 8"
@@ -1443,9 +1454,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: e9ae420a-2fac-5200-9038-72ab3cc454aa
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'Header SVG - Executive Insights' =
 			VAR vContext = "Page 8 of 8"
@@ -1456,9 +1467,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: f9de72c6-3327-588f-8c03-99d8456ae704
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	/// The snapshot every stock figure is read from: the latest weekly snapshot that
 	/// is complete, meaning it carries at least 75% of the median snapshot's lots.
@@ -1481,17 +1492,17 @@ table _Measures
 			RETURN
 			    MAXX(vComplete, fact_inventory[snapshot_date])
 		formatString: yyyy-mm-dd
-		lineageTag: 2b9ad68e-a89b-5fac-b9cd-90dc0dbd6327
 		displayFolder: Inventory Risk
+		lineageTag: 2b9ad68e-a89b-5fac-b9cd-90dc0dbd6327
 
 	measure 'Selected Expiry Window Days' = SELECTEDVALUE('Expiry Window'[Days], 5)
 		formatString: 0
-		lineageTag: dceaf12d-71a0-5968-abfe-b99358b26c6a
 		displayFolder: Inventory Risk
+		lineageTag: dceaf12d-71a0-5968-abfe-b99358b26c6a
 
 	measure 'Expiry Window Label' = "within " & [Selected Expiry Window Days] & " days"
-		lineageTag: 886249c5-1afb-57f6-ac4c-16bb1af7bfb8
 		displayFolder: Inventory Risk
+		lineageTag: 886249c5-1afb-57f6-ac4c-16bb1af7bfb8
 
 	/// Stock value in the snapshot that expires inside the selected window.
 	measure 'Value Expiring In Window' =
@@ -1504,8 +1515,8 @@ table _Measures
 			        fact_inventory[days_until_expiry] <= vDays
 			    )
 		formatString: \$#,0
-		lineageTag: 1070640b-89b0-519d-9a19-acc6a32fecf6
 		displayFolder: Inventory Risk
+		lineageTag: 1070640b-89b0-519d-9a19-acc6a32fecf6
 
 	measure 'Units Expiring In Window' =
 			VAR vAsOfDate = [Inventory Snapshot Date]
@@ -1517,8 +1528,8 @@ table _Measures
 			        fact_inventory[days_until_expiry] <= vDays
 			    )
 		formatString: #,0
-		lineageTag: d3bf5287-b1be-5393-ad85-a4dabb796bf0
 		displayFolder: Inventory Risk
+		lineageTag: d3bf5287-b1be-5393-ad85-a4dabb796bf0
 
 	measure 'Lots Expiring In Window' =
 			VAR vAsOfDate = [Inventory Snapshot Date]
@@ -1531,8 +1542,8 @@ table _Measures
 			        fact_inventory[qty_on_hand] > 0
 			    )
 		formatString: #,0
-		lineageTag: 0492902a-e6be-548f-a3e5-35ff324b8165
 		displayFolder: Inventory Risk
+		lineageTag: 0492902a-e6be-548f-a3e5-35ff324b8165
 
 	measure 'Stocked Lots' =
 			VAR vAsOfDate = [Inventory Snapshot Date]
@@ -1543,13 +1554,13 @@ table _Measures
 			        fact_inventory[qty_on_hand] > 0
 			    )
 		formatString: #,0
-		lineageTag: 68f7c965-cd35-53e8-9441-4d4f77a13dc4
 		displayFolder: Inventory Risk
+		lineageTag: 68f7c965-cd35-53e8-9441-4d4f77a13dc4
 
 	measure '% Value Expiring In Window' = DIVIDE(COALESCE([Value Expiring In Window], 0), [Total Inventory Value])
 		formatString: 0.0%
-		lineageTag: c769a9f7-fecb-55fc-9742-0d7bfbbf1600
 		displayFolder: Inventory Risk
+		lineageTag: c769a9f7-fecb-55fc-9742-0d7bfbbf1600
 
 	/// Shelf life left in the snapshot, weighted by value: where the money actually sits.
 	measure 'Weighted Days To Expiry' =
@@ -1563,24 +1574,24 @@ table _Measures
 			        [Total Inventory Value]
 			    )
 		formatString: 0.0
-		lineageTag: ba9af675-bbcf-5344-9cd0-1196b37c57c3
 		displayFolder: Inventory Risk
+		lineageTag: ba9af675-bbcf-5344-9cd0-1196b37c57c3
 
 	measure 'Expiry Window Reference' = FORMAT(COALESCE([% Value Expiring In Window], 0), "0.0%") & " of stock value · " & FORMAT(COALESCE([Units Expiring In Window], 0), "#,0") & " units"
-		lineageTag: 25e00e6b-1e5a-5a1f-8d1c-5a9b9ed0c914
 		displayFolder: Inventory Risk
+		lineageTag: 25e00e6b-1e5a-5a1f-8d1c-5a9b9ed0c914
 
 	measure 'Lots Expiring Reference' = FORMAT(COALESCE([Lots Expiring In Window], 0), "#,0") & " of " & FORMAT([Stocked Lots], "#,0") & " stocked lots " & [Expiry Window Label]
-		lineageTag: f82dd41a-c949-5451-9010-a6ebf0cd94f0
 		displayFolder: Inventory Risk
+		lineageTag: f82dd41a-c949-5451-9010-a6ebf0cd94f0
 
 	measure 'Shelf Life Reference' = "Days on hand " & FORMAT([Days On Hand], "0.0") & " · turns " & FORMAT([Inventory Turns], "0.0")
-		lineageTag: dc04e242-a850-5774-aabb-5e9cbef9cc7d
 		displayFolder: Inventory Risk
+		lineageTag: dc04e242-a850-5774-aabb-5e9cbef9cc7d
 
 	measure 'Warehouse Expiry Chart Title' = "Value expiring " & [Expiry Window Label] & ", by warehouse"
-		lineageTag: 5a1df0cd-96e7-5f0d-b47d-f08919d73e2e
 		displayFolder: Inventory Risk
+		lineageTag: 5a1df0cd-96e7-5f0d-b47d-f08919d73e2e
 
 	measure 'KPI SVG Value Expiring In Window | Expiry Window Reference' =
 			VAR vValue = [Value Expiring In Window]
@@ -1599,9 +1610,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 6c3c04ad-2d61-582d-aca9-f50cb91605de
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Lots Expiring In Window | Lots Expiring Reference' =
 			VAR vValue = [Lots Expiring In Window]
@@ -1620,9 +1631,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 004bc243-b457-5202-a045-13f8ee77ce51
 		dataCategory: ImageUrl
-		displayFolder: Report UI
 
 	measure 'KPI SVG Weighted Days To Expiry | Shelf Life Reference' =
 			VAR vValue = [Weighted Days To Expiry]
@@ -1641,25 +1652,9 @@ table _Measures
 			        & "</svg>"
 			RETURN
 			    "data:image/svg+xml;utf8," & SUBSTITUTE(SUBSTITUTE(vSvg, "%", "%25"), "#", "%23")
+		displayFolder: Report UI
 		lineageTag: 295e87e5-4522-5afa-ab08-ae7dfd8a3ca1
 		dataCategory: ImageUrl
-		displayFolder: Report UI
-
-	column Value
-		dataType: int64
-		isHidden
-		formatString: 0
-		lineageTag: 5608e50b-58b0-4c92-b17b-c7eb8f62f3b6
-		summarizeBy: none
-		sourceColumn: Value
-
-	partition _Measures = m
-		mode: import
-		source =
-				let
-				    Source = #table(type table [Value = Int64.Type], {})
-				in
-				    Source
 
 	/// What was invoiced across every purchase order line in the window.
 	measure 'Inbound Spend' = SUM(supplier_scorecard[spend])
@@ -1817,3 +1812,20 @@ table _Measures
 	measure 'Optimal Change' = SUM(service_policy_by_class[optimal_change])
 		formatString: \$#,0
 		lineageTag: 4919e25e-f6c1-50c4-bd4f-3690d2361a61
+
+	column Value
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5608e50b-58b0-4c92-b17b-c7eb8f62f3b6
+		summarizeBy: none
+		sourceColumn: Value
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Value = Int64.Type], {})
+				in
+				    Source
+

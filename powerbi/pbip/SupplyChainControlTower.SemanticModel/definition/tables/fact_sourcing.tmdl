@@ -68,3 +68,4 @@ table fact_sourcing
 				    Typed = Table.TransformColumnTypes(Promoted, {{"product_id", Int64.Type}, {"supplier_id", Int64.Type}, {"allocation_share", type number}, {"contract_lead_days", Int64.Type}, {"lead_time_sigma_days", type number}, {"moq_units", Int64.Type}, {"price_index", type number}, {"is_primary", Int64.Type}})
 				in
 				    Typed
+

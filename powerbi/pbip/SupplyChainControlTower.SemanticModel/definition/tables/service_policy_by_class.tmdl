@@ -87,3 +87,4 @@ table service_policy_by_class
 				    Typed = Table.TransformColumnTypes(Promoted, {{"abc_class", type text}, {"positions", Int64.Type}, {"skus", Int64.Type}, {"value_now", type number}, {"value_ladder", type number}, {"value_optimal_units", type number}, {"service_now", type number}, {"service_ladder", type number}, {"service_optimal_units", type number}, {"ladder_change", type number}, {"optimal_change", type number}})
 				in
 				    Typed
+
