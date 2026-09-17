@@ -610,7 +610,7 @@ python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3,
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 704 tests: contracts, GIS, incident command, app, gate, quarantine, stream, promotion
+pytest tests/ -v                                     # 826 tests: contracts, GIS, incident command, app, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -815,7 +815,7 @@ deploy/             fabric-cicd deployment script + per-environment parameter.ym
 gis/                governed synthetic location references for GIS publication
 docs/               metric dictionary, pipeline spec, GIS analysis, process case,
                      MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              704 tests: contracts, GIS, incident command, app, gate, quarantine, streaming, observability,
+tests/              826 tests: contracts, GIS, incident command, app, gate, quarantine, streaming, observability,
                      promotion policy, KPI rules, sourcing risk, inventory health,
                      supplier scorecard, service economics, semantic-model
                      binding, report formatting

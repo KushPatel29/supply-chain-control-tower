@@ -155,6 +155,16 @@ def test_the_page_and_test_counts_on_the_badge_are_real(prose):
     assert int(badge.group(1)) == int(found.group(1)), (
         f"badge claims {badge.group(1)} tests, the suite collects {found.group(1)}")
 
+    # The badge was right and two sentences below it, and the app's header,
+    # still said 704 for weeks. Every count the prose states is the badge's, and
+    # the app reads the badge rather than carrying a number of its own.
+    stated = {int(n.replace(",", "")) for n in re.findall(r"\b(\d[\d,]*) tests\b", prose)}
+    assert stated <= {int(badge.group(1))}, (
+        f"the README states {sorted(stated)} tests; the badge says {badge.group(1)}")
+    app = (ROOT / "streamlit_app.py").read_text(encoding="utf-8")
+    assert not re.search(r"\d[\d,]* automated tests", app), (
+        "streamlit_app.py types out a test count; use collected_test_count()")
+
     pages = len(list((ROOT / "powerbi" / "pbip").glob(
         "*.Report/definition/pages/*/page.json")))
     # Written as a word in the prose and as a digit elsewhere; accept either,

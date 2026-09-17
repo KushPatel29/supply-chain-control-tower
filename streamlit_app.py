@@ -9,6 +9,7 @@ state, geocode locations, or make operational sourcing and routing decisions.
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -44,6 +45,20 @@ from app.incident_command import (
 
 
 ROOT = Path(__file__).resolve().parent
+
+
+def collected_test_count() -> str:
+    """The README badge, which test_published_prose pins to what pytest collects.
+
+    The header typed out 704 long after the suite reached 826. Read from the one
+    number something checks, it cannot fall behind again.
+    """
+    try:
+        badge = re.search(r"tests-(\d+)%20collected", (ROOT / "README.md").read_text(encoding="utf-8"))
+    except OSError:
+        badge = None
+    return f"{int(badge.group(1)):,} automated tests" if badge else "Automated test suite"
+
 
 st.set_page_config(
     page_title="Decision Assurance Studio | Kush Patel",
@@ -300,7 +315,7 @@ with st.sidebar:
     )
 
 st.markdown(
-    f'<p class="studio-meta"><strong>Decision Assurance Studio</strong><span>Opening scenario: {selected_country}</span><span>Publication gate: {"PASS" if publication_ready else "BLOCKED"}</span><span>704 automated tests</span></p>',
+    f'<p class="studio-meta"><strong>Decision Assurance Studio</strong><span>Opening scenario: {selected_country}</span><span>Publication gate: {"PASS" if publication_ready else "BLOCKED"}</span><span>{collected_test_count()}</span></p>',
     unsafe_allow_html=True,
 )
 st.title(
