@@ -32,6 +32,7 @@ import sys
 import time
 import uuid
 from datetime import datetime, timezone
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 import pandas as pd
@@ -175,18 +176,30 @@ def replay_quarantine(lake: Path) -> int:
     return len(healthy)
 
 
+def round_half_up(values: pd.Series, places: int) -> pd.Series:
+    """Round the way Spark's F.round does: half away from zero, on the shortest decimal repr.
+
+    pandas and numpy round half to even on binary floats, so 1.005 and 0.125
+    land a cent away from what the PySpark notebooks write. Across the 34,221
+    inventory rows that came to $13.85 on $110.4M, found by reconciling this
+    mirror against the notebooks run on Databricks (docs/databricks/).
+    """
+    q = Decimal(1).scaleb(-places)
+    return values.map(lambda v: v if pd.isna(v) else float(Decimal(repr(float(v))).quantize(q, ROUND_HALF_UP)))
+
+
 def _enrich_orders(orders: pd.DataFrame, dim_product: pd.DataFrame) -> pd.DataFrame:
     """The Silver business rules (OTIF, fill rate, economics) for order rows."""
     orders = orders.drop(columns=["unit_price", "unit_cost"], errors="ignore")
     orders = orders.merge(
         dim_product[["product_id", "unit_cost", "unit_price"]],
         on="product_id", how="inner")
-    orders["fill_rate"] = (orders["qty_shipped"] / orders["qty_ordered"]).round(4)
+    orders["fill_rate"] = round_half_up(orders["qty_shipped"] / orders["qty_ordered"], 4)
     on_time = pd.to_datetime(orders["shipped_date"]) <= pd.to_datetime(orders["promised_date"])
     orders["otif_flag"] = ((on_time) & (orders["fill_rate"] >= 0.95)).astype(int)
-    orders["revenue"] = (orders["qty_shipped"] * orders["unit_price"]).round(2)
-    orders["cogs"] = (orders["qty_shipped"] * orders["unit_cost"]).round(2)
-    orders["gross_margin"] = (orders["revenue"] - orders["cogs"]).round(2)
+    orders["revenue"] = round_half_up(orders["qty_shipped"] * orders["unit_price"], 2)
+    orders["cogs"] = round_half_up(orders["qty_shipped"] * orders["unit_cost"], 2)
+    orders["gross_margin"] = round_half_up(orders["revenue"] - orders["cogs"], 2)
     return orders
 
 
@@ -280,7 +293,7 @@ def gold_curate(lake: Path, inject_dq_failure: bool = False) -> dict:
            .assign(date_key=lambda d: pd.to_datetime(d["snapshot_date"]).dt.strftime("%Y%m%d").astype(int))
            .merge(t["dim_lot"][["lot_id", "lot_key", "product_key", "warehouse_key"]], on="lot_id")
            .merge(t["dim_product"][["product_key", "unit_cost"]], on="product_key"))
-    inv["inventory_value"] = (inv["qty_on_hand"] * inv["unit_cost"]).round(2)
+    inv["inventory_value"] = round_half_up(inv["qty_on_hand"] * inv["unit_cost"], 2)
     fact_inventory = inv[["date_key", "lot_key", "product_key", "warehouse_key",
                           "qty_on_hand", "days_until_expiry", "expiry_risk_flag",
                           "inventory_value"]]

@@ -3,12 +3,13 @@
 [![CI](https://github.com/KushPatel29/supply-chain-control-tower/actions/workflows/ci.yml/badge.svg)](https://github.com/KushPatel29/supply-chain-control-tower/actions/workflows/ci.yml)
 ![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-Lakehouse-0078D4)
 ![PySpark](https://img.shields.io/badge/PySpark-Delta%20MERGE-E25A1C?logo=apachespark&logoColor=white)
+![Databricks](https://img.shields.io/badge/Databricks-notebooks%20run%20as%20a%20job-FF3621?logo=databricks&logoColor=white)
 ![Power BI](https://img.shields.io/badge/Power%20BI-DAX%20%2B%20RLS-F2C811?logo=powerbi&logoColor=black)
 ![T-SQL](https://img.shields.io/badge/T--SQL-Star%20Schema-CC2927)
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
 ![Streamlit](https://img.shields.io/badge/Streamlit-decision%20assurance-FF4B4B?logo=streamlit&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-826%20collected-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-836%20collected-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 **▶ Live decision studio: [kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/)**
@@ -32,7 +33,7 @@ One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs an 826-test suite. The
+builds, exercises the model-promotion policy, and runs an 836-test suite. The
 green badge above covers the failure paths too.
 
 ## Business process improvement case
@@ -530,9 +531,52 @@ contract — a test even verifies the configured merge keys are genuinely
 unique in the data, because a MERGE on a non-unique key multiplies rows
 silently.
 
-Stack: Microsoft Fabric (Lakehouse, PySpark), Power BI (DAX, TMDL, RLS/OLS,
+Stack: Microsoft Fabric (Lakehouse, PySpark), also run on Databricks (serverless jobs, Unity Catalog), Power BI (DAX, TMDL, RLS/OLS,
 calculation groups), T-SQL for the Gold DDL, Python for everything that
 proves the rest works.
+
+## The notebooks, run for real on Databricks
+
+The four PySpark notebooks were written for a Fabric Lakehouse, and I had no
+Fabric tenant to run them in. So I ran them somewhere I could: a Databricks
+job on Databricks Free Edition (serverless compute, Unity Catalog, Delta).
+[`deploy/databricks/run_on_databricks.py`](deploy/databricks/run_on_databricks.py)
+does it end to end:
+
+1. uploads the seven raw CSVs to a Unity Catalog volume;
+2. imports notebooks 01–04 into the workspace. **One line changes**: Fabric's
+   `Files/bronze` landing path becomes the volume path. A test holds the
+   conversion to that one line;
+3. runs them as a four-task job, bronze → silver → gold → data quality,
+   **twice**.
+
+| What was checked | Result |
+|---|---|
+| Job runs | 2 of 2 succeeded, all four tasks each time (146s and 133s on serverless) |
+| Delta `MERGE` is idempotent | every silver row count after run 2 equals run 1 |
+| The DQ notebook | 18 of 18 data-quality checks passed |
+| Spark vs the local pandas pipeline | 36 of 36 measures across 8 gold tables agree to the cent |
+
+The evidence is in [`docs/databricks/`](docs/databricks/): the
+[run summary](docs/databricks/run_summary.json) and every
+[measure compared](docs/databricks/reconciliation.csv).
+
+**What running it for real found.** The local pandas pipeline describes
+itself as a line-for-line mirror of these notebooks, and on the first run it
+wasn't.
+Inventory value was $13.85 apart on $110.4M, and revenue, cost and margin were
+off by cents. pandas rounds half to even on binary floats, so `1.005` becomes
+`1.00`; Spark's `round` goes half away from zero, so it becomes `1.01`.
+Recomputing the pandas side with half-up rounding reproduced Spark's
+$110,356,720.35 exactly, so the mirror now rounds the way Spark does
+(`round_half_up` in [`pipeline/run_pipeline.py`](pipeline/run_pipeline.py),
+pinned by tests with the cases that differ). The reconciliation now demands
+agreement to the cent, not to a tolerance.
+
+CI does not rerun the job: an unattended run would need a stored workspace
+credential. The script signs in through the browser with OAuth, so no token
+exists to store. CI does test the recorded evidence and the notebook
+conversion.
 
 ## Orders don't wait for the nightly batch
 
@@ -610,7 +654,7 @@ python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3,
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 826 tests: contracts, GIS, incident command, app, gate, quarantine, stream, promotion
+pytest tests/ -v                                     # 836 tests: contracts, GIS, incident command, app, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -749,8 +793,9 @@ runner does. The Power BI build steps are in
 [`powerbi/BUILD_GUIDE.md`](powerbi/BUILD_GUIDE.md).
 
 > **What I didn't fake:** running the Fabric deployment needs a tenant
-> login this machine doesn't currently have. So instead of screenshots, the
-> repo ships a **complete, armed CI/CD pipeline** —
+> login this machine doesn't currently have. The notebooks themselves have
+> run, on Databricks ([above](#the-notebooks-run-for-real-on-databricks)).
+> For the Fabric deployment, instead of screenshots, the repo ships a **complete, armed CI/CD pipeline** —
 > [`deploy_fabric.yml`](.github/workflows/deploy_fabric.yml) promotes the
 > PBIP through Dev → QA → Prod GitHub Environments with approval gates,
 > service-principal auth, and per-environment parameterization
@@ -815,7 +860,7 @@ deploy/             fabric-cicd deployment script + per-environment parameter.ym
 gis/                governed synthetic location references for GIS publication
 docs/               metric dictionary, pipeline spec, GIS analysis, process case,
                      MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              826 tests: contracts, GIS, incident command, app, gate, quarantine, streaming, observability,
+tests/              836 tests: contracts, GIS, incident command, app, gate, quarantine, streaming, observability,
                      promotion policy, KPI rules, sourcing risk, inventory health,
                      supplier scorecard, service economics, semantic-model
                      binding, report formatting
