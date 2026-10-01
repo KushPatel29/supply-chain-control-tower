@@ -24,7 +24,7 @@ env:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -39,7 +39,7 @@ jobs:
 
   deploy-dev:
     needs: validate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: dev        # auto-deploy target, no approval gate
     steps:
       - uses: actions/checkout@v7
@@ -59,7 +59,7 @@ jobs:
   deploy-qa:
     needs: deploy-dev
     if: ${{ !inputs.skip_qa }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: qa         # configure a required reviewer on this environment
     steps:
       - uses: actions/checkout@v7
@@ -79,7 +79,7 @@ jobs:
   deploy-prod:
     needs: [deploy-dev, deploy-qa]
     if: ${{ always() && needs.deploy-dev.result == 'success' && (needs.deploy-qa.result == 'success' || inputs.skip_qa) }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: prod       # required reviewer + wait timer belong here
     steps:
       - uses: actions/checkout@v7
