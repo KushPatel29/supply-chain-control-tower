@@ -21,7 +21,7 @@
 > - **What I found.** OTIF sits at 90.4% against a 95% target, and short-shipping, not lateness, is the bigger failure. Over 13 weeks the stock gap grew 15.2% while stock on hand barely moved, and 12% of the gap needs no purchase order at all.
 > - **Check it yourself.** Each defence is proven in CI by injecting the failure it exists to catch. On Databricks, 36 of 36 Gold measures matched the local pipeline to the cent. Synthetic data, labelled throughout.
 >
-> One of three case studies in [Kush Patel's portfolio](https://kushpatel29.github.io/#p-control-tower). Built with AI coding assistants; the questions, metric definitions, tests and findings are mine.
+> **[▶ Watch the 72-second captioned tour](https://kushpatel29.github.io/assets/video/control-tower-tour.mp4)** · one of three case studies in [Kush Patel's portfolio](https://kushpatel29.github.io/#p-control-tower). Built with AI coding assistants; the questions, metric definitions, tests and findings are mine.
 
 A retail distribution network runs two inventory disciplines at once. Half the
 catalogue has a clock on it — a case of salmon with twelve days of life is stock
