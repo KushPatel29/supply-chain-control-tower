@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "executed_at_utc": "2026-10-24T21:44:15.412784+00:00",
+  "engine": "4.0.1",
+  "master": "local[2]",
+  "rows": 200000,
+  "repeats_per_variant": 3,
+  "warmups_per_variant": 1,
+  "samples_ms": {
+    "shuffle_join": [
+      104.193248,
+      107.319404,
+      99.629399
+    ],
+    "broadcast_dimension": [
+      93.294511,
+      117.900495,
+      89.77027
+    ]
+  },
+  "median_ms": {
+    "shuffle_join": 104.193248,
+    "broadcast_dimension": 93.294511
+  },
+  "partition_rows": [
+    4446,
+    4444,
+    0,
+    8889,
+    13332,
+    168889,
+    0,
+    0
+  ],
+  "plans": {
+    "shuffle_join": "== Physical Plan ==\n* Sort (18)\n+- Exchange (17)\n   +- * HashAggregate (16)\n      +- Exchange (15)\n         +- * HashAggregate (14)\n            +- * Project (13)\n               +- * SortMergeJoin Inner (12)\n                  :- * Sort (7)\n                  :  +- Exchange (6)\n                  :     +- * Filter (5)\n                  :        +- InMemoryTableScan (1) (columnarIn=false, columnarOut=true)\n                  :              +- InMemoryRelation (2)\n                  :                    +- * Project (4)\n                  :                       +- * Range (3)\n                  +- * Sort (11)\n                     +- Exchange (10)\n                        +- * Project (9)\n                           +- * Range (8)\n\n\n(1) InMemoryTableScan\nOutput [4]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L]\nArguments: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L], [isnotnull(warehouse_key#1L)]\n\n(2) InMemoryRelation\nArguments: [id#0L, warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L], StorageLevel(disk, memory, deserialized, 1 replicas), [id#0L ASC NULLS FIRST]\n\n(3) Range [codegen id : 1]\nOutput [1]: [id#0L]\nArguments: Range (0, 200000, step=1, splits=Some(2))\n\n(4) Project [codegen id : 1]\nOutput [5]: [id#0L, CASE WHEN ((id#0L % 10) < 8) THEN 1 ELSE ((id#0L % 9) + 2) END AS warehouse_key#1L, ((id#0L % 17) + 1) AS qty#2L, ((id#0L % 4000) + 199) AS price_cents#3L, ((id#0L % 1000) + 99) AS cost_cents#4L]\nInput [1]: [id#0L]\n\n(5) Filter [codegen id : 1]\nInput [4]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L]\nCondition : isnotnull(warehouse_key#1L)\n\n(6) Exchange\nInput [4]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L]\nArguments: hashpartitioning(warehouse_key#1L, 8), ENSURE_REQUIREMENTS, [plan_id=82]\n\n(7) Sort [codegen id : 2]\nInput [4]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L]\nArguments: [warehouse_key#1L ASC NULLS FIRST], false, 0\n\n(8) Range [codegen id : 3]\nOutput [1]: [id#164L]\nArguments: Range (1, 11, step=1, splits=Some(2))\n\n(9) Project [codegen id : 3]\nOutput [2]: [id#164L AS warehouse_key#165L, ((id#164L - 1) % 5) AS region#166L]\nInput [1]: [id#164L]\n\n(10) Exchange\nInput [2]: [warehouse_key#165L, region#166L]\nArguments: hashpartitioning(warehouse_key#165L, 8), ENSURE_REQUIREMENTS, [plan_id=88]\n\n(11) Sort [codegen id : 4]\nInput [2]: [warehouse_key#165L, region#166L]\nArguments: [warehouse_key#165L ASC NULLS FIRST], false, 0\n\n(12) SortMergeJoin [codegen id : 5]\nLeft keys [1]: [warehouse_key#1L]\nRight keys [1]: [warehouse_key#165L]\nJoin type: Inner\nJoin condition: None\n\n(13) Project [codegen id : 5]\nOutput [4]: [qty#2L, price_cents#3L, cost_cents#4L, region#166L]\nInput [6]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L, warehouse_key#165L, region#166L]\n\n(14) HashAggregate [codegen id : 5]\nInput [4]: [qty#2L, price_cents#3L, cost_cents#4L, region#166L]\nKeys [1]: [region#166L]\nFunctions [2]: [partial_sum(qty#2L), partial_sum((qty#2L * (price_cents#3L - cost_cents#4L)))]\nAggregate Attributes [2]: [sum#262L, sum#263L]\nResults [3]: [region#166L, sum#264L, sum#265L]\n\n(15) Exchange\nInput [3]: [region#166L, sum#264L, sum#265L]\nArguments: hashpartitioning(region#166L, 8), ENSURE_REQUIREMENTS, [plan_id=97]\n\n(16) HashAggregate [codegen id : 6]\nInput [3]: [region#166L, sum#264L, sum#265L]\nKeys [1]: [region#166L]\nFunctions [2]: [sum(qty#2L), sum((qty#2L * (price_cents#3L - cost_cents#4L)))]\nAggregate Attributes [2]: [sum(qty#2L)#175L, sum((qty#2L * (price_cents#3L - cost_cents#4L)))#176L]\nResults [3]: [region#166L, sum(qty#2L)#175L AS units#167L, sum((qty#2L * (price_cents#3L - cost_cents#4L)))#176L AS margin_cents#168L]\n\n(17) Exchange\nInput [3]: [region#166L, units#167L, margin_cents#168L]\nArguments: rangepartitioning(region#166L ASC NULLS FIRST, 8), ENSURE_REQUIREMENTS, [plan_id=101]\n\n(18) Sort [codegen id : 7]\nInput [3]: [region#166L, units#167L, margin_cents#168L]\nArguments: [region#166L ASC NULLS FIRST], true, 0\n\n\n",
+    "broadcast_dimension": "== Physical Plan ==\n* Sort (15)\n+- Exchange (14)\n   +- * HashAggregate (13)\n      +- Exchange (12)\n         +- * HashAggregate (11)\n            +- * Project (10)\n               +- * BroadcastHashJoin Inner BuildRight (9)\n                  :- * Filter (5)\n                  :  +- InMemoryTableScan (1) (columnarIn=false, columnarOut=true)\n                  :        +- InMemoryRelation (2)\n                  :              +- * Project (4)\n                  :                 +- * Range (3)\n                  +- BroadcastExchange (8)\n                     +- * Project (7)\n                        +- * Range (6)\n\n\n(1) InMemoryTableScan\nOutput [4]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L]\nArguments: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L], [isnotnull(warehouse_key#1L)]\n\n(2) InMemoryRelation\nArguments: [id#0L, warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L], StorageLevel(disk, memory, deserialized, 1 replicas), [id#0L ASC NULLS FIRST]\n\n(3) Range [codegen id : 1]\nOutput [1]: [id#0L]\nArguments: Range (0, 200000, step=1, splits=Some(2))\n\n(4) Project [codegen id : 1]\nOutput [5]: [id#0L, CASE WHEN ((id#0L % 10) < 8) THEN 1 ELSE ((id#0L % 9) + 2) END AS warehouse_key#1L, ((id#0L % 17) + 1) AS qty#2L, ((id#0L % 4000) + 199) AS price_cents#3L, ((id#0L % 1000) + 99) AS cost_cents#4L]\nInput [1]: [id#0L]\n\n(5) Filter [codegen id : 2]\nInput [4]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L]\nCondition : isnotnull(warehouse_key#1L)\n\n(6) Range [codegen id : 1]\nOutput [1]: [id#164L]\nArguments: Range (1, 11, step=1, splits=Some(2))\n\n(7) Project [codegen id : 1]\nOutput [2]: [id#164L AS warehouse_key#165L, ((id#164L - 1) % 5) AS region#166L]\nInput [1]: [id#164L]\n\n(8) BroadcastExchange\nInput [2]: [warehouse_key#165L, region#166L]\nArguments: HashedRelationBroadcastMode(List(input[0, bigint, false]),false), [plan_id=188]\n\n(9) BroadcastHashJoin [codegen id : 2]\nLeft keys [1]: [warehouse_key#1L]\nRight keys [1]: [warehouse_key#165L]\nJoin type: Inner\nJoin condition: None\n\n(10) Project [codegen id : 2]\nOutput [4]: [qty#2L, price_cents#3L, cost_cents#4L, region#166L]\nInput [6]: [warehouse_key#1L, qty#2L, price_cents#3L, cost_cents#4L, warehouse_key#165L, region#166L]\n\n(11) HashAggregate [codegen id : 2]\nInput [4]: [qty#2L, price_cents#3L, cost_cents#4L, region#166L]\nKeys [1]: [region#166L]\nFunctions [2]: [partial_sum(qty#2L), partial_sum((qty#2L * (price_cents#3L - cost_cents#4L)))]\nAggregate Attributes [2]: [sum#397L, sum#398L]\nResults [3]: [region#166L, sum#399L, sum#400L]\n\n(12) Exchange\nInput [3]: [region#166L, sum#399L, sum#400L]\nArguments: hashpartitioning(region#166L, 8), ENSURE_REQUIREMENTS, [plan_id=194]\n\n(13) HashAggregate [codegen id : 3]\nInput [3]: [region#166L, sum#399L, sum#400L]\nKeys [1]: [region#166L]\nFunctions [2]: [sum(qty#2L), sum((qty#2L * (price_cents#3L - cost_cents#4L)))]\nAggregate Attributes [2]: [sum(qty#2L)#185L, sum((qty#2L * (price_cents#3L - cost_cents#4L)))#186L]\nResults [3]: [region#166L, sum(qty#2L)#185L AS units#177L, sum((qty#2L * (price_cents#3L - cost_cents#4L)))#186L AS margin_cents#178L]\n\n(14) Exchange\nInput [3]: [region#166L, units#177L, margin_cents#178L]\nArguments: rangepartitioning(region#166L ASC NULLS FIRST, 8), ENSURE_REQUIREMENTS, [plan_id=198]\n\n(15) Sort [codegen id : 4]\nInput [3]: [region#166L, units#177L, margin_cents#178L]\nArguments: [region#166L ASC NULLS FIRST], true, 0\n\n\n"
+  },
+  "result": [
+    [
+      0,
+      1479977,
+      2367936700
+    ],
+    [
+      1,
+      80001,
+      128026100
+    ],
+    [
+      2,
+      80004,
+      127927400
+    ],
+    [
+      3,
+      79996,
+      128062600
+    ],
+    [
+      4,
+      79992,
+      127954200
+    ]
+  ],
+  "independent_oracle_equal": true,
+  "boundary": "Bounded CI/local[2], cached synthetic fact and 10-row dimension, AQE disabled to isolate join strategy. Not Databricks cluster tuning, cloud cost or production throughput.",
+  "ci": {
+    "source_revision": "c1055d2b0728705175f8b1aa99010a773688c3b0",
+    "url": "https://github.com/KushPatel29/supply-chain-control-tower/actions/runs/40135461861"
+  }
+}

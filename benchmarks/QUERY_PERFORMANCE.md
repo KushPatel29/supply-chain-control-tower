@@ -39,3 +39,11 @@ The `spark-join-tuning` CI job supplies Java 17 and PySpark 4.0.1 and uploads th
 execution evidence. The measurement is local[2] on an ephemeral runner. Broadcasting
 is appropriate only when the dimension fits worker memory; growth can reverse
 the tradeoff. This does not establish managed Databricks tuning or cluster tenure.
+
+The [executed CI receipt](spark_tuning.json) records 200,000 rows on Spark 4.0.1
+with three measurements per variant: median 104.19 ms for the shuffle join and
+93.29 ms for the broadcast join. The samples overlap, so this small run supports
+the plan explanation and equivalence check, not a general speedup claim. One
+hash partition holds 168,889 rows while three are empty; broadcasting the small
+dimension avoids the skewed join exchange, but the grouped result still shuffles.
+The receipt names its source revision and original CI run.
