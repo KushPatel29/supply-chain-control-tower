@@ -11,7 +11,7 @@ sop = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(sop)
 
 
-def test_joint_service_constraints_reject_the_single_objective_trap():
+def test_joint_service_constraints_reject_the_single_objective_trap(tmp_path):
     result = sop.build()
     assert result["candidate"] == "optimal for revenue"
     alternatives = {row["policy"]: row for row in result["alternatives"]}
@@ -19,6 +19,12 @@ def test_joint_service_constraints_reject_the_single_objective_trap():
     assert "fill_revenue below agreed floor" in alternatives["optimal for units"]["reasons"]
     assert not alternatives["ABC ladder 98/95/90"]["eligible"]
     assert result["execution_approved"] is False
+    source = tmp_path / "options.csv"
+    payload = sop.SOURCE.read_bytes().replace(b"\r\n", b"\n")
+    source.write_bytes(payload)
+    assert sop.build(source) == result
+    source.write_bytes(payload.replace(b"\n", b"\r\n"))
+    assert sop.build(source) == result
 
 
 def test_unaffordable_target_is_not_silently_relaxed():

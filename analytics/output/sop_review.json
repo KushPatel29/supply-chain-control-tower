@@ -57,5 +57,6 @@
     "No ERP transaction or purchase order created",
     "Modelled fill rates are not observed future service or guaranteed capacity"
   ],
-  "source_sha256": "27060a8210f2cc6677d561869d2d3919222af20c41cb2b1c109051184d31abec"
+  "source_sha256": "7dea996d2db972e0f53817254e1659fd098bd412cd4e07888301c679207e51f5",
+  "source_hash_basis": "UTF-8 CSV with line endings normalized to LF"
 }

@@ -59,10 +59,11 @@ def review(rows: list[dict], min_units=None, min_revenue=None, budget=None) -> d
     }
 
 
-def build() -> dict:
-    with SOURCE.open(newline="", encoding="utf-8") as stream:
+def build(source: Path = SOURCE) -> dict:
+    with source.open(newline="", encoding="utf-8") as stream:
         result = review(list(csv.DictReader(stream)))
-    result["source_sha256"] = hashlib.sha256(SOURCE.read_bytes()).hexdigest()
+    result["source_sha256"] = hashlib.sha256(source.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+    result["source_hash_basis"] = "UTF-8 CSV with line endings normalized to LF"
     return result
 
 
