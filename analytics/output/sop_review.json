@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "classification": "synthetic_policy_challenge",
+  "constraints": {
+    "minimum_unit_fill": "0.98249",
+    "minimum_revenue_fill": "0.97584",
+    "stock_ceiling": "5619058.13"
+  },
+  "alternatives": [
+    {
+      "policy": "flat 95% (in force)",
+      "eligible": true,
+      "reasons": [],
+      "safety_stock_value": "5619058.13",
+      "fill_units": "0.98249",
+      "fill_revenue": "0.97584"
+    },
+    {
+      "policy": "ABC ladder 98/95/90",
+      "eligible": false,
+      "reasons": [
+        "fill_units below agreed floor"
+      ],
+      "safety_stock_value": "5619058.13",
+      "fill_units": "0.96526",
+      "fill_revenue": "0.97602"
+    },
+    {
+      "policy": "optimal for units",
+      "eligible": false,
+      "reasons": [
+        "fill_revenue below agreed floor"
+      ],
+      "safety_stock_value": "5619058.13",
+      "fill_units": "0.99503",
+      "fill_revenue": "0.97474"
+    },
+    {
+      "policy": "optimal for revenue",
+      "eligible": true,
+      "reasons": [],
+      "safety_stock_value": "5619058.13",
+      "fill_units": "0.98627",
+      "fill_revenue": "0.98653"
+    }
+  ],
+  "candidate": "optimal for revenue",
+  "decision": "CONDITIONAL CANDIDATE",
+  "execution_approved": false,
+  "required_owners": {
+    "Commercial": "confirm unit/revenue service priorities and lost-sales assumptions",
+    "Supply planning": "validate lead-time, lot-life and capacity assumptions",
+    "Finance": "confirm stock investment ceiling and carrying-cost basis"
+  },
+  "unresolved": [
+    "No completed stakeholder meeting or approval",
+    "No ERP transaction or purchase order created",
+    "Modelled fill rates are not observed future service or guaranteed capacity"
+  ],
+  "source_sha256": "27060a8210f2cc6677d561869d2d3919222af20c41cb2b1c109051184d31abec"
+}

@@ -9,7 +9,7 @@
 ![MLflow](https://img.shields.io/badge/MLflow-backtest%20tracking-0194E2?logo=mlflow&logoColor=white)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-10M--row%20benchmarks-00ADD4)
 ![Streamlit](https://img.shields.io/badge/Streamlit-decision%20assurance-FF4B4B?logo=streamlit&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-836%20collected-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-852%20collected-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 **▶ Live decision studio: [kush-network-risk-decision-room.streamlit.app](https://kush-network-risk-decision-room.streamlit.app/)**
@@ -42,8 +42,10 @@ One rule governs everything here: **nothing is claimed that isn't run,
 tested, or measured.** Every push regenerates the data from scratch, streams
 a file drop through the exactly-once ingest, executes the whole pipeline
 through a quarantine split and a data-quality gate that provably blocks bad
-builds, exercises the model-promotion policy, and runs an 836-test suite. The
+builds, exercises the model-promotion policy, and runs an 852-test suite. The
 green badge above covers the failure paths too.
+
+**New execution evidence:** [equivalent SQL profiling and Spark join tuning](benchmarks/QUERY_PERFORMANCE.md) · [S&OP constraint challenge](docs/SOP_DECISION_REVIEW.md) · [safe Fabric preflight](docs/DEPLOYMENT.md#preflight-and-preservation-controls). Repeated local SQL timings and independent totals are recorded; Spark execution belongs to the bounded CI job. Cloud publication remains configuration-gated.
 
 ## Business process improvement case
 
@@ -663,7 +665,7 @@ python pipeline/run_pipeline.py --simulate-schema-drift # contract kill: exit 3,
 python pipeline/run_pipeline.py --inject-dq-failure # watch it refuse: exit code 2, no publish
 python pipeline/run_pipeline.py --inject-bad-rows 40 # quarantine demo: isolated, still publishes
 python pipeline/run_pipeline.py --replay-quarantine  # release rows the source fix healed
-pytest tests/ -v                                     # 836 tests: contracts, GIS, incident command, app, gate, quarantine, stream, promotion
+pytest tests/ -v                                     # 852 tests: contracts, GIS, incident command, app, gate, quarantine, stream, promotion
 ```
 
 ## The forecast bake-off (in which the fancy model loses)
@@ -869,7 +871,7 @@ deploy/             fabric-cicd deployment script + per-environment parameter.ym
 gis/                governed synthetic location references for GIS publication
 docs/               metric dictionary, pipeline spec, GIS analysis, process case,
                      MODEL_OPTIMIZATION.md, DEPLOYMENT.md
-tests/              836 tests: contracts, GIS, incident command, app, gate, quarantine, streaming, observability,
+tests/              852 tests: contracts, GIS, incident command, app, gate, quarantine, streaming, observability,
                      promotion policy, KPI rules, sourcing risk, inventory health,
                      supplier scorecard, service economics, semantic-model
                      binding, report formatting

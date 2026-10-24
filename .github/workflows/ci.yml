@@ -10,6 +10,28 @@ on:
   pull_request:
 
 jobs:
+  spark-join-tuning:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Run equivalent joins on a real bounded Spark engine
+        run: |
+          pip install pyspark==4.0.1
+          python benchmarks/spark_tuning.py --rows 200000 --repeats 3 --output spark-tuning.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: spark-tuning-evidence
+          path: spark-tuning.json
+          retention-days: 14
+
   pipeline-tests:
     runs-on: ubuntu-24.04
     steps:
@@ -78,6 +100,14 @@ jobs:
 
       - name: Service-level economics (exchange curve + constant-spend re-allocation)
         run: python analytics/service_economics.py
+
+      - name: Challenge S&OP alternatives against joint commercial and finance constraints
+        run: python analytics/sop_review.py
+
+      - name: Prove equivalent SQL and capture a bounded repeated performance run
+        run: |
+          pip install duckdb==1.5.4
+          python benchmarks/query_performance.py --rows 100000 --repeats 3 --output /tmp/query-performance.json
 
       - name: The published analytics figures must be reproducible byte for byte
         run: |
