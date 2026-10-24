@@ -32,7 +32,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Validate PBIP artifacts before any deployment
         run: |
-          pip install -r data_generator/requirements.txt pytest
+          pip install -r data_generator/requirements.txt -r requirements.txt -r benchmarks/requirements.txt pytest jsonschema statsmodels matplotlib pyarrow mlflow scikit-learn pyyaml
           python data_generator/generate_data.py
           python pipeline/run_pipeline.py
           pytest tests/ -q
@@ -54,7 +54,7 @@ jobs:
           FABRIC_WORKSPACE_ID: ${{ secrets.FABRIC_WORKSPACE_ID_DEV }}
         run: |
           pip install fabric-cicd azure-identity
-          python deploy/fabric_deploy.py --environment DEV
+          python deploy/fabric_deploy.py --environment DEV --execute
 
   deploy-qa:
     needs: deploy-dev
@@ -74,7 +74,7 @@ jobs:
           FABRIC_WORKSPACE_ID: ${{ secrets.FABRIC_WORKSPACE_ID_QA }}
         run: |
           pip install fabric-cicd azure-identity
-          python deploy/fabric_deploy.py --environment QA
+          python deploy/fabric_deploy.py --environment QA --execute
 
   deploy-prod:
     needs: [deploy-dev, deploy-qa]
@@ -94,4 +94,4 @@ jobs:
           FABRIC_WORKSPACE_ID: ${{ secrets.FABRIC_WORKSPACE_ID_PROD }}
         run: |
           pip install fabric-cicd azure-identity
-          python deploy/fabric_deploy.py --environment PROD
+          python deploy/fabric_deploy.py --environment PROD --execute

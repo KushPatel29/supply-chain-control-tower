@@ -52,6 +52,22 @@ swaps from the local demo principal to governed entitlement identities.
 
 The REST APIs work, but `fabric-cicd` is the supported acceleration layer
 for exactly this shape — source-controlled PBIP/TMDL definitions published
-idempotently (`publish_all_items` + `unpublish_all_orphan_items`), with
+idempotently (`publish_all_items`, with orphan retirement separately opted in), with
 environment parameterization as data instead of sed scripts. Less custom
 code to review, fewer places to be wrong.
+
+## Preflight and preservation controls
+
+`python deploy/fabric_deploy.py --environment DEV` is now an offline preflight.
+It hashes source/parameter files, validates the workspace UUID and rejects missing
+or example bindings. Configure actual tenant paths and entitlement identities
+before using `--execute`. The workflow passes that flag explicitly; it does not
+make an unconfigured tenant ready or establish a successful deployment.
+
+The canonical `deploy/parameter.yml` is copied into a temporary publish directory
+beside the PBIP items, the library's documented default lookup location. Source
+files are preserved. Orphan retirement is off by default and requires the separate
+`--retire-orphans` option after reviewing the affected items. Publication still
+needs Service refresh checks and intended-user security validation.
+
+This remains configuration-gated, unexecuted cloud deployment work.
