@@ -137,7 +137,11 @@ st.markdown(
   [data-testid="stMetric"] { min-height: 108px; padding: .82rem .2rem .42rem; border-top: 1px solid var(--line); background: transparent; }
   [data-testid="stMetricLabel"] { color: var(--muted); }
   [data-testid="stMetricValue"] { color: var(--cyan); letter-spacing: -.04em; }
-  [data-testid="stMetricDelta"] { color: var(--amber); }
+  [data-testid="stMetricDelta"] { color: var(--amber); border-radius: .45rem; }
+  [data-testid="stMetricValue"] { font-size: clamp(1.3rem, 2.3vw, 2.25rem); }
+  [data-testid="stMetricValue"] > div, [data-testid="stMetricValue"] p, [data-testid="stMetricLabel"] p, [data-testid="stMetricDelta"] p { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; line-height: 1.25; }
+  div[data-testid="stMetric"] div:has(> [data-testid="stMetricDelta"]) { overflow: visible; height: auto; }
+  .st-key-incident-id [data-testid="stMetricValue"] { font-size: clamp(1.05rem, 1.55vw, 1.6rem); letter-spacing: -.01em; }
   [data-baseweb="tab-list"] { gap: 1.25rem; border-bottom: 1px solid var(--line); }
   [data-baseweb="tab"] { height: 3.25rem; padding-left: .1rem; padding-right: .1rem; }
   [data-baseweb="tab-highlight"] { background-color: var(--cyan); }
@@ -474,7 +478,8 @@ if workspace == "Incident command":
     incident_id = str(incident_timeline.iloc[0].event_id)
     p0_actions = incident_actions[incident_actions.priority.eq("P0")]
     command_1, command_2, command_3, command_4 = st.columns(4)
-    command_1.metric("Incident", incident_id, "simulated event", delta_color="off", delta_arrow="off")
+    # The incident ID is one long token; its tile uses a smaller value size (see .st-key-incident-id).
+    command_1.container(key="incident-id").metric("Incident", incident_id, "simulated event", delta_color="off", delta_arrow="off")
     command_2.metric("P0 validation queue", len(p0_actions), f"of {len(incident_actions)} affected SKUs", delta_color="off", delta_arrow="off")
     command_3.metric("Action SLA", f"{int(selected_playbook.action_sla_min)} min", str(selected_playbook.incident_commander), delta_color="off", delta_arrow="off")
     command_4.metric("Recovery target", f"{int(selected_playbook.recovery_target_min / 60)} hr", "clock starts at source event", delta_color="off", delta_arrow="off")
